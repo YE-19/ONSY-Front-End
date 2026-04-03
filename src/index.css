@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+
+    --color-onsy-light: #E4EAED;
+    --color-onsy-primary: #5AA8B1;
+    --color-onsy-secondary: #4B676C;
+  
+  }
