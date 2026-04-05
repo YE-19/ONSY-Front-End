@@ -1,5 +1,5 @@
 import React from 'react'
-import icon from '../../assets/iconp.png';
+import icon from '../../assets/iconP.png';
 
 const Hero3 = () => {
   return (
