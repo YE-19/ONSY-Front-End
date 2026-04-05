@@ -2,8 +2,12 @@
 
 @theme {
 
+  --font-labrada: "Labrada", serif;
+
     --color-onsy-light: #E4EAED;
     --color-onsy-primary: #5AA8B1;
     --color-onsy-secondary: #4B676C;
+
+    --background-image-hero: url('/src/assets/hero1.png');
   
   }
