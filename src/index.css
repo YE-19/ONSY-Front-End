@@ -1,17 +1,16 @@
 @import "tailwindcss";
-
-@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800;900&family=Labrada:wght@400;500;600;700&display=swap');
 
 @theme {
-
+  /* Fonts */
   --font-labrada: "Labrada", serif;
-
   --font-gabarito: "Gabarito", sans-serif;
 
-    --color-onsy-light: #E4EAED;
-    --color-onsy-primary: #5AA8B1;
-    --color-onsy-secondary: #4B676C;
+  /* Colors */
+  --color-onsy-light: #E4EAED;
+  --color-onsy-primary: #5AA8B1;
+  --color-onsy-secondary: #4B676C;
 
-    --background-image-hero: url('/src/assets/hero1.png');
-  
-  }
+  /* Backgrounds */
+  --background-image-hero: url('/src/assets/hero1.png');
+}
