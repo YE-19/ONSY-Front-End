@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 const MainNav = () => {
   return (
       <>
-      <section className=' w-full absolute top-0 px-24 gap-4 flex justify-between items-center flex-row content-between backdrop-blur'>
+      <section className=' w-full absolute top-0 px-24 gap-4 flex justify-between items-center flex-row content-between backdrop-blur z-10'>
           <div className='text-[#147E8F]  font-labrada text-[48px] font-semibold mx-10'>
             ONSY
           </div>
