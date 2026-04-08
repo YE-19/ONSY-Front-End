@@ -26,7 +26,7 @@ const MainNav = () => {
             </NavLink>
           </nav>
           <button 
-          className='w-45.25 h-12 border border-black rounded-xl text-white cursor-pointer'
+          className='w-45.25 h-12 border border-black rounded-xl text-white cursor-pointer bg-cyan-800'
           >
             Log in
           </button>
