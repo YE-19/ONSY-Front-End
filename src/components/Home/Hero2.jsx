@@ -5,7 +5,7 @@ import icon3 from '../../assets/Frame 55 3.png';
 
 const Hero2 = () => {
   return (
-    <section className='pt-12 px-10 h-148.25'>
+    <section className='pt-12 px-10 h-148.25 bg-[#FEFDFE]'>
         <h1 className='font-semibold text-[48px] text-center mb-2'>How It Works </h1>
         <p className='text-[#5F5F5F] text-center mb-7'>
           ONSY uniquely combines AI conversation, behavioral  <br></br>tracking, and biometric brainwave data to give you the <br></br> deepest self-understanding possible.

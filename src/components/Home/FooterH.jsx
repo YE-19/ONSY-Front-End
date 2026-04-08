@@ -22,7 +22,7 @@ const FooterH = () => {
 
         {/* Column 2: Product */}
         <div>
-          <h3 className="text-black font-bold mb-6 text-xl">Product</h3>
+          <h3 className="text-[#111111] font-bold mb-6 text-xl">Product</h3>
           <ul className="space-y-4 text-sm">
             <li className="hover:text-onsy-primary cursor-pointer transition-colors">Features</li>
             <li className="hover:text-onsy-primary cursor-pointer transition-colors">Pricing</li>
@@ -34,7 +34,7 @@ const FooterH = () => {
 
         {/* Column 3: Company */}
         <div>
-          <h3 className="text-black font-bold mb-6 text-xl">Company</h3>
+          <h3 className="text-[#111111] font-bold mb-6 text-xl">Company</h3>
           <ul className="space-y-4 text-sm">
             <li className="hover:text-onsy-primary cursor-pointer transition-colors">About</li>
             <li className="hover:text-onsy-primary cursor-pointer transition-colors">Contact us</li>
@@ -46,7 +46,7 @@ const FooterH = () => {
 
         {/* Column 4: Support */}
         <div>
-          <h3 className="text-black font-bold mb-6 text-xl">Support</h3>
+          <h3 className="text-[#111111] font-bold mb-6 text-xl">Support</h3>
           <ul className="space-y-4 text-sm">
             <li className="hover:text-onsy-primary cursor-pointer transition-colors">Getting started</li>
             <li className="hover:text-onsy-primary cursor-pointer transition-colors">Help center</li>
@@ -58,7 +58,7 @@ const FooterH = () => {
 
         {/* Column 5: Contacts us */}
         <div>
-          <h3 className="text-black font-bold mb-6 text-xl">Contacts us</h3>
+          <h3 className="text-[#111111] font-bold mb-6 text-xl">Contacts us</h3>
           <ul className="space-y-4 text-sm">
             <li className="flex items-center gap-3">
               <FaRegEnvelope className="text-lg" />
