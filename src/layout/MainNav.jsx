@@ -36,7 +36,7 @@ const MainNav = () => {
           </nav>
           <button 
           onClick={() => navigate("/SingIn")}
-          className={`h-12 border border-black rounded-xl text-white cursor-pointer transition-all w-45.25${
+          className={`h-12 border border-black rounded-xl text-white cursor-pointer transition-all w-45.25 ${
           isHomePage 
           ? ' bg-transparent' 
           : ' bg-[#036464E5]'
