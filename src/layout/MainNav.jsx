@@ -1,7 +1,11 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 const MainNav = () => {
+
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   return (
       <>
       <section className=' w-full absolute top-0 px-24 gap-4 flex justify-between items-center flex-row content-between backdrop-blur z-10'>
@@ -26,7 +30,11 @@ const MainNav = () => {
             </NavLink>
           </nav>
           <button 
-          className='w-45.25 h-12 border border-black rounded-xl text-white cursor-pointer bg-cyan-800'
+          className={`h-12 border border-black rounded-xl text-white cursor-pointer transition-all ${
+          isHomePage 
+          ? 'w-45.25 bg-transparent' 
+          : 'w-45.25 bg-[#036464E5]'
+          }`}
           >
             Log in
           </button>

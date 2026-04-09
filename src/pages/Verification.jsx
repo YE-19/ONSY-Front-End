@@ -3,10 +3,6 @@ import myImage from '../assets/mint-backg.jpg'
 import { Button, } from "@heroui/react";
 import { Link } from "react-router-dom";
 
-
-
-
-
 export default function Verification() {
   return (
     <div>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 const Hero5 = () => {
 
-  const Navigate = useNavigate
+  const navigate = useNavigate();
 
   return (
       <section className='w-full h-80 bg-[#147E8F] relative overflow-hidden content-center'>
@@ -14,13 +14,13 @@ const Hero5 = () => {
           <div className='flex text-2xl font-bold gap-10'>
             <button 
             className='w-84 h-16 rounded-2xl bg-[#036464E5] text-[#111111] shadow-[0_0_15px_3px_#FFFFFF80] cursor-pointer'
-            onClick={Navigate("/SingIn")}
+            onClick={() => navigate("/SignUp")}
             >
               Sign Up
             </button>
             <button 
             className='w-84 h-16 rounded-2xl text-white border border-[#111111] cursor-pointer'
-            onClick={Navigate("/SingUp")}
+            onClick={() => navigate("/SingIn")}
             >
               Long In
             </button>
