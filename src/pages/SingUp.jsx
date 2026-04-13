@@ -63,18 +63,18 @@ let navigate=useNavigate()
             <p className='text-[#5F5F5F] font-semibold text-xl  mb-2'>Let's personalize your experience</p>
             </div>
             <div className='flex  flex-col gap-2 px-19 font-semibold'>
-            <div className='flex flex-row justify-between'>
+            <div className='flex flex-row justify-between w-96'>
              <div className='flex flex-col'>
                <Label for='name' className=' mb-1'>First name</Label>
                 <Input
-                {...register("name")} label="name"  labelPlacement="outside" type="text" className={`py-3 w-45 h-14 font-semibold rounded-xl border border-[#147E8F]`} placeholder='Sara'  >
+                {...register("name")} label="name"  labelPlacement="outside" type="text" className={`py-3 w-43 h-14 font-semibold rounded-xl border border-[#147E8F]`} placeholder='Sara'  >
                 </Input>
               {errors.name ?  <p className="text-red-900 ">{errors.name.message}</p> :null   }
              </div>
             <div className='flex flex-col'>
               <Label for='lastName' className=' mb-1 font-semibold'>Last name</Label>
              <Input
-              {...register("username")} label="lastName" type="text"  className={`py-3 font-semibold w- h-14 `} placeholder='Ahmed' >
+              {...register("username")} label="lastName" type="text"  className={`py-3 w-43 h-14 font-semibold rounded-xl border border-[#147E8F]`} placeholder='Ahmed' >
              
             </Input>
             {errors.username ?  <p className="text-red-900 ">{errors.username.message}</p> :null   }

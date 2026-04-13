@@ -60,7 +60,7 @@ let navigate=useNavigate()
           </div>
           <div className='flex  flex-col gap-2 px-19 font-semibold'>
             <Label for='email'className='mb-1 font-semibold '>Email address</Label>
-                          <Input {...register("email")} label="email" type="email" className={`p-3 h-14 w-96  rounded-[10px] font-semibold border border-[#147E8F]`}  placeholder='your@email.com'>
+            <Input {...register("email")} label="email" type="email" className={`p-3 h-14 w-96  rounded-[10px] font-semibold border border-[#147E8F]`}  placeholder='your@email.com'>
 
             </Input>
             {errors.email?  <p className="text-red-900">{errors.email.message}</p> :null   }

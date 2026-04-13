@@ -22,7 +22,7 @@ const Hero5 = () => {
             className='w-84 h-16 rounded-2xl text-white border border-[#111111] cursor-pointer'
             onClick={() => navigate("/SingIn")}
             >
-              Long In
+              Log In
             </button>
           </div>
         </div>
