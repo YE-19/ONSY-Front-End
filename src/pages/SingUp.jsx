@@ -50,7 +50,7 @@ let navigate=useNavigate()
       <section  style={{ backgroundImage: `url(${myImage})` }} 
       className="bg-cover bg-center " >
 
- <div className='pt-40 px-40 '>
+    <div className='pt-40 px-40 '>
         <div className="max-width-100 md:max-w-2/3 lg:max-w-1/2 mx-auto " >
           <form
             onSubmit={handleSubmit(onSubmitForm)}
@@ -105,23 +105,23 @@ let navigate=useNavigate()
               
             </Input>
              {errors.dateOfBirth?  <p className="text-red-900">{errors.dateOfBirth.message}</p> :null   }
-              <div className='flex gap-1 items-center m-auto'>
+              <div className='flex gap-1 items-center m-auto  '>
               <div className='h-px w-28 bg-onsy-secondary'></div>
               <p className='text-[#111111] font-normal text-center my-3 text-[16px]'>Or sign up with</p>
               <div className='h-px w-28 bg-onsy-secondary'></div>
               </div>
-              <div  className='p-3 px-5 h-14 w-96 rounded-[10px] bg-[#FFFFFF] flex justify-between items-center cursor-pointer' >
+              <div  className='p-3 px-5 h-14 w-96 rounded-[10px] bg-[#FFFFFF] flex justify-between items-center cursor-pointer hover:shadow-[0_0_15px_3px_#FFFFFF80]  transition-all duration-300 ease-in-out' >
                 <div className='flex items-center gap-2'>
                 <img src={google}/>
                 <p className='font-semibold text-[#5F5F5F]'>Sign up with Google</p>
                 </div>
                 <img src={aro} className='w-4 h-4'/>
               </div>
-            <Button type="submit" isLoading={isSubmitting} className={`bg-[#036464E5] h-14 w-96 rounded-[10px] py-6`}>
+            <Button type="submit" isLoading={isSubmitting} className={`bg-[#036464E5] h-14 w-96 rounded-[10px] py-6 hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5]  transition-all duration-300 ease-in-out`}>
               Continue
             </Button>
             </div>
-            <p className='text-[#111111] text-center mt-4'>Already have an account? <Link to={'/SingIn'} className='text-onsy-secondary font-semibold underline underline-offset-4 '>  Sign in</Link> </p>
+            <p className='text-[#111111] text-center mt-4'>Already have an account? <Link to={'/SingIn'} className='text-onsy-secondary font-semibold underline underline-offset-4 hover:text-[#264444e5]  transition-all duration-300 ease-in-out '>  Sign in</Link> </p>
           </form>
            <div className="py-20"></div>
         </div>

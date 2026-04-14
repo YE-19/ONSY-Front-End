@@ -59,17 +59,17 @@ const Hero3 = () => {
 
           <div className='flex flex-col gap-9 z-10'>
             {/* Feature Cards with individual animation */}
-            <motion.div variants={fadeInUp} className='p-7 w-154.75 h-40.5 bg-[#FEFDFE] border-[0.5px] border-onsy-primary shadow-md shadow-[#618475] rounded-2xl'>
-              <h3 className='py-1.5 text-2xl font-sans font-semibold text-[#111111]'>2. Learns Over Time</h3>
+            <motion.div variants={fadeInUp} className='p-7 w-154.75 h-40.5 bg-[#FEFDFE] border-[0.5px] border-onsy-primary shadow-md shadow-[#618475] rounded-2xl transition-all duration-300 ease-in-out  hover:-translate-y-2 '>
+            <h3 className='py-1.5 text-2xl font-sans font-semibold text-[#111111]'>1. Emotion-Aware Responses</h3>
               <p className='py-1.5 text-[#5F5F5F]'>Every conversation builds a deeper model of who you are — your triggers, your patterns, your growth.</p>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className='p-7 w-154.75 h-40.5 bg-[#FEFDFE] border-[0.5px] border-onsy-primary shadow-md shadow-[#618475] rounded-2xl'>
-              <h3 className='py-1.5 text-2xl font-sans font-semibold text-[#111111]'>1. Emotion-Aware Responses</h3>
+            <motion.div variants={fadeInUp} className='p-7 w-154.75 h-40.5 bg-[#FEFDFE] border-[0.5px] border-onsy-primary shadow-md shadow-[#618475] rounded-2xl  transition-all duration-300 ease-in-out  hover:-translate-y-2'>
+              <h3 className='py-1.5 text-2xl font-sans font-semibold text-[#111111]'>2. Learns Over Time</h3>
               <p className='py-1.5 text-[#5F5F5F]'>The AI detects anxiety, sadness, or joy in your words and responds appropriately — never robotic, always human.</p>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className='p-7 w-154.75 h-40.5 bg-[#FEFDFE] border-[0.5px] border-onsy-primary shadow-md shadow-[#618475] rounded-2xl'>
+            <motion.div variants={fadeInUp} className='p-7 w-154.75 h-40.5 bg-[#FEFDFE] border-[0.5px] border-onsy-primary shadow-md shadow-[#618475] rounded-2xl  transition-all duration-300 ease-in-out  hover:-translate-y-2'>
               <h3 className='py-1.5 text-2xl font-sans font-semibold text-[#111111]'>3. Private & Secure</h3>
               <p className='py-1.5 text-[#5F5F5F]'>End-to-end encrypted. Your thoughts stay yours — never shared, never trained on without consent.</p>
             </motion.div>

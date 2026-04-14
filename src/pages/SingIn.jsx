@@ -70,8 +70,8 @@ let navigate=useNavigate()
             
             </Input>
             {errors.password?  <p className="text-red-900">{errors.password.message}</p> :null   }
-            <p className='text-end cursor-pointer text-onsy-secondary -mt-2.5 mb-6 underline underline-offset-4'>Forgot password?</p>
-            <Button type="submit" isLoading={isSubmitting}  className={`bg-[#036464E5] h-14 w-96 rounded-[10px] py-6`}>
+            <p className='text-end cursor-pointer text-onsy-secondary -mt-2.5 mb-6 underline underline-offset-4 hover:text-[#264444e5]  transition-all duration-300 ease-in-out '>Forgot password?</p>
+            <Button type="submit" isLoading={isSubmitting}  className={`bg-[#036464E5] h-14 w-96 rounded-[10px] py-6 hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5]  transition-all duration-300 ease-in-out`}>
               
               Login
             </Button>
@@ -80,7 +80,7 @@ let navigate=useNavigate()
               <p className='text-[#111111] font-normal text-center my-3 text-[16px]'>Or sign up with</p>
               <div className='h-px w-28 bg-onsy-secondary'></div>
               </div>
-            <div  className='p-3 px-5 h-14 w-96 rounded-[10px] bg-[#FFFFFF] flex justify-between items-center cursor-pointer' >
+            <div  className='p-3 px-5 h-14 w-96 rounded-[10px] bg-[#FFFFFF] flex justify-between items-center cursor-pointer  hover:shadow-[0_0_15px_3px_#FFFFFF80]  transition-all duration-300 ease-in-out' >
               <div className='flex items-center gap-2'>
               <img src={google}/>
               <p className='font-semibold text-[#5F5F5F]'>Sign up with Google</p>
@@ -89,7 +89,7 @@ let navigate=useNavigate()
             </div>
 
           </div>
-            <p className='text-[#111111] text-center mt-4'>don't have an account? <Link to={'/SignUp'} className='text-onsy-secondary font-semibold underline underline-offset-4 '> Signup</Link> </p>
+            <p className='text-[#111111] text-center mt-4'>don't have an account? <Link to={'/SignUp'} className='text-onsy-secondary font-semibold underline underline-offset-4 hover:text-[#264444e5]  transition-all duration-300 ease-in-out '> Signup</Link> </p>
           </form>
             <div className="py-20"></div>
         </div>   

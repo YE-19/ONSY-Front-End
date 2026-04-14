@@ -1,5 +1,17 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+
+@keyframes flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-text-flow {
+  background-size: 300% auto;
+  animation: flow 5s ease infinite;
+}
+
 @theme {
   /* Fonts */
   --font-labrada: "Labrada", serif;
