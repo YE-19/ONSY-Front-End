@@ -20,7 +20,7 @@ const Hero5 = () => {
             </button>
             <button 
             className='w-84 h-16 rounded-2xl text-white border border-[#111111] cursor-pointer  transition-all duration-300 ease-in-out  hover:scale-105'
-            onClick={() => navigate("/SingIn")}
+            onClick={() => navigate("/SignIn")}
             >
               Log In
             </button>

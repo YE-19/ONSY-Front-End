@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/SignUp' element={<SignUp />} />
-        <Route path='/SingIn' element={<SingIn />} />
+        <Route path='/SignIn' element={<SingIn />} />
         <Route path='/verification' element={<Verification />} />
       </Routes>
       </HeroUIProvider>
