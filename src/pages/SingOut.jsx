@@ -3,19 +3,28 @@ import myImage from '../assets/mint-backg.jpg';
 import { removeToken } from '../utils/cookieUtils';
 import { useNavigate } from "react-router-dom";
 import Loading from './Loading';
+import { logoutUserApi } from '../services/authService';
 
 const SingOut = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    const handleLogout = () => {
-        setLoading(true); 
-        removeToken(); 
-        setTimeout(() => {
+    const handleLogout = async () => {
+        setLoading(true);
+        try {
+            await logoutUserApi(); 
+            removeToken(); 
+            toast.success("Logged out successfully");
+            
+            setTimeout(() => {
+                navigate("/"); 
+            }, 1500);
+        } catch (err) {
+            removeToken();
             navigate("/");
-        }, 1500);
+            console.error("Signout error:", err);
+        }
     };
-
     if (loading) {
         return (
             <Loading 

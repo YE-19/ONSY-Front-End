@@ -20,6 +20,11 @@ export const verifyOtp = async (otpData) => {
   }
 };
 
+export const resendOtp = async (email) => {
+    const response = await axiosInstance.post('/auth/resend-otp', { email });
+    return response.data;
+  };
+
 export const loginUser = async (credentials) => {
   const response = await axiosInstance.post('/auth/signin', credentials);
   
@@ -30,7 +35,11 @@ export const loginUser = async (credentials) => {
   return response.data;
 };
 
-export const resendOtp = async (email) => {
-    const response = await axiosInstance.post('/auth/resend-otp', { email });
+export const logoutUserApi = async () => {
+  try {
+    const response = await axiosInstance.post('/auth/signout');
     return response.data;
-  };
+  } catch (error) {
+    throw error;
+  }
+};
