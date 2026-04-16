@@ -5,6 +5,7 @@ import Hero3 from '../components/Home/Hero3'
 import Hero5 from '../components/Home/Hero5'
 import FooterH from '../components/Home/FooterH'
 import Hero4 from '../components/Home/Hero4'
+import ProtectedRoute from '../routes/ProtectedRoute'
 
 const Home = () => {
   return (

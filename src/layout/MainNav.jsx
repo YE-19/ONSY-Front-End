@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { getToken, removeToken } from '../utils/cookieUtils';
 
 const MainNav = () => {
   const navigate = useNavigate();
@@ -8,6 +9,16 @@ const MainNav = () => {
 
   const navLinkBase = "rounded-3xl px-3 transition-all duration-300 ease-in-out border-2 hover:scale-120 hover:border-onsy-primary focus:outline-none";
   const navLinkActive = "border-[#5AA8B1] "; 
+
+  const isAuthenticated = !!getToken(); 
+
+  const handleAuthAction = () => {
+    if (isAuthenticated) {
+      navigate("/SignOut"); 
+    } else {
+      navigate("/SignIn");
+    }
+  };
 
   return (
     <section className='w-full absolute top-0 px-24 h-20 gap-4 flex justify-between items-center backdrop-blur z-20'>
@@ -58,14 +69,13 @@ const MainNav = () => {
         </NavLink>
       </nav>
 
-      {/* Auth Button */}
       <button 
-        onClick={() => navigate("/SingIn")}
-        className={`h-12 border border-black rounded-xl text-white cursor-pointer w-45.25 font-semibold  transition-all duration-300 ease-in-out  hover:scale-110 ${
-          isHomePage ? 'bg-transparent' : 'bg-[#036464E5]'
-        }`}
+      onClick={handleAuthAction}
+      className={`h-12 border border-black rounded-xl text-white cursor-pointer w-45.25 font-semibold transition-all duration-300 ease-in-out hover:scale-110 ${
+        isHomePage ? 'bg-transparent' : 'bg-[#036464E5]'
+      }`}
       >
-        Log in
+      {isAuthenticated ? "Log out" : "Log in"}
       </button>
     </section>
   )

@@ -37,7 +37,7 @@ export default function Verification() {
       await verifyOtp({ email, otp });
       setIsSuccess(true); 
       setTimeout(() => {
-        navigate('/'); 
+        navigate('/SignIn'); 
       }, 2500);
 
     } catch (err) {
@@ -69,7 +69,7 @@ export default function Verification() {
           <div className="bg-white p-10 rounded-[31px] border-[3px] border-[#036464] text-center shadow-2xl max-w-sm mx-4">
             <div className="text-6xl mb-4">🎉</div>
             <h2 className="text-2xl font-bold text-[#036464] mb-2">Welcome to ONSY!</h2>
-            <p className="text-gray-600 font-medium">Your account is verified. <br/> Redirecting you to home page...</p>
+            <p className="text-gray-600 font-medium">Your account is verified. <br/> Redirecting you to log in...</p>
           </div>
         </div>
       )}

@@ -6,9 +6,11 @@ import SignUp from './pages/SingUp'
 import SingIn from './pages/SingIn'
 import { HeroUIProvider } from "@heroui/system";
 import Verification from './pages/Verification'
+import ProtectedRoute from './routes/ProtectedRoute'
+import PublicRoute from './routes/PublicRoute'
+import SingOut from './pages/SingOut'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -16,9 +18,13 @@ function App() {
       <MainNav />
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/SignUp' element={<SignUp />} />
-        <Route path='/SignIn' element={<SingIn />} />
-        <Route path='/verification' element={<Verification />} />
+        <Route path='/SignUp' element={<PublicRoute> <SignUp /> </PublicRoute>} />
+        <Route path='/SignIn' element={ <PublicRoute> <SingIn /> </PublicRoute>} />
+        <Route path='/verification' element={<PublicRoute> <Verification /> </PublicRoute>} />
+        <Route path='/r' element={<PublicRoute /> } />
+        <Route path='/f' element={<ProtectedRoute/> } />
+        <Route path='/SignOut' element={<SingOut /> } />
+
       </Routes>
       </HeroUIProvider>
     </>

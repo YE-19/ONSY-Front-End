@@ -9,10 +9,12 @@ import { loginUser } from '../services/authService';
 import myImage from '../assets/mint-backg.jpg'
 import google from "../assets/Group.png"
 import aro from "../assets/Vector.png"
+import Loading from './Loading';
 
 const SingIn = () => {
   const [isError, setError] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(loginSchema),
@@ -27,17 +29,26 @@ const SingIn = () => {
     setError(false);
     try {
       await loginUser(data);
-      
       toast.success("Welcome back to ONSY!");
-      
-      navigate('/');
-      
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+      setLoading(true)
     } catch (err) {
       setError(true);
       const errorMessage = err.response?.data?.message || "Invalid email or password";
       toast.error(errorMessage);
     }
   }
+
+  if (loading) {
+    return (
+        <Loading 
+            head={"You're now logged in."}
+            prag={"Taking you home…"} 
+        />
+    );
+  } 
 
   return (
     <>
@@ -100,10 +111,9 @@ const SingIn = () => {
                 <img src={aro} className='w-4 h-4' alt="arrow" />
               </div>
             </div>
-
             <p className='text-[#111111] text-center mt-4'>don't have an account? <Link to={'/SignUp'} className='text-onsy-secondary font-semibold underline underline-offset-4 hover:text-[#264444e5] transition-all duration-300 ease-in-out '> Signup</Link> </p>
           </form>
-          <div className="py-20"></div>
+
         </div>
       </section>
     </>

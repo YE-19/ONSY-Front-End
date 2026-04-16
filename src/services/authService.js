@@ -21,12 +21,14 @@ export const verifyOtp = async (otpData) => {
 };
 
 export const loginUser = async (credentials) => {
-    const response = await axiosInstance.post('/auth/signin', credentials);
-    if (response.data.token) {
-        setToken(response.data.token);
-    }
-    return response.data;
-   };
+  const response = await axiosInstance.post('/auth/signin', credentials);
+  
+  const token = response.data?.data?.access_token; 
+  if (token) {
+    setToken(token);
+  }
+  return response.data;
+};
 
 export const resendOtp = async (email) => {
     const response = await axiosInstance.post('/auth/resend-otp', { email });
