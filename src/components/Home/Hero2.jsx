@@ -14,7 +14,7 @@ const Hero2 = () => {
             <div className='w-94.5 h-62 border-[0.5px] border-onsy-primary py-6 px-14 flex flex-col rounded-xl content-center items-center gap-3  transition-all duration-300 ease-in-out  hover:-translate-y-2'>
             <img src={icon1} alt="Icon 1" className=" w-12 h-12" />
               <h3 className='font-semibold text-2xl -mt-2 text-[#111111] '>1.Talk to ChatBot</h3>
-              <p className='text-[#5F5F5F] text-center'>Chat about your day, vent, or reflect <br></br> in a safe, private space designed to  <br></br>understand your tone.</p>
+              <p className='text-[#5F5F5F] text-center'>Chat about your day, vent, or reflect in a safe, private space designed to understand your tone.</p>
             </div>
             <div className='w-94.5 h-62 border-[0.5px] border-onsy-primary py-6 px-14 flex flex-col rounded-xl content-center items-center gap-3  transition-all duration-300 ease-in-out  hover:-translate-y-2'>
             <img src={icon2} alt="Icon 2" className=" w-12 h-12" />

@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
     if (!token) {
       const timer = setTimeout(() => {
         navigate("/signin");
-      }, 1500);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [token, navigate]);

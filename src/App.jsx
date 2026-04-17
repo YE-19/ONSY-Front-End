@@ -10,6 +10,11 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import PublicRoute from './routes/PublicRoute'
 import SingOut from './pages/SingOut'
 import ForgetP from './pages/ForgetP'
+import ForgetPOTP from './pages/ForgetPOTP'
+import ResetPassword from './pages/ResetPassword'
+import Dashboard from './pages/Dashboard'
+import SpeakChatBot from './pages/SpeakChatBot'
+import EMotiv from './pages/EMotiv'
 
 function App() {
 
@@ -23,9 +28,14 @@ function App() {
         <Route path='/SignIn' element={ <PublicRoute> <SingIn /> </PublicRoute>} />
         <Route path='/verification' element={<PublicRoute> <Verification /> </PublicRoute>} />
         <Route path='/ForgetP' element={<PublicRoute> <ForgetP /> </PublicRoute>} />
+        <Route path='/ForgetPOTP' element={<PublicRoute> <ForgetPOTP /> </PublicRoute>} />
+        <Route path='/ResetP' element={<PublicRoute> <ResetPassword /> </PublicRoute>} />
         <Route path='/r' element={<PublicRoute /> } />
         <Route path='/f' element={<ProtectedRoute/> } />
         <Route path='/SignOut' element={<ProtectedRoute> <SingOut /> </ProtectedRoute>  } />
+        <Route path='/Dashboard' element={<ProtectedRoute> <Dashboard /> </ProtectedRoute>  } />
+        <Route path='/Speak' element={<ProtectedRoute> <SpeakChatBot /> </ProtectedRoute>  } />
+        <Route path='/EMotiv' element={<ProtectedRoute> <EMotiv /> </ProtectedRoute>  } />
       </Routes>
       </HeroUIProvider>
     </>

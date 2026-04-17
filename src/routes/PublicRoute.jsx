@@ -11,7 +11,7 @@ const PublicRoute = ({ children }) => {
     if (token) {
       const timer = setTimeout(() => {
         navigate("/");
-      }, 1500);
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [token, navigate]);

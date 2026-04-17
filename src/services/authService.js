@@ -20,11 +20,6 @@ export const verifyOtp = async (otpData) => {
   }
 };
 
-export const resendOtp = async (email) => {
-    const response = await axiosInstance.post('/auth/resend-otp', { email });
-    return response.data;
-  };
-
 export const loginUser = async (credentials) => {
   const response = await axiosInstance.post('/auth/signin', credentials);
   
@@ -33,6 +28,34 @@ export const loginUser = async (credentials) => {
     setToken(token);
   }
   return response.data;
+};
+
+export const resendOtp = async (email) => {
+    const response = await axiosInstance.post('/auth/resend-otp', { email });
+    return response.data;
+  };
+  
+  export const forgotPasswordApi = async (data) => {
+    const response = await axiosInstance.post('/auth/forget-password', data);
+    return response.data;
+  };
+
+export const ForgetPasswordOtp = async (otpData) => {
+  try {
+    const response = await axiosInstance.post('/auth/verify-forget-password-otp', otpData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const ResetPasswordApi = async (userData) => {
+  try {
+    const response = await axiosInstance.post('/auth/reset-password', userData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const logoutUserApi = async () => {

@@ -17,7 +17,7 @@ const SingIn = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const { register, handleSubmit, setError: setFormFieldError, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -30,15 +30,24 @@ const SingIn = () => {
     setError(false);
     try {
       await loginUser(data);
-      toast.success("Welcome back to ONSY!");
+      toast.success("Welcome back!");
+      setLoading(true); 
       setTimeout(() => {
         navigate("/");
       }, 1500);
-      setLoading(true)
     } catch (err) {
       setError(true);
       const errorMessage = err.response?.data?.message || "Invalid email or password";
-      toast.error(errorMessage);
+      const lowCaseMessage = errorMessage.toLowerCase();
+      if (lowCaseMessage.includes("password")) {
+        setFormFieldError("password", { type: "manual", message: errorMessage });
+      } 
+      else if (lowCaseMessage.includes("email") || lowCaseMessage.includes("user") || lowCaseMessage.includes("not found")) {
+        setFormFieldError("email", { type: "manual", message: errorMessage });
+      } 
+      else {
+        toast.error(errorMessage);
+      }
     }
   }
 
@@ -79,20 +88,20 @@ const SingIn = () => {
               {errors.email && <p className="text-red-900">{errors.email.message}</p>}
 
               <div className="relative w-96"> 
-              <Label htmlFor='password' title='password' className='mb-1 font-semibold'>password</Label>
-              <Input 
-                {...register("password")} 
-                type={showPassword ? "text" : "password"} 
-                className={`p-3 h-14 w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
-                placeholder='********' 
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 text-gray-500 cursor-pointer hover:text-[#264444e5] transition-all duration-300 ease-in-out"
-              >
-                {showPassword ? "Hide" : "Show"} 
-              </button>
+                <Label htmlFor='password' title='password' className='mb-1 font-semibold'>password</Label>
+                <Input 
+                  {...register("password")} 
+                  type={showPassword ? "text" : "password"} 
+                  className={`p-3 h-14 w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
+                  placeholder='********' 
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 text-gray-500 cursor-pointer hover:text-[#264444e5] transition-all duration-300 ease-in-out"
+                >
+                  {showPassword ? "Hide" : "Show"} 
+                </button>
               </div>
               {errors.password && <p className="text-red-900">{errors.password.message}</p>}
 

@@ -17,7 +17,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const { register, handleSubmit, setError: setFormError, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       firstName: "",
@@ -62,7 +62,19 @@ const SignUp = () => {
     } catch (err) {
       setError(true);
       const errorMessage = err.response?.data?.message || "Something went wrong!";
-      toast.error(errorMessage);
+      const lowCaseMsg = errorMessage.toLowerCase();
+      if (lowCaseMsg.includes("email") || lowCaseMsg.includes("exists") || lowCaseMsg.includes("used")) {
+        setFormError("email", { type: "manual", message: errorMessage });
+      } 
+      else if (err.response?.data?.errors) {
+        Object.keys(err.response.data.errors).forEach((key) => {
+          setFormError(key, { type: "manual", message: err.response.data.errors[key] });
+        });
+      }
+      else {
+        toast.error(errorMessage);
+      }
+      
       console.error("API Error:", err);
     }
   }
@@ -186,6 +198,3 @@ const SignUp = () => {
 }
 
 export default SignUp;
-
-
-

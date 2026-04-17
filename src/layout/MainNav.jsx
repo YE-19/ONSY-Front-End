@@ -60,7 +60,7 @@ const MainNav = () => {
         </NavLink>
 
         <NavLink 
-          to="/E-Motiv" 
+          to="/EMotiv" 
           className={({ isActive }) => 
             `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`
           }
