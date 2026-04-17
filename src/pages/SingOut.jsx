@@ -15,7 +15,6 @@ const SingOut = () => {
             await logoutUserApi(); 
             removeToken(); 
             toast.success("Logged out successfully");
-            
             setTimeout(() => {
                 navigate("/"); 
             }, 1500);

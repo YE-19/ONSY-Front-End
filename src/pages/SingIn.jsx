@@ -15,6 +15,7 @@ const SingIn = () => {
   const [isError, setError] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(loginSchema),
@@ -77,16 +78,25 @@ const SingIn = () => {
               />
               {errors.email && <p className="text-red-900">{errors.email.message}</p>}
 
+              <div className="relative w-96"> 
               <Label htmlFor='password' title='password' className='mb-1 font-semibold'>password</Label>
               <Input 
                 {...register("password")} 
-                type="password" 
+                type={showPassword ? "text" : "password"} 
                 className={`p-3 h-14 w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
                 placeholder='********' 
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 text-gray-500"
+              >
+                {showPassword ? "Hide" : "Show"} 
+              </button>
+              </div>
               {errors.password && <p className="text-red-900">{errors.password.message}</p>}
-              
-              <p className='text-end cursor-pointer text-onsy-secondary -mt-2.5 mb-6 underline underline-offset-4 hover:text-[#264444e5] transition-all duration-300 ease-in-out'>Forgot password?</p>
+
+              <p onClick={() => navigate("/ForgetP")} className='text-end cursor-pointer text-onsy-secondary -mt-2.5 mb-6 underline underline-offset-4 hover:text-[#264444e5] transition-all duration-300 ease-in-out'>Forgot password?</p>
               
               <Button 
                 type="submit" 

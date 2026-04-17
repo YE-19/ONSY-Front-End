@@ -9,6 +9,7 @@ import Verification from './pages/Verification'
 import ProtectedRoute from './routes/ProtectedRoute'
 import PublicRoute from './routes/PublicRoute'
 import SingOut from './pages/SingOut'
+import ForgetP from './pages/ForgetP'
 
 function App() {
 
@@ -21,10 +22,10 @@ function App() {
         <Route path='/SignUp' element={<PublicRoute> <SignUp /> </PublicRoute>} />
         <Route path='/SignIn' element={ <PublicRoute> <SingIn /> </PublicRoute>} />
         <Route path='/verification' element={<PublicRoute> <Verification /> </PublicRoute>} />
+        <Route path='/ForgetP' element={<PublicRoute> <ForgetP /> </PublicRoute>} />
         <Route path='/r' element={<PublicRoute /> } />
         <Route path='/f' element={<ProtectedRoute/> } />
-        <Route path='/SignOut' element={<SingOut /> } />
-
+        <Route path='/SignOut' element={<ProtectedRoute> <SingOut /> </ProtectedRoute>  } />
       </Routes>
       </HeroUIProvider>
     </>

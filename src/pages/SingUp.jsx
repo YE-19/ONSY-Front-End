@@ -14,6 +14,8 @@ import { registerUser } from '../services/authService';
 const SignUp = () => {
   const [isError, setError] = useState(false);
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(registerSchema),
@@ -111,12 +113,40 @@ const SignUp = () => {
               </select>
               {errors.gender && <p className="text-red-900">{errors.gender.message}</p>}
 
-              <Label htmlFor='password' dangerouslySetInnerHTML={{__html: 'Password'}} className='font-semibold ' />
-              <Input {...register("password")} type="password" className={`p-3 h-14 w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} placeholder='Min 8 characters' />
+              <Label htmlFor='password' dangerouslySetInnerHTML={{__html: 'Password'}} className='font-semibold' />
+              <div className="relative w-96">
+                <Input 
+                  {...register("password")} 
+                  type={showPassword ? "text" : "password"} 
+                  className={`p-3 h-14 w-full text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
+                  placeholder='Min 8 characters' 
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? "Hide" : "Show"} 
+                </button>
+              </div>
               {errors.password && <p className="text-red-900">{errors.password.message}</p>}
 
               <Label htmlFor='confirmPassword' dangerouslySetInnerHTML={{__html: 'Confirm Password'}} className='font-semibold' />
-              <Input {...register("confirmPassword")} type="password" className={`p-3 h-14 w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} placeholder='Min 8 characters' />
+              <div className="relative w-96">
+                <Input 
+                  {...register("confirmPassword")} 
+                  type={showConfirmPassword ? "text" : "password"} 
+                  className={`p-3 h-14 w-full text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
+                  placeholder='Min 8 characters' 
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+              </div>
               {errors.confirmPassword && <p className="text-red-900">{errors.confirmPassword.message}</p>}
 
               <Label htmlFor='dateOfBirth' className='font-semibold '>Date of Birth</Label>

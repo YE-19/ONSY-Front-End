@@ -19,12 +19,11 @@ export const registerSchema = z.object({
 
   password: z
   .string()
-  .min(8, "Minimum 8 characters")
-  .max(20, "Maximum 20 characters") 
-  .regex(/[A-Z]/, "One uppercase letter")
-  .regex(/[a-z]/, "One lowercase letter")
-  .regex(/[0-9]/, "One number")
-  .regex(/[^A-Za-z0-9]/, "One special character"),
+  .min(8, "The password must have (Minimum 8 characters, Maximum 20 characters, One uppercase letter, One lowercase letter, One number)")
+  .max(20, "The password must have (Minimum 8 characters, Maximum 20 characters, One uppercase letter, One lowercase letter, One number)") 
+  .regex(/[A-Z]/, "The password must have (Minimum 8 characters, Maximum 20 characters, One uppercase letter, One lowercase letter, One number)")
+  .regex(/[a-z]/, "The password must have (Minimum 8 characters, Maximum 20 characters, One uppercase letter, One lowercase letter, One number)")
+  .regex(/[0-9]/, "The password must have (Minimum 8 characters, Maximum 20 characters, One uppercase letter, One lowercase letter, One number)"),
     
   confirmPassword: z.string().min(1, "Please confirm your password"),
 }).refine((data) => data.password === data.confirmPassword, {
