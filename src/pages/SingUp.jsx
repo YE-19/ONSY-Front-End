@@ -124,7 +124,7 @@ const SignUp = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#264444e5] transition-all duration-300 ease-in-out"
                 >
                   {showPassword ? "Hide" : "Show"} 
                 </button>
@@ -142,7 +142,7 @@ const SignUp = () => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer hover:text-[#264444e5] transition-all duration-300 ease-in-out"
                 >
                   {showConfirmPassword ? "Hide" : "Show"}
                 </button>
