@@ -15,6 +15,8 @@ import ResetPassword from './pages/ResetPassword'
 import Dashboard from './pages/Dashboard'
 import SpeakChatBot from './pages/SpeakChatBot'
 import EMotiv from './pages/EMotiv'
+import MoodT from './pages/MoodT'
+import AiChat from './pages/AiChat'
 
 function App() {
 
@@ -36,6 +38,8 @@ function App() {
         <Route path='/Dashboard' element={<ProtectedRoute> <Dashboard /> </ProtectedRoute>  } />
         <Route path='/Speak' element={<ProtectedRoute> <SpeakChatBot /> </ProtectedRoute>  } />
         <Route path='/EMotiv' element={<ProtectedRoute> <EMotiv /> </ProtectedRoute>  } />
+        <Route path='/Mood' element={<ProtectedRoute> <MoodT /> </ProtectedRoute>  } />
+        <Route path='/AiChat' element={<ProtectedRoute> <AiChat /> </ProtectedRoute>  } />
       </Routes>
       </HeroUIProvider>
     </>

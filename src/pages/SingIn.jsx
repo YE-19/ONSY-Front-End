@@ -62,67 +62,73 @@ const SingIn = () => {
 
   return (
     <>
-      <section style={{ backgroundImage: `url(${myImage})` }} className="bg-cover bg-center h-300 py-40">
+      {/* 1. السكشن: h-auto للموبايل و lg:h-300 للديسك توب، py-20 للموبايل و lg:py-40 للديسك توب */}
+      <section style={{ backgroundImage: `url(${myImage})` }} className="bg-cover bg-center h-auto lg:h-300 py-20 lg:py-40 px-4 lg:px-0">
         <div>
           <form
             onSubmit={handleSubmit(onSubmitForm)}
-            className="shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-6 py-12 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold w-147 m-auto" 
+            className="shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-6 py-10 lg:py-12 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold w-full max-w-147 lg:w-147 m-auto" 
             style={{ backgroundImage: `url(${myImage})` }}
           >
-            <div className='text-[#147E8F] font-labrada text-[64px] mx-10 text-center'>
+            <div className='text-[#147E8F] font-labrada text-5xl lg:text-[64px] lg:mx-10 mx-10 text-center'>
               ONSY
             </div>
-            <div className='mb-8'>
-              <h1 className="text-[32px] font-bold mt-0 text-black"> Welcome back </h1>
-              <p className='text-[#5F5F5F] font-semibold text-xl mb-2'>Continue your mental wellness journey</p>
+            <div className='mb-6 lg:mb-8 mt-4 text-center lg:text-left'>
+              <h1 className="text-2xl lg:text-[32px] font-bold mt-0 text-black"> Welcome back </h1>
+              <p className='text-[#5F5F5F] font-semibold text-lg lg:text-xl mb-2'>Continue your mental wellness journey</p>
             </div>
             
-            <div className='flex flex-col gap-2 px-19 font-semibold'>
-              <Label htmlFor='email' className='mb-1 font-semibold'>Email address</Label>
-              <Input 
-                {...register("email")} 
-                type="email" 
-                className={`p-3 h-14 w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
-                placeholder='your@email.com' 
-              />
-              {errors.email && <p className="text-red-900">{errors.email.message}</p>}
 
-              <div className="relative w-96"> 
-                <Label htmlFor='password' title='password' className='mb-1 font-semibold'>password</Label>
+            <div className='flex flex-col gap-2 px-0 lg:px-19 font-semibold items-center lg:items-start'>
+              <div className='w-full lg:w-96'>
+                <Label htmlFor='email' className='mb-1 font-semibold block'>Email address</Label>
+                <Input 
+                  {...register("email")} 
+                  type="email" 
+                  className={`p-3 h-14 w-full lg:w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
+                  placeholder='your@email.com' 
+                />
+                {errors.email && <p className="text-red-900 text-sm mt-1">{errors.email.message}</p>}
+              </div>
+
+              <div className="relative w-full lg:w-96"> 
+                <Label htmlFor='password' title='password' className='mb-1 font-semibold block'>password</Label>
                 <Input 
                   {...register("password")} 
                   type={showPassword ? "text" : "password"} 
-                  className={`p-3 h-14 w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
+                  className={`p-3 h-14 w-full lg:w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
                   placeholder='********' 
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 text-gray-500 cursor-pointer hover:text-[#264444e5] transition-all duration-300 ease-in-out"
+                  className="absolute right-3 top-11 text-gray-500 cursor-pointer hover:text-[#264444e5] transition-all duration-300 ease-in-out"
                 >
                   {showPassword ? "Hide" : "Show"} 
                 </button>
+                {errors.password && <p className="text-red-900 text-sm mt-1">{errors.password.message}</p>}
               </div>
-              {errors.password && <p className="text-red-900">{errors.password.message}</p>}
 
-              <p onClick={() => navigate("/ForgetP")} className='text-end cursor-pointer text-onsy-secondary -mt-2.5 mb-6 underline underline-offset-4 hover:text-[#264444e5] transition-all duration-300 ease-in-out'>Forgot password?</p>
+              <div className='w-full lg:w-96'>
+                <p onClick={() => navigate("/ForgetP")} className='text-end cursor-pointer text-onsy-secondary mt-1 mb-6 underline underline-offset-4 hover:text-[#264444e5] transition-all duration-300 ease-in-out'>Forgot password?</p>
+              </div>
               
               <Button 
                 type="submit" 
                 isLoading={isSubmitting} 
                 disabled={isSubmitting}
-                className={`bg-[#036464E5] h-14 w-96 rounded-[10px] py-6 hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5] transition-all duration-300 ease-in-out ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`bg-[#036464E5] h-14 w-full lg:w-96 rounded-[10px] py-6 text-white hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5] transition-all duration-300 ease-in-out ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >           
                 {isSubmitting ? "Loading..." : "Log in"}
               </Button>
               
-              <div className='flex gap-1 items-center m-auto'>
-                <div className='h-px w-28 bg-onsy-secondary'></div>
-                <p className='text-[#111111] font-normal text-center my-3 text-[16px]'>Or sign up with</p>
-                <div className='h-px w-28 bg-onsy-secondary'></div>
+              <div className='flex gap-1 items-center m-auto w-full justify-center'>
+                <div className='h-px w-16 lg:w-28 bg-onsy-secondary'></div>
+                <p className='text-[#111111] font-normal text-center my-3 text-sm lg:text-[16px] whitespace-nowrap'>Or sign up with</p>
+                <div className='h-px w-16 lg:w-28 bg-onsy-secondary'></div>
               </div>
 
-              <div className='p-3 px-5 h-14 w-96 rounded-[10px] bg-[#FFFFFF] flex justify-between items-center cursor-pointer hover:shadow-[0_0_15px_3px_#FFFFFF80] transition-all duration-300 ease-in-out'>
+              <div className='p-3 px-5 h-14 w-full lg:w-96 rounded-[10px] bg-[#FFFFFF] flex justify-between items-center cursor-pointer hover:shadow-[0_0_15px_3px_#FFFFFF80] transition-all duration-300 ease-in-out'>
                 <div className='flex items-center gap-2'>
                   <img src={google} alt="google" />
                   <p className='font-semibold text-[#5F5F5F]'>Sign up with Google</p>

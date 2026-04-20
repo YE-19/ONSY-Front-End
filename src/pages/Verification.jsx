@@ -62,7 +62,7 @@ export default function Verification() {
   };
 
   return (
-    <section style={{ backgroundImage: `url(${myImage})` }} className="h-screen bg-center bg-cover flex items-center justify-center relative">
+    <section style={{ backgroundImage: `url(${myImage})` }} className="min-h-screen bg-center bg-cover flex items-center justify-center relative py-10 lg:py-0">
       
       {isSuccess && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-appearance-in">
@@ -74,16 +74,16 @@ export default function Verification() {
         </div>
       )}
 
-      <div className='w-full'>
+      <div className='w-full pt-20 px-4 lg:px-0'>
         <form 
           onSubmit={handleVerify}
-          className="w-145 mx-auto shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-6 mt-1 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold content-center py-20 bg-white/10 backdrop-blur-md" 
+          className="w-full max-w-145 lg:w-145 mx-auto shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-4 lg:px-6 mt-1 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold content-center py-12 lg:py-20 bg-white/10 backdrop-blur-md" 
           style={{ backgroundImage: `url(${myImage})` }}
         >
           <div className="mb-6">
-            <h1 className="text-[40px] font-bold mt-0 text-black text-center">OTP verification</h1>
-            <p className='text-gray-600 text-center font-normal text-[24px] mb-2'>
-              Enter the code from the email we sent <br /> to <span className='text-black font-semibold'>{email}</span>
+            <h1 className="text-3xl lg:text-[40px] font-bold mt-0 text-black text-center">OTP verification</h1>
+            <p className='text-gray-600 text-center font-normal text-lg lg:text-[24px] mb-2 px-2'>
+              Enter the code from the email we sent <br className='hidden lg:block' /> to <span className='text-black font-semibold break-all'>{email}</span>
             </p>
           </div>
 
@@ -93,12 +93,12 @@ export default function Verification() {
             onChange={setOtp}
             numInputs={4}
             inputType="text" 
-            renderSeparator={<span className="w-4"></span>} 
+            renderSeparator={<span className="w-2 lg:w-4"></span>} 
             renderInput={(props) => (
               <input
                 {...props}
                 type="text"
-                className="w-20! h-20! text-3xl font-bold text-white bg-[#036464] rounded-[20px] outline-none focus:ring-4 focus:ring-cyan-500  transition-all shadow-lg"
+                className="w-14! h-14! lg:w-20! lg:h-20! text-2xl lg:text-3xl font-bold text-white bg-[#036464] rounded-[15px] lg:rounded-[20px] outline-none focus:ring-4 focus:ring-cyan-500 transition-all shadow-lg"
               />
             )}
           />
@@ -108,12 +108,12 @@ export default function Verification() {
             type="submit" 
             isLoading={isLoading}
             disabled={isSuccess}
-            className="bg-[#036464E5] w-96 h-14 mx-auto rounded-xl py-6 mt-8 text-white text-xl hover:bg-[#264444e5] transition-all duration-300 ease-in-out font-bold"
+            className="bg-[#036464E5] w-full lg:w-96 h-14 mx-auto rounded-xl py-6 mt-8 text-white text-lg lg:text-xl hover:bg-[#264444e5] transition-all duration-300 ease-in-out font-bold"
           >
             {isLoading ? "Checking..." : "Verify & Login"}
           </Button>
 
-          <p className='text-gray-500 text-center mt-6'>
+          <p className='text-gray-500 text-center mt-6 text-sm lg:text-base'>
             Didn't receive code?{" "}
             <button 
               type="button" 

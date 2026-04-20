@@ -42,26 +42,30 @@ const ForgetP = () => {
   }
 
   return (
-    <section style={{ backgroundImage: `url(${myImage})` }} className="bg-cover bg-center h-screen flex flex-col justify-center">
-      <div className='px-40'>
-        <div className="max-width-100 md:max-w-2/3 lg:max-w-1/2 mx-auto">
+    <section style={{ backgroundImage: `url(${myImage})` }} className="bg-cover bg-center min-h-screen flex flex-col justify-center py-10 lg:py-0">
+
+      <div className='px-4 lg:px-40'>
+        <div className="w-full max-w-full lg:max-w-1/2 mx-auto">
+          
           <form
             onSubmit={handleSubmit(onSubmitForm)}
-            className="shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-6 py-12 mt-1 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold" 
+            className="shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-4 lg:px-6 py-12 mt-1 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold" 
             style={{ backgroundImage: `url(${myImage})` }} 
           >
-            <div className='text-[#147E8F] font-labrada text-[64px] mx-10 text-center'> ONSY </div>
-            <div>
-              <h1 className="text-[32px] font-bold mt-0 text-black"> Forgot your password </h1>
-              <p className='text-[#5F5F5F] font-semibold text-xl mb-2'>Please enter your email to reset the password</p>
+            <div className='text-[#147E8F] font-labrada text-5xl lg:text-[64px] lg:mx-10 text-center'> ONSY </div>
+            
+            <div className="text-center lg:text-left">
+              <h1 className="text-2xl lg:text-[32px] font-bold mt-0 text-black"> Forgot your password </h1>
+              <p className='text-[#5F5F5F] font-semibold text-lg lg:text-xl mb-2'>Please enter your email to reset the password</p>
             </div>
-            <div className='flex flex-col gap-2 px-19 font-semibold pb-10'>
+
+            <div className='flex flex-col gap-2 px-2 lg:px-19 font-semibold pb-10'>
                 <Label htmlFor='email' className='font-semibold'>Email address</Label>
                 <Input 
                   {...register("email")} 
                   type="email" 
                   isInvalid={!!errors.email}
-                  className={`p-3 h-14 w-96 rounded-[10px] text-[16px] font-semibold border border-[#147E8F]`} 
+                  className={`p-3 h-14 w-full lg:w-96 rounded-[10px] text-[16px] font-semibold border border-[#147E8F]`} 
                   placeholder='your@email.com' 
                 />
                 {errors.email && <p className="text-red-900">{errors.email.message}</p>}
@@ -70,12 +74,13 @@ const ForgetP = () => {
                     type="submit" 
                     isLoading={isSubmitting} 
                     disabled={isSubmitting}
-                    className={`bg-[#036464E5] h-14 w-96 rounded-[10px] py-6 hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5] transition-all duration-300 ease-in-out text-white ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    className={`bg-[#036464E5] h-14 w-full lg:w-96 rounded-[10px] py-6 hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5] transition-all duration-300 ease-in-out text-white ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
                 >           
                     {isSubmitting ? "Processing..." : "Reset Password"}
                 </Button>
             </div>
           </form>
+
         </div>
       </div>
     </section>
