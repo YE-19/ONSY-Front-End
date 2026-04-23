@@ -127,8 +127,8 @@ export default function AiChat() {
   const [activeConvId, setActiveConvId]     = useState(null);
   const [messages, setMessages]             = useState([]);
   const [input, setInput]                   = useState("");
-  const [loading, setLoading]               = useState(false);   // AI typing
-  const [convLoading, setConvLoading]       = useState(false);   // fetching messages
+  const [loading, setLoading]               = useState(false);  
+  const [convLoading, setConvLoading]       = useState(false);  
   const [sidebarOpen, setSidebarOpen]       = useState(true);
   const [error, setError]                   = useState(null);
 
@@ -485,7 +485,6 @@ const s = {
   root: {
     display: "flex",
     height: "100vh",
-    marginTop: "80px",
     fontFamily: "'DM Sans', sans-serif",
     background: "#f7f8fa",
     overflow: "hidden",

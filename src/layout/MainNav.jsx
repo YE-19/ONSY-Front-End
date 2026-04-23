@@ -7,6 +7,7 @@ const MainNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  const isSpeakPage = location.pathname === '/Speak';
 
   const navLinkBase = "rounded-3xl px-3 transition-all duration-300 ease-in-out border-2 hover:scale-120 hover:border-onsy-primary focus:outline-none";
   const navLinkActive = "border-[#5AA8B1] "; 
@@ -22,7 +23,7 @@ const MainNav = () => {
   };
 
   return (
-    <section className='w-full absolute top-0 px-6 lg:px-24 h-20 flex justify-between items-center backdrop-blur z-50'>
+    <section className={`w-full absolute top-0 px-6 lg:px-24 h-20 flex justify-between items-center backdrop-blur z-50 ${isSpeakPage ? 'hidden h-0' : ''}`}>
       
       {/* 1. Logo (On the Left) */}
       <div 
@@ -44,7 +45,7 @@ const MainNav = () => {
       {/* 3. Desktop Navigation Links (Hidden on Mobile) */}
       <nav className='links font-medium hidden lg:flex gap-4 items-center'>
         <NavLink to="/" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Home </NavLink>
-        <NavLink to="/AiCha" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Speak with <span className='text-cyan-800'> ONSY</span> </NavLink>
+        <NavLink to="/Speak" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Speak with <span className='text-cyan-800'> ONSY</span> </NavLink>
         <NavLink to="/Dashboard" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Dashboard </NavLink>
         <NavLink to="/EMotiv" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> E-Motiv </NavLink>
         <NavLink to="/Moo" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Mood </NavLink>
@@ -69,7 +70,7 @@ const MainNav = () => {
         ${isOpen ? 'max-h-125 opacity-100' : 'max-h-0 opacity-0'}
       `}>
         <NavLink to="/" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Home </NavLink>
-        <NavLink to="/AiCha" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Speak with ONSY </NavLink>
+        <NavLink to="/Speak" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Speak with ONSY </NavLink>
         <NavLink to="/Dashboard" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Dashboard </NavLink>
         <NavLink to="/EMotiv" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> E-Motiv </NavLink>
         <NavLink to="/Moo" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Mood </NavLink>

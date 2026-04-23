@@ -39,7 +39,7 @@ function App() {
         <Route path='/Speak' element={<ProtectedRoute> <SpeakChatBot /> </ProtectedRoute>  } />
         <Route path='/EMotiv' element={<ProtectedRoute> <EMotiv /> </ProtectedRoute>  } />
         <Route path='/Mood' element={<ProtectedRoute> <MoodT /> </ProtectedRoute>  } />
-        <Route path='/AiChat' element={<ProtectedRoute> <AiChat /> </ProtectedRoute>  } />
+        {/* <Route path='/Speak' element={<ProtectedRoute> <AiChat /> </ProtectedRoute>  } /> */}
       </Routes>
       </HeroUIProvider>
     </>

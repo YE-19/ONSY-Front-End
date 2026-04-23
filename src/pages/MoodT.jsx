@@ -60,11 +60,10 @@ export default function MoodTracker({ onClose, onSubmit }) {
           What is your mood for today?
         </h2>
 
-        {/* Mood Display Section */}
         <div className="flex flex-col items-center gap-1.5 mb-8">
           {submitted ? (
             <>
-              <div className="w-[88px] h-[88px] rounded-full bg-[#E1F5EE] border-2 border-[#9FE1CB] flex items-center justify-center text-[36px] text-[#1D9E75] font-bold mb-1">
+              <div className="w-22 h-22 rounded-full bg-[#E1F5EE] border-2 border-[#9FE1CB] flex items-center justify-center text-[36px] text-[#1D9E75] font-bold mb-1">
                 ✓
               </div>
               <p className="text-[22px] font-bold" style={{ color: mood.color }}>Mood logged!</p>
@@ -73,7 +72,7 @@ export default function MoodTracker({ onClose, onSubmit }) {
           ) : (
             <>
               <div
-                className="w-[88px] h-[88px] rounded-full flex items-center justify-center mb-1 transition-all duration-300"
+                className="w-22 h-22 rounded-full flex items-center justify-center mb-1 transition-all duration-300"
                 style={{
                   background: mood.color + "18",
                   border: `2px solid ${mood.color}33`,
