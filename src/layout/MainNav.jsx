@@ -23,7 +23,7 @@ const MainNav = () => {
   };
 
   return (
-    <section className={`w-full absolute top-0 px-6 lg:px-24 h-20 flex justify-between items-center backdrop-blur z-50 ${isSpeakPage ? 'hidden h-0' : ''}`}>
+    <section className={`w-full absolute top-0 px-6 lg:px-24 h-20 flex justify-between items-center backdrop-blur z-50 border-b border-b-[#d4c7c7a9] ${isSpeakPage ? 'hidden h-0' : ''}`}>
       
       {/* 1. Logo (On the Left) */}
       <div 
@@ -48,7 +48,7 @@ const MainNav = () => {
         <NavLink to="/Speak" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Speak with <span className='text-cyan-800'> ONSY</span> </NavLink>
         <NavLink to="/Dashboard" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Dashboard </NavLink>
         <NavLink to="/EMotiv" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> E-Motiv </NavLink>
-        <NavLink to="/Moo" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Mood </NavLink>
+        <NavLink to="/Mood" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Mood </NavLink>
       </nav>
 
       {/* 4. Auth Button (On the Right) */}
@@ -73,7 +73,7 @@ const MainNav = () => {
         <NavLink to="/Speak" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Speak with ONSY </NavLink>
         <NavLink to="/Dashboard" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Dashboard </NavLink>
         <NavLink to="/EMotiv" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> E-Motiv </NavLink>
-        <NavLink to="/Moo" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Mood </NavLink>
+        <NavLink to="/Mood" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Mood </NavLink>
       </div>
 
     </section>

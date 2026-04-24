@@ -10,6 +10,7 @@ export const registerUser = async (userData) => {
   }
 };
 
+
 export const googleSignup = async (idToken) => {
   try {
     const response = await axiosInstance.post('/users/signup/gmail', { idToken });

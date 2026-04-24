@@ -33,40 +33,40 @@ const SignUp = () => {
     mode: 'onBlur'
   });
 
-  const handleGoogleResponse = async (response) => {
-    try {
-      const result = await googleSignup(response.credential);
-      toast.success("Signed up with Google successfully!");
-      console.log("Google Success:", result);
-      navigate('/dashboard'); 
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || "Google sign up failed";
-      toast.error(errorMessage);
-    }
-  };
+  // const handleGoogleResponse = async (response) => {
+  //   try {
+  //     const result = await googleSignup(response.credential);
+  //     toast.success("Signed up with Google successfully!");
+  //     console.log("Google Success:", result);
+  //     navigate('/dashboard'); 
+  //   } catch (err) {
+  //     const errorMessage = err.response?.data?.message || "Google sign up failed";
+  //     toast.error(errorMessage);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: "367829066840-ip9nn34hpd5n5vbuobvlo8l2v4ihmhg8.apps.googleusercontent.com",
-        callback: handleGoogleResponse,
-        locale: "en",
-      });
+  // useEffect(() => {
+  //   if (window.google) {
+  //     window.google.accounts.id.initialize({
+  //       client_id: "367829066840-ip9nn34hpd5n5vbuobvlo8l2v4ihmhg8.apps.googleusercontent.com",
+  //       callback: handleGoogleResponse,
+  //       locale: "en",
+  //     });
 
-      window.google.accounts.id.renderButton(
-        googleBtnRef.current,
-        { 
-          theme: 'outline', 
-          size: 'large', 
-          width: window.innerWidth < 1024 ? window.innerWidth - 80 : "384",  
-          height: "56", 
-          shape: "rectangular",
-          text: "signup_with", 
-          logo_alignment: "left"
-        }
-      );
-    }
-  }, []);
+  //     window.google.accounts.id.renderButton(
+  //       googleBtnRef.current,
+  //       { 
+  //         theme: 'outline', 
+  //         size: 'large', 
+  //         width: window.innerWidth < 1024 ? window.innerWidth - 80 : "384",  
+  //         height: "56", 
+  //         shape: "rectangular",
+  //         text: "signup_with", 
+  //         logo_alignment: "left"
+  //       }
+  //     );
+  //   }
+  // }, []);
 
   const calculateAge = (dob) => {
     const birthday = new Date(dob);
