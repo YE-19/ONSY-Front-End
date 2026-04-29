@@ -6,8 +6,9 @@ const MainNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === '/' || location.pathname === '/Mood';
   const isSpeakPage = location.pathname === '/Speak';
+  const isMoodPage = location.pathname === '/Mood';
 
   const navLinkBase = "rounded-3xl px-3 transition-all duration-300 ease-in-out border-2 hover:scale-120 hover:border-onsy-primary focus:outline-none";
   const navLinkActive = "border-[#5AA8B1] "; 
@@ -27,7 +28,8 @@ const MainNav = () => {
       
       {/* 1. Logo (On the Left) */}
       <div 
-        className='text-[#147E8F] font-labrada text-[30px] lg:text-[48px] font-semibold cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 z-50'
+        className={` text-[#147E8F] font-labrada text-[30px] lg:text-[48px] font-semibold cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 z-50 
+          ${isMoodPage ? 'text-white' : 'text-[#147E8F] '}`}
         onClick={() => { navigate("/"); setIsOpen(false); }}
       >
         ONSY
@@ -36,9 +38,9 @@ const MainNav = () => {
       {/* 2. Hamburger Button (In the Absolute Center) */}
       <div className='lg:hidden absolute left-1/2 -translate-x-1/2 z-50'>
         <button onClick={() => setIsOpen(!isOpen)} className='flex flex-col gap-1.5 focus:outline-none p-2'>
-          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2.5' : ''}`}></span>
-          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2.5' : ''}`}></span>
+          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2.5' : ''} ${isMoodPage ? 'bg-white' : ''}`}></span>
+          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? 'opacity-0' : ''} ${isMoodPage ? 'bg-white' : ''}`}></span>
+          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2.5' : ''} ${isMoodPage ? 'bg-white' : ''}`}></span>
         </button>
       </div>
 
