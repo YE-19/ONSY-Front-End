@@ -9,8 +9,8 @@ const Hero5 = () => {
 
   return (
       <section className='w-full h-auto py-20 lg:py-0 lg:h-80 bg-[#147E8F] relative overflow-hidden flex items-center justify-center lg:content-center '>
-        <img src={bgr} alt="" className=' absolute left-0'/>
-        <img src={bgl} alt="" className=' absolute right-0'/>
+        <img src={bgr} alt="" className=' absolute left-0 hidden md:block'/>
+        <img src={bgl} alt="" className=' absolute right-0 hidden md:block'/>
         <div className='px-6 lg:px-60 flex flex-col items-center gap-10 lg:gap-16 z-10'>
           <h2 className='text-3xl lg:text-5xl font-bold font-labrada text-[#FEFDFE] text-center leading-tight'>
             You're not alone. Let's talk With <span className='text-4xl lg:text-6xl text-[#111111]'>ONSY.</span> 
