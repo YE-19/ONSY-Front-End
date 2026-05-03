@@ -1,4 +1,5 @@
 import React from 'react'
+import { motion } from 'framer-motion'
 import {
   LineChart,
   Line,
@@ -9,6 +10,26 @@ import {
   ReferenceDot,
   ResponsiveContainer,
 } from 'recharts'
+
+// ── Framer Motion Variants ────────────────────────────────────────────────────
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { duration: 0.8, ease: "easeOut" } 
+  },
+}
 
 // ── SVG Circular Gauge — scales via CSS wrapper ───────────────────────────────
 const CircularGauge = ({ value = 75 }) => {
@@ -50,15 +71,17 @@ const CircularGauge = ({ value = 75 }) => {
       <circle cx={cx} cy={cy} r={radius}
         fill="none" stroke="rgba(97,132,117,0.22)" strokeWidth={strokeWidth} />
 
-      {/* Filled progress arc */}
-      <circle cx={cx} cy={cy} r={radius}
+      {/* Filled progress arc (Animated via Framer Motion) */}
+      <motion.circle cx={cx} cy={cy} r={radius}
         fill="none"
         stroke="url(#gaugeGrad)"
         strokeWidth={strokeWidth}
-        strokeDasharray={`${filled} ${gap}`}
         strokeLinecap="butt"
         transform={`rotate(-90, ${cx}, ${cy})`}
         filter="url(#arcGlow)"
+        initial={{ strokeDasharray: `0 ${circumference}` }}
+        animate={{ strokeDasharray: `${filled} ${gap}` }}
+        transition={{ duration: 2, ease: "easeOut", delay: 0.5 }}
       />
 
       {/* Inner circle depth */}
@@ -67,12 +90,16 @@ const CircularGauge = ({ value = 75 }) => {
       <circle cx={cx} cy={cy} r={radius - strokeWidth / 2 - 2}
         fill="none" stroke="rgba(97,132,117,0.2)" strokeWidth={1} />
 
-      {/* Center text */}
-      <text x={cx} y={cy + 11} textAnchor="middle"
+      {/* Center text (Fades in after the gauge fills) */}
+      <motion.text x={cx} y={cy + 11} textAnchor="middle"
         fill="#2d7d8a" fontSize={32} fontWeight={800}
-        fontFamily="inherit" letterSpacing="-1">
+        fontFamily="inherit" letterSpacing="-1"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 2 }}
+      >
         {value}%
-      </text>
+      </motion.text>
     </svg>
   )
 }
@@ -123,20 +150,25 @@ const BestDayLabel = ({ viewBox }) => {
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 const Dashboard = () => {
   return (
-    <section className="
-      py-24 px-5
-      sm:py-24 sm:px-10
-      lg:py-24 lg:px-30
-      flex flex-col lg:flex-row
-      lg:justify-between
-      gap-10 lg:gap-0
-    ">
+    <motion.section 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="
+        py-24 px-5
+        sm:py-24 sm:px-10
+        lg:py-24 lg:px-30
+        flex flex-col lg:flex-row
+        lg:justify-between
+        gap-10 lg:gap-0
+      "
+    >
 
       {/* ── Left Column ── */}
       <div className="flex flex-col gap-5 w-full lg:w-157">
 
         {/* Line Chart Card */}
-        <div className="
+        <motion.div variants={itemVariants} className="
           w-full lg:w-157
           h-64 sm:h-80 lg:h-101
           bg-[#147E8F3D] rounded-4xl
@@ -174,21 +206,31 @@ const Dashboard = () => {
               <Tooltip content={<MoodTooltip />}
                 cursor={{ stroke: 'rgba(20,126,143,0.3)', strokeWidth: 1 }} />
 
-              <Line type="monotone" dataKey="mood"
-                stroke="#0e6b78" strokeWidth={2.5} dot={false}
+              <Line 
+                type="monotone" 
+                dataKey="mood"
+                stroke="#0e6b78" 
+                strokeWidth={2.5} 
+                dot={false}
                 activeDot={{ r: 5, fill: '#0e6b78', stroke: 'white', strokeWidth: 2 }}
+                // إضافة الأنيميشن لخط الرسم الخاص بالريتشارتس
+                isAnimationActive={true}
+                animationDuration={2500}
+                animationEasing="ease-out"
+                animationBegin={400}
               />
 
               <ReferenceDot x={3} y={3.8} r={5}
                 fill="#0e6b78" stroke="white" strokeWidth={2}
                 label={<BestDayLabel />}
+                isFront={true}
               />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </motion.div>
 
         {/* Weekly Mood Text */}
-        <div className="w-full lg:w-157 flex flex-col gap-4">
+        <motion.div variants={itemVariants} className="w-full lg:w-157 flex flex-col gap-4">
           <h2 className="font-bold text-xl sm:text-2xl text-[#111111]">
             Weekly Mood Analysis
           </h2>
@@ -210,14 +252,14 @@ const Dashboard = () => {
               the "Best Day" during this period.
             </li>
           </ul>
-        </div>
+        </motion.div>
       </div>
 
       {/* ── Right Column ── */}
       <div className="flex flex-col gap-5 w-full lg:w-157">
 
         {/* Gauge Card */}
-        <div className="
+        <motion.div variants={itemVariants} className="
           w-full lg:w-157
           h-64 sm:h-80 lg:h-101
           bg-[#61847547] rounded-4xl
@@ -232,10 +274,10 @@ const Dashboard = () => {
           <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-[230px] lg:h-[230px]">
             <CircularGauge value={75} />
           </div>
-        </div>
+        </motion.div>
 
         {/* Overall Mood Text */}
-        <div className="w-full lg:w-157 flex flex-col gap-4">
+        <motion.div variants={itemVariants} className="w-full lg:w-157 flex flex-col gap-4">
           <h2 className="font-bold text-xl sm:text-2xl text-[#111111]">
             Overall Mood Summary
           </h2>
@@ -258,10 +300,10 @@ const Dashboard = () => {
               <span className="text-[#4a9e6b]">"Very Good"</span> on a standard emotional scale.
             </li>
           </ul>
-        </div>
+        </motion.div>
       </div>
 
-    </section>
+    </motion.section>
   )
 }
 
