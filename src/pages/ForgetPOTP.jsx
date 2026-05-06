@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import myImage from '../assets/mint-backg.jpg'
 import { Button } from "@heroui/react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -38,14 +37,12 @@ export default function ForgetPOTP() {
       toast.error("Please enter the 4-digit code");
       return;
     }
-
     setIsLoading(true);
     try {
       await ForgetPasswordOtp({ email, otp });
       setIsSuccess(true); 
       toast.success("OTP Verified Successfully");
       navigate('/ResetP', { state: { email, otp } });
-
     } catch (err) {
       const msg = err.response?.data?.message || "Invalid OTP code";
       toast.error(msg);
@@ -68,54 +65,53 @@ export default function ForgetPOTP() {
   };
 
   return (
-    <section style={{ backgroundImage: `url(${myImage})` }} className="min-h-screen bg-center bg-cover flex items-center justify-center relative py-10 lg:py-0">
-      
-      <div className='w-full px-4 lg:px-0'>
+    <section className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20 px-4 py-24 transition-colors duration-300">
+      <div className="w-full max-w-lg">
         <form 
           onSubmit={handleVerify}
-          className="w-full max-w-145 lg:w-145 mx-auto shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-4 lg:px-6 mt-1 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold content-center py-12 lg:py-20 bg-white/10 backdrop-blur-md" 
-          style={{ backgroundImage: `url(${myImage})` }}
+          className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl px-8 py-12 shadow-[0_8px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] border border-slate-100 dark:border-slate-700/60 flex flex-col gap-8 transition-all duration-300"
         >
-          <div className="mb-6">
-            <h1 className="text-3xl lg:text-[40px] font-bold mt-0 text-black text-center">OTP verification</h1>
-            <p className='text-gray-600 text-center font-normal text-lg lg:text-[24px] mb-2 px-2'>
-              Enter the code from the email we sent <br className='hidden lg:block' /> to <span className='text-black font-semibold break-all'>{email || "your email"}</span>
+          <div className="text-center">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">OTP verification</h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-base sm:text-lg mt-3 px-2">
+              Enter the code from the email we sent to{' '}
+              <span className="text-slate-800 dark:text-slate-200 font-semibold break-all">{email || "your email"}</span>
             </p>
           </div>
 
           <div className="flex justify-center">
-          <OtpInput
-            value={otp}
-            onChange={setOtp}
-            numInputs={4}
-            inputType="text" 
-            renderSeparator={<span className="w-2 lg:w-4"></span>} 
-            renderInput={(props) => (
-              <input
-                {...props}
-                type="text"
-                className="w-14! h-14! lg:w-20! lg:h-20! text-2xl lg:text-3xl font-bold text-white bg-[#036464] rounded-[15px] lg:rounded-[20px] outline-none focus:ring-4 focus:ring-cyan-500 text-center transition-all shadow-lg"
-              />
-            )}
-          />
+            <OtpInput
+              value={otp}
+              onChange={setOtp}
+              numInputs={4}
+              inputType="text" 
+              renderSeparator={<span className="w-3 lg:w-4" />} 
+              renderInput={(props) => (
+                <input
+                  {...props}
+                  type="text"
+                  className="w-14! h-14! lg:w-20! lg:h-20! text-2xl lg:text-3xl font-bold text-white bg-[#036464] dark:bg-teal-700 rounded-2xl outline-none focus:ring-4 focus:ring-teal-400 dark:focus:ring-teal-300 text-center transition-all shadow-lg"
+                />
+              )}
+            />
           </div>
 
           <Button 
             type="submit" 
             isLoading={isLoading}
             disabled={isSuccess || isLoading}
-            className="bg-[#036464E5] w-full lg:w-96 h-14 mx-auto rounded-xl py-6 mt-8 text-white text-lg lg:text-xl hover:bg-[#264444e5] transition-all duration-300 ease-in-out font-bold"
+            className="w-full h-14 rounded-xl bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white font-bold text-base shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 hover:-translate-y-0.5 transition-all duration-300"
           >
             {isLoading ? "Checking..." : isSuccess ? "Verified!" : "Verify"}
           </Button>
 
-          <p className='text-gray-500 text-center mt-6 text-sm lg:text-base'>
+          <p className="text-slate-500 dark:text-slate-400 text-center text-sm">
             Didn't receive code?{" "}
             <button 
               type="button" 
               onClick={handleResend}
               disabled={timer > 0 || isResending}
-              className={`font-bold underline ml-1 transition-all ${timer > 0 || isResending ? 'text-gray-400 no-underline cursor-not-allowed' : 'text-[#036464E5] cursor-pointer hover:text-[#264444e5]'}`}
+              className={`font-bold underline ml-1 transition-all ${timer > 0 || isResending ? 'text-slate-400 dark:text-slate-600 no-underline cursor-not-allowed' : 'text-teal-600 dark:text-teal-400 cursor-pointer hover:text-teal-800 dark:hover:text-teal-300'}`}
             >
               {isResending ? "Sending..." : timer > 0 ? `Resend in ${timer}s` : "Resend Now"}
             </button>

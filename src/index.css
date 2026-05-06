@@ -1,40 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Syne:wght@600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Syne:wght@600;700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Gabarito:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "@heroui/styles";
 
+/* ── Keyframe Animations ───────────────────────────────────────────────── */
 @keyframes flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-.animate-text-flow {
-  background-size: 300% auto;
-  animation: flow 5s ease infinite;
-}
-
-@theme {
-  /* Fonts */
-  --font-labrada: "Labrada", serif;
-  --font-gabarito: "Gabarito", sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-
-  /* Colors */
-  --color-onsy-light: #E4EAED;
-  --color-onsy-primary: #5AA8B1;
-  --color-onsy-secondary: #4B676C;
-
-  /* Backgrounds */
-  --background-image-hero: url('/src/assets/hero1.png');
-}
-
-@layer base {
-  html, body {
-    font-family: var(--font-sans);
-  }
-}
-
 
 @keyframes blink {
   0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
@@ -50,29 +23,84 @@
   to   { opacity: 1; transform: translateY(0);    }
 }
 
-/* Scrollbar */
-.messages-area::-webkit-scrollbar { width: 4px; }
-.messages-area::-webkit-scrollbar-track { background: transparent; }
-.messages-area::-webkit-scrollbar-thumb { background: #d0ece4; border-radius: 4px; }
+/* ── Tailwind Theme Tokens ─────────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-labrada: "Labrada", serif;
+  --font-gabarito: "Gabarito", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 
-/* Input focus ring */
-.input-box:focus-within {
-  border-color: #1D9E75 !important;
-  box-shadow: 0 0 0 3px rgba(29,158,117,0.12);
+  /* Brand Colors */
+  --color-primary:   #147E8F;
+  --color-secondary: #036464;
+
+  /* Legacy tokens (kept for compatibility) */
+  --color-onsy-light:     #E4EAED;
+  --color-onsy-primary:   #147E8F;
+  --color-onsy-secondary: #4B676C;
 }
 
-/* Suggestion chip hover */
+/* ── Base Layer ────────────────────────────────────────────────────────── */
+@layer base {
+  html, body {
+    font-family: var(--font-sans);
+  }
+
+  /* Smooth dark mode transitions */
+  *, *::before, *::after {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
+  }
+
+  /* Prevent transition on initial load */
+  .no-transition * {
+    transition: none !important;
+  }
+}
+
+/* ── Utility Classes ───────────────────────────────────────────────────── */
+.animate-text-flow {
+  background-size: 300% auto;
+  animation: flow 5s ease infinite;
+}
+
+/* ── Scrollbar Styling ─────────────────────────────────────────────────── */
+.messages-area::-webkit-scrollbar        { width: 4px; }
+.messages-area::-webkit-scrollbar-track  { background: transparent; }
+.messages-area::-webkit-scrollbar-thumb  { background: #d0ece4; border-radius: 4px; }
+
+.dark .messages-area::-webkit-scrollbar-thumb { background: #2d5c5c; }
+
+/* Thin scrollbar for sidebar */
+.conv-list::-webkit-scrollbar        { width: 3px; }
+.conv-list::-webkit-scrollbar-track  { background: transparent; }
+.conv-list::-webkit-scrollbar-thumb  { background: #e0e0e0; border-radius: 3px; }
+.dark .conv-list::-webkit-scrollbar-thumb { background: #374151; }
+
+/* ── AiChat Input Focus ────────────────────────────────────────────────── */
+.input-box:focus-within {
+  border-color: #147E8F !important;
+  box-shadow: 0 0 0 3px rgba(20, 126, 143, 0.12);
+}
+
+.dark .input-box:focus-within {
+  border-color: #5DCAA5 !important;
+  box-shadow: 0 0 0 3px rgba(93, 202, 165, 0.12);
+}
+
+/* ── Suggestion chip hover ─────────────────────────────────────────────── */
 .suggestion-chip:hover {
   background: #D4F0E7 !important;
-  border-color: #1D9E75 !important;
+  border-color: #147E8F !important;
 }
 
-/* New chat btn hover */
-.new-chat-btn:hover {
-  background: #D4F0E7 !important;
+.dark .suggestion-chip:hover {
+  background: #1a3d3a !important;
+  border-color: #5DCAA5 !important;
 }
 
-/* Send btn active */
+/* ── Send btn active ───────────────────────────────────────────────────── */
 .send-btn:active {
   transform: scale(0.95);
 }

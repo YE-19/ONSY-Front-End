@@ -1,7 +1,4 @@
 import { useState, useRef, useCallback } from "react";
-import bgl from "../assets/bg-1.png"
-import bgb from "../assets/bg-2.png"
-import bgr from "../assets/bg-3.png"
 import arrowl from "../assets/arrowl.png"
 import arrowr from "../assets/arrowr.png"
 import done from "../assets/done.png"
@@ -25,7 +22,7 @@ const MOODS = [
 export default function MoodTracker({ onClose, onSubmit }) {
   const [value, setValue] = useState(5);
   const [submitted, setSubmitted] = useState(false);
-  const [showMoodForm, setShowMoodForm] = useState (false);
+  const [showMoodForm, setShowMoodForm] = useState(false);
   const sliderRef = useRef(null);
 
   const mood = MOODS[value];
@@ -66,63 +63,66 @@ export default function MoodTracker({ onClose, onSubmit }) {
   return (
     <>
     {/* Main */}
-    <section className="bg-[#147E8F] h-screen relative overflow-hidden flex flex-col items-center content-center justify-center p-4 md:p-0">
-      <img src={bgl} alt="" className="hidden md:block absolute right-0 -bottom-8" />
-      <img src={bgr} alt="" className="hidden md:block absolute left-0 -bottom-8" />
-      {/* <img src={bgb} alt="" className="hidden md:block absolute  bottom-0" /> */}
-      
+    <section className="bg-gradient-to-br from-[#147E8F] via-teal-700 to-cyan-800 dark:from-teal-950 dark:via-slate-900 dark:to-slate-950 h-screen relative overflow-hidden flex flex-col items-center content-center justify-center p-4 md:p-0 transition-colors duration-300">
+      {/* Decorative ambient blobs — replace background images */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full bg-cyan-400/15 blur-3xl hidden md:block" />
+        <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-teal-300/15 blur-3xl hidden md:block" />
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle, #99f6e4 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+      </div>
+
       <div className="flex flex-col items-center gap-6 md:gap-10 w-full z-10">
-        <h2 className="text-6xl md:text-9xl text-[#FFFFFF] font-labrada font-semibold">Mood</h2>
-        <p className="font-semibold text-xl md:text-[32px] text-center px-2">
+        <h2 className="text-6xl md:text-9xl text-white font-labrada font-semibold drop-shadow-lg">Mood</h2>
+        <p className="font-semibold text-xl md:text-[32px] text-center px-2 text-white/90">
           Here you can submit, edit or delete your mood.
         </p>
         
-        <div className="w-[95%] max-w-200 md:w-200 h-auto min-h-62.5 md:h-65 rounded-3xl bg-[#D8D8D852] flex flex-col px-4 md:px-6 py-6 md:py-3 justify-around gap-6 md:gap-0">
+        <div className="w-[95%] max-w-3xl md:w-[800px] h-auto min-h-62.5 md:h-65 rounded-3xl bg-white/15 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 flex flex-col px-4 md:px-6 py-6 md:py-3 justify-around gap-6 md:gap-0 shadow-xl">
           <div className="flex gap-5 items-center justify-center">
-            <img src={arrowl} alt="" className="w-3.5 h-6 cursor-pointer"/>
-            <p className="text-[#FFFFFF] text-3xl md:text-5xl">April</p>
-            <img src={arrowr} alt="" className="w-3.5 h-6 cursor-pointer"/>
+            <img src={arrowl} alt="" className="w-3.5 h-6 cursor-pointer opacity-80 hover:opacity-100 transition-opacity" />
+            <p className="text-white text-3xl md:text-5xl font-semibold">April</p>
+            <img src={arrowr} alt="" className="w-3.5 h-6 cursor-pointer opacity-80 hover:opacity-100 transition-opacity" />
           </div>
           
           {/* API */}
           <div 
-            className="w-full md:w-147 min-h-15 md:h-23 bg-[#FEFDFE] mx-auto text-center flex items-center justify-center rounded-xl md:rounded-none p-3 md:p-0 cursor-pointer text-sm md:text-base font-medium shadow-sm hover:bg-gray-50 transition-colors" 
+            className="w-full md:w-[600px] min-h-15 md:h-23 bg-white dark:bg-slate-800 mx-auto text-center flex items-center justify-center rounded-2xl p-3 md:p-0 cursor-pointer text-sm md:text-base font-medium shadow-sm hover:shadow-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-300 text-slate-700 dark:text-slate-300" 
             onClick={() => setShowMoodForm(true)}
           >
             IT WILL BE DONE WITH THE API XD
           </div>
         
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0 mt-2 md:mt-0">
-            <div className="flex flex-wrap justify-center gap-3 md:gap-3">
-              <p className="flex items-center gap-1 text-xs md:text-base">
+            <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+              <p className="flex items-center gap-1.5 text-xs md:text-sm text-white/90">
                 <img src={done} alt="" className="w-3 h-2.5" />Done
               </p>
-              <p className="flex items-center gap-1 text-xs md:text-base">
+              <p className="flex items-center gap-1.5 text-xs md:text-sm text-white/90">
                 <img src={hdone} alt="" className="w-3 h-2.5" />Half day done
               </p>
-              <p className="flex items-center gap-1 text-xs md:text-base">
+              <p className="flex items-center gap-1.5 text-xs md:text-sm text-white/90">
                 <img src={ndone} alt="" className="w-3 h-3" />Not Done Yet
               </p>
             </div>
-            <p className="text-sm md:text-base">Today’s date : 4/22/2026</p>
+            <p className="text-sm md:text-base text-white/80">Today's date : 4/22/2026</p>
           </div>
         </div>
       </div>
     </section>
 
-    {/* (Modal) */}
+    {/* Modal */}
     {showMoodForm && (
       <div 
-        className="fixed inset-0 flex items-center justify-center p-4 z-100 bg-black/40 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity"
         onClick={() => setShowMoodForm(false)}
       >
         <div 
-          className="bg-white rounded-[24px] p-6 md:p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto relative shadow-2xl border border-gray-100"
+          className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto relative shadow-2xl border border-slate-100 dark:border-slate-700"
           onClick={(e) => e.stopPropagation()}
         >
           <button 
             onClick={() => setShowMoodForm(false)}
-            className="absolute top-4 right-4 md:top-5 md:right-5 text-gray-400 hover:text-red-600 transition-colors bg-gray-50 hover:bg-gray-100 rounded-full p-1.5 cursor-pointer"
+            className="absolute top-4 right-4 md:top-5 md:right-5 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 rounded-full p-1.5 cursor-pointer"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -130,27 +130,24 @@ export default function MoodTracker({ onClose, onSubmit }) {
             </svg>
           </button>
 
-          <h2 className="text-xl md:text-[22px] font-bold text-gray-900 mb-6 leading-tight pr-8">
+          <h2 className="text-xl md:text-[22px] font-bold text-slate-800 dark:text-slate-100 mb-6 leading-tight pr-8">
             What is your mood for today?
           </h2>
 
           <div className="flex flex-col items-center gap-1.5 mb-8">
             {submitted ? (
               <>
-                <div className="w-20 h-20 md:w-22 md:h-22 rounded-full bg-[#E1F5EE] border-2 border-[#9FE1CB] flex items-center justify-center text-[36px] text-[#1D9E75] font-bold mb-1">
+                <div className="w-20 h-20 md:w-22 md:h-22 rounded-full bg-[#E1F5EE] dark:bg-teal-900/40 border-2 border-[#9FE1CB] dark:border-teal-600 flex items-center justify-center text-[36px] text-[#1D9E75] dark:text-teal-400 font-bold mb-1">
                   ✓
                 </div>
                 <p className="text-xl md:text-[22px] font-bold" style={{ color: mood.color }}>Mood logged!</p>
-                <p className="text-[13px] text-gray-400">Have a great day</p>
+                <p className="text-[13px] text-slate-400 dark:text-slate-500">Have a great day</p>
               </>
             ) : (
               <>
                 <div
                   className="w-20 h-20 md:w-22 md:h-22 rounded-full flex items-center justify-center mb-1 transition-all duration-300"
-                  style={{
-                    background: mood.color + "18",
-                    border: `2px solid ${mood.color}33`,
-                  }}
+                  style={{ background: mood.color + "18", border: `2px solid ${mood.color}33` }}
                 >
                   <span className="text-4xl md:text-[48px] leading-none select-none">{mood.emoji}</span>
                 </div>
@@ -184,13 +181,10 @@ export default function MoodTracker({ onClose, onSubmit }) {
             </div>
 
             <div className="relative h-12 flex items-center">
-              <div className="absolute inset-x-0 h-2.5 rounded-full bg-gray-100" />
+              <div className="absolute inset-x-0 h-2.5 rounded-full bg-slate-100 dark:bg-slate-700" />
               <div
                 className="absolute left-0 h-2.5 rounded-full transition-[width] duration-75"
-                style={{
-                  width: `${pct}%`,
-                  background: "linear-gradient(90deg, #E24B4A 0%, #EF9F27 30%, #1D9E75 70%, #085041 100%)",
-                }}
+                style={{ width: `${pct}%`, background: "linear-gradient(90deg, #E24B4A 0%, #EF9F27 30%, #1D9E75 70%, #085041 100%)" }}
               />
               <input
                 ref={sliderRef}
@@ -204,11 +198,8 @@ export default function MoodTracker({ onClose, onSubmit }) {
                 aria-label="Mood score"
               />
               <div
-                className="absolute w-6 h-6 md:w-7 md:h-7 rounded-full bg-white border-[3px] shadow-md flex items-center justify-center z-10 transition-[left] duration-75 pointer-events-none"
-                style={{
-                  left: `calc(${pct}% - ${pct === 0 ? 0 : pct === 100 ? 28 : 14}px)`,
-                  borderColor: mood.color,
-                }}
+                className="absolute w-6 h-6 md:w-7 md:h-7 rounded-full bg-white dark:bg-slate-200 border-[3px] shadow-md flex items-center justify-center z-10 transition-[left] duration-75 pointer-events-none"
+                style={{ left: `calc(${pct}% - ${pct === 0 ? 0 : pct === 100 ? 28 : 14}px)`, borderColor: mood.color }}
               >
                 <span className="text-[9px] md:text-[10px] font-bold" style={{ color: mood.color }}>
                   {value}
@@ -217,20 +208,17 @@ export default function MoodTracker({ onClose, onSubmit }) {
             </div>
 
             <div className="flex justify-between mt-2 px-0.5">
-              <span className="text-[10px] md:text-[11px] text-gray-400 select-none text-left">😩 Worst</span>
-              <span className="text-[10px] md:text-[11px] text-gray-400 select-none text-center">😐 Neutral</span>
-              <span className="text-[10px] md:text-[11px] text-gray-400 select-none text-right">🤩 Best</span>
+              <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-left">😩 Worst</span>
+              <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-center">😐 Neutral</span>
+              <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-right">🤩 Best</span>
             </div>
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={submitted}
-            className="w-full py-3.5 md:py-4 rounded-[14px] text-white text-sm md:text-base font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:bg-gray-300"
-            style={{
-              background: submitted ? "#ccc" : mood.color,
-              cursor: submitted ? "default" : "pointer",
-            }}
+            className="w-full py-3.5 md:py-4 rounded-2xl text-white text-sm md:text-base font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed hover:-translate-y-0.5"
+            style={{ background: submitted ? "#ccc" : mood.color, cursor: submitted ? "default" : "pointer" }}
           >
             {!submitted && (
               <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

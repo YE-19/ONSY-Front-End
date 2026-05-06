@@ -48,12 +48,12 @@ const SUGGESTIONS = [
 // ─── Typing indicator dots ───────────────────────────────────────────────────
 function TypingDots() {
   return (
-    <div style={s.typingWrap}>
-      <div style={s.aiAvatar}>O</div>
-      <div style={s.typingBubble}>
-        <span style={{ ...s.dot, animationDelay: "0s" }} />
-        <span style={{ ...s.dot, animationDelay: "0.18s" }} />
-        <span style={{ ...s.dot, animationDelay: "0.36s" }} />
+    <div className="flex items-end gap-2">
+      <div className="w-8 h-8 rounded-full bg-[#1D9E75] dark:bg-teal-600 text-white flex items-center justify-center font-bold text-xs font-syne shrink-0">O</div>
+      <div className="bg-white dark:bg-slate-700 border border-teal-100 dark:border-slate-600 rounded-[18px_18px_18px_4px] px-5 py-3.5 shadow-sm flex gap-1.5 items-center">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#1D9E75] dark:bg-teal-400 inline-block" style={{ animation: "blink 1.2s infinite ease-in-out", animationDelay: "0s" }} />
+        <span className="w-1.5 h-1.5 rounded-full bg-[#1D9E75] dark:bg-teal-400 inline-block" style={{ animation: "blink 1.2s infinite ease-in-out", animationDelay: "0.18s" }} />
+        <span className="w-1.5 h-1.5 rounded-full bg-[#1D9E75] dark:bg-teal-400 inline-block" style={{ animation: "blink 1.2s infinite ease-in-out", animationDelay: "0.36s" }} />
       </div>
     </div>
   );
@@ -66,16 +66,24 @@ function MessageBubble({ msg }) {
     .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div style={{ ...s.msgRow, justifyContent: isUser ? "flex-end" : "flex-start" }}>
-      {!isUser && <div style={s.aiAvatar}>O</div>}
-      <div style={{ maxWidth: "72%", display: "flex", flexDirection: "column",
-        alignItems: isUser ? "flex-end" : "flex-start", gap: 4 }}>
-        <div style={isUser ? s.userBubble : s.aiBubble}>
-          <p style={s.bubbleText}>{msg.content}</p>
+    <div className={`flex items-end gap-2 ${isUser ? "justify-end" : "justify-start"}`} style={{ animation: "fadeUp 0.25s ease both" }}>
+      {!isUser && (
+        <div className="w-8 h-8 rounded-full bg-[#1D9E75] dark:bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0">O</div>
+      )}
+      <div className={`flex flex-col gap-1 ${isUser ? "items-end" : "items-start"}`} style={{ maxWidth: "72%" }}>
+        <div className={isUser
+          ? "bg-[#1D9E75] dark:bg-teal-600 rounded-[18px_18px_4px_18px] px-4 py-3"
+          : "bg-white dark:bg-slate-700 border border-teal-50 dark:border-slate-600 rounded-[18px_18px_18px_4px] px-4 py-3 shadow-sm"
+        }>
+          <p className={`m-0 text-sm leading-relaxed whitespace-pre-wrap break-words ${isUser ? "text-white" : "text-slate-800 dark:text-slate-100"}`}>
+            {msg.content}
+          </p>
         </div>
-        <span style={s.timeStamp}>{time}</span>
+        <span className="text-[11px] text-slate-400 dark:text-slate-500">{time}</span>
       </div>
-      {isUser && <div style={s.userAvatar}>U</div>}
+      {isUser && (
+        <div className="w-8 h-8 rounded-full bg-[#085041] dark:bg-teal-800 text-white flex items-center justify-center font-bold text-xs shrink-0">U</div>
+      )}
     </div>
   );
 }
@@ -89,27 +97,30 @@ function ConvItem({ conv, active, onClick, onDelete }) {
 
   return (
     <div
-      style={{
-        ...s.convItem,
-        background: active ? "#E1F5EE" : hover ? "#f5f5f5" : "transparent",
-        borderLeft: active ? "3px solid #1D9E75" : "3px solid transparent",
-      }}
+      className={`flex items-center gap-2.5 px-4 py-2.5 cursor-pointer transition-all duration-150 border-l-[3px] ${
+        active
+          ? "bg-teal-50 dark:bg-teal-900/30 border-[#1D9E75] dark:border-teal-400"
+          : hover
+            ? "bg-slate-50 dark:bg-slate-700/50 border-transparent"
+            : "bg-transparent border-transparent"
+      }`}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={onClick}
     >
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={s.convTitle}>
+      <div className="flex-1 min-w-0">
+        <p className="text-[13px] font-semibold text-slate-800 dark:text-slate-200 m-0 whitespace-nowrap overflow-hidden text-ellipsis">
           {conv.title || `Chat ${conv._id?.slice(-4) || ""}`}
         </p>
-        <p style={s.convPreview}>{preview.slice(0, 42)}{preview.length > 42 ? "…" : ""}</p>
+        <p className="text-xs text-slate-400 dark:text-slate-500 m-0 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+          {preview.slice(0, 42)}{preview.length > 42 ? "…" : ""}
+        </p>
       </div>
-      <div style={{ display: "flex", flexDirection: "column",
-        alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
-        <span style={s.convDate}>{date}</span>
+      <div className="flex flex-col items-end gap-1 shrink-0">
+        <span className="text-[11px] text-slate-300 dark:text-slate-600 whitespace-nowrap">{date}</span>
         {(hover || active) && (
           <button
-            style={s.deleteConvBtn}
+            className="text-[11px] text-slate-300 dark:text-slate-600 hover:text-red-400 dark:hover:text-red-400 bg-none border-none cursor-pointer p-1 rounded leading-none transition-colors"
             onClick={(e) => { e.stopPropagation(); onDelete(conv._id); }}
             title="Delete conversation"
           >
@@ -187,9 +198,7 @@ export default function AiChat() {
   // ── start a new conversation ───────────────────────────────────────────────
   async function startNewConversation() {
     try {
-      const data = await apiPost("/api/chat/conversation", {
-        title: "New conversation",
-      });
+      const data = await apiPost("/api/chat/conversation", { title: "New conversation" });
       const conv = data.conversation || data;
       setConversations((prev) => [conv, ...prev]);
       setActiveConvId(conv._id);
@@ -212,9 +221,7 @@ export default function AiChat() {
     let convId = activeConvId;
     if (!convId) {
       try {
-        const data = await apiPost("/api/chat/conversation", {
-          title: content.slice(0, 40),
-        });
+        const data = await apiPost("/api/chat/conversation", { title: content.slice(0, 40) });
         const conv = data.conversation || data;
         convId = conv._id;
         setConversations((prev) => [conv, ...prev]);
@@ -236,10 +243,7 @@ export default function AiChat() {
     setLoading(true);
 
     try {
-      const data = await apiPost(
-        `/api/chat/conversation/${convId}/message`,
-        { content }
-      );
+      const data = await apiPost(`/api/chat/conversation/${convId}/message`, { content });
 
       const aiMsg = data.aiMessage || data.message || {
         _id: `ai-${Date.now()}`,
@@ -298,21 +302,27 @@ export default function AiChat() {
   const isEmpty = messages.length === 0 && !convLoading;
 
   return (
-    <div style={s.root}>
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-900 overflow-hidden font-sans transition-colors duration-300">
 
       {/* ── SIDEBAR ── */}
-      <aside style={{ ...s.sidebar, width: sidebarOpen ? 280 : 0, overflow: "hidden" }}>
-        <div style={s.sidebarInner}>
+      <aside
+        className="flex-shrink-0 transition-[width] duration-300 ease-in-out overflow-hidden border-r border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900"
+        style={{ width: sidebarOpen ? 280 : 0 }}
+      >
+        <div className="w-[280px] h-full flex flex-col overflow-hidden">
 
           {/* Sidebar header */}
-          <div style={s.sidebarHeader}>
-            <div style={s.brandMark}>
-              <span style={s.brandDot} />
-              <span style={s.brandName}>ONSY AI</span>
+          <div className="px-4 pt-5 pb-3 border-b border-slate-100 dark:border-slate-800 flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#1D9E75] dark:bg-teal-400 inline-block shadow-[0_0_0_3px_#E1F5EE] dark:shadow-[0_0_0_3px_rgba(52,211,153,0.15)]" />
+              <span className="text-[15px] font-bold text-[#0F6E56] dark:text-teal-400 tracking-wide" style={{ fontFamily: "'Syne', sans-serif" }}>ONSY AI</span>
             </div>
-            <button style={s.newChatBtn} onClick={startNewConversation} title="New chat">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <button
+              className="new-chat-btn flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#1D9E75] dark:border-teal-600 bg-teal-50 dark:bg-teal-900/30 text-[#0F6E56] dark:text-teal-300 text-[13px] font-medium cursor-pointer w-full transition-all duration-200 hover:bg-teal-100 dark:hover:bg-teal-900/50"
+              onClick={startNewConversation}
+              title="New chat"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
               New chat
@@ -320,9 +330,9 @@ export default function AiChat() {
           </div>
 
           {/* Conversation list */}
-          <div style={s.convList}>
+          <div className="conv-list flex-1 overflow-y-auto py-2">
             {conversations.length === 0 ? (
-              <p style={s.emptyConvs}>No conversations yet. Start chatting!</p>
+              <p className="text-[13px] text-slate-400 dark:text-slate-500 text-center py-6 px-4">No conversations yet. Start chatting!</p>
             ) : (
               conversations.map((conv) => (
                 <ConvItem
@@ -337,39 +347,42 @@ export default function AiChat() {
           </div>
 
           {/* Sidebar footer */}
-          <div style={s.sidebarFooter}>
-            <div style={s.footerDot} />
-            <span style={s.footerText}>Powered by ONSY AI</span>
+          <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#1D9E75] dark:bg-teal-400" />
+            <span className="text-[11px] text-slate-400 dark:text-slate-500">Powered by ONSY AI</span>
           </div>
         </div>
       </aside>
 
       {/* ── MAIN CHAT PANEL ── */}
-      <main style={s.main}>
+      <main className="flex-1 flex flex-col min-w-0 h-screen">
 
         {/* Top bar */}
-        <header style={s.topBar}>
-          <button style={s.sidebarToggle} onClick={() => setSidebarOpen((v) => !v)}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
+        <header className="flex items-center gap-3 px-5 py-3 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shrink-0">
+          <button
+            className="bg-none border-none cursor-pointer text-slate-500 dark:text-slate-400 p-1.5 rounded-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            onClick={() => setSidebarOpen((v) => !v)}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
           </button>
-          <div style={s.topBarCenter}>
-            <div style={s.topBarAvatar}>O</div>
+          <div className="flex-1 flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-full bg-[#1D9E75] dark:bg-teal-600 text-white flex items-center justify-center font-bold text-base shrink-0" style={{ fontFamily: "'Syne', sans-serif" }}>O</div>
             <div>
-              <p style={s.topBarName}>ONSY Companion</p>
-              <p style={s.topBarStatus}>
-                <span style={s.statusDot} />
+              <p className="m-0 text-sm font-semibold text-slate-800 dark:text-slate-100">ONSY Companion</p>
+              <p className="m-0 text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#1D9E75] dark:bg-teal-400 inline-block" />
                 Always here for you
               </p>
             </div>
           </div>
-          <button style={s.newChatTopBtn} onClick={startNewConversation} title="New chat">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <button
+            className="border border-slate-200 dark:border-slate-700 rounded-lg cursor-pointer text-slate-500 dark:text-slate-400 p-2 flex items-center justify-center bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            onClick={startNewConversation}
+            title="New chat"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </svg>
@@ -378,32 +391,31 @@ export default function AiChat() {
 
         {/* Error banner */}
         {error && (
-          <div style={s.errorBanner}>
+          <div className="flex items-center justify-between bg-red-50 dark:bg-red-900/20 border-b border-red-100 dark:border-red-800/40 px-5 py-2 text-[13px] text-red-600 dark:text-red-400 shrink-0">
             <span>{error}</span>
-            <button style={s.errorClose} onClick={() => setError(null)}>✕</button>
+            <button className="bg-none border-none text-red-500 dark:text-red-400 cursor-pointer text-[13px]" onClick={() => setError(null)}>✕</button>
           </div>
         )}
 
         {/* Messages area */}
-        <div style={s.messagesArea}>
+        <div className="messages-area flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-4">
           {isEmpty && (
-            <div style={s.emptyState}>
-              <div style={s.emptyOrb}>
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                  stroke="#1D9E75" strokeWidth="1.5" strokeLinecap="round">
+            <div className="flex-1 flex flex-col items-center justify-center text-center px-6 py-10 gap-4">
+              <div className="w-20 h-20 rounded-full bg-teal-50 dark:bg-teal-900/30 border-2 border-teal-200 dark:border-teal-700 flex items-center justify-center mb-2">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="1.5" strokeLinecap="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
               </div>
-              <h2 style={s.emptyTitle}>Hi, I'm your ONSY companion</h2>
-              <p style={s.emptySubtitle}>
+              <h2 className="m-0 text-[22px] font-bold text-slate-800 dark:text-slate-100" style={{ fontFamily: "'Syne', sans-serif" }}>Hi, I'm your ONSY companion</h2>
+              <p className="m-0 text-sm text-slate-500 dark:text-slate-400 max-w-[420px] leading-relaxed">
                 I'm here to support your mental wellbeing. Ask me anything — about
                 your mood, EEG results, breathing, or just talk to me.
               </p>
-              <div style={s.suggestionsGrid}>
+              <div className="grid gap-2.5 w-full max-w-[520px] mt-2" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
                 {SUGGESTIONS.map((s_, i) => (
                   <button
                     key={i}
-                    style={s.suggestionChip}
+                    className="suggestion-chip px-3.5 py-2.5 rounded-xl border border-teal-100 dark:border-teal-800/60 bg-teal-50/80 dark:bg-teal-900/20 text-[#0F6E56] dark:text-teal-300 text-[13px] font-medium cursor-pointer text-left leading-snug transition-all duration-150 hover:-translate-y-0.5"
                     onClick={() => sendMessage(s_)}
                   >
                     {s_}
@@ -414,8 +426,8 @@ export default function AiChat() {
           )}
 
           {convLoading && (
-            <div style={s.convLoadingWrap}>
-              <div style={s.spinnerRing} />
+            <div className="flex justify-center py-10">
+              <div className="w-8 h-8 rounded-full border-[3px] border-teal-100 dark:border-teal-900 border-t-[#1D9E75] dark:border-t-teal-400" style={{ animation: "spin 0.8s linear infinite" }} />
             </div>
           )}
 
@@ -428,508 +440,33 @@ export default function AiChat() {
         </div>
 
         {/* Input area */}
-        <footer style={s.inputArea}>
-          <div style={s.inputBox}>
+        <footer className="px-5 py-3 pb-4 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 shrink-0">
+          <div className="input-box flex items-end gap-2.5 bg-slate-50 dark:bg-slate-800 rounded-2xl border-[1.5px] border-slate-200 dark:border-slate-700 px-4 py-2 transition-all duration-150">
             <textarea
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Share how you're feeling…"
-              style={s.textarea}
+              className="flex-1 border-none bg-transparent resize-none outline-none text-sm leading-relaxed text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 max-h-[140px] overflow-y-auto py-1 font-sans"
               rows={1}
               disabled={loading}
             />
             <button
-              style={{
-                ...s.sendButton,
-                background: input.trim() && !loading ? "#1D9E75" : "#ccc",
-                cursor: input.trim() && !loading ? "pointer" : "default",
-              }}
+              className={`send-btn w-10 h-10 rounded-xl border-none flex items-center justify-center shrink-0 transition-all duration-200 ${input.trim() && !loading ? 'bg-[#1D9E75] dark:bg-teal-600 cursor-pointer hover:bg-teal-600 dark:hover:bg-teal-500 hover:-translate-y-0.5' : 'bg-slate-200 dark:bg-slate-700 cursor-default'}`}
               onClick={() => sendMessage()}
               disabled={!input.trim() || loading}
               title="Send"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"/>
                 <polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/>
               </svg>
             </button>
           </div>
-          <p style={s.inputHint}>Press Enter to send · Shift+Enter for new line</p>
+          <p className="mt-1.5 mx-1 text-[11px] text-slate-300 dark:text-slate-600 text-right">Press Enter to send · Shift+Enter for new line</p>
         </footer>
       </main>
-
-      {/* CSS keyframes injected once */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@600;700&display=swap');
-        @keyframes blink {
-          0%,80%,100% { opacity:0.2; transform:scale(0.8); }
-          40% { opacity:1; transform:scale(1.1); }
-        }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        @keyframes fadeUp {
-          from { opacity:0; transform:translateY(10px); }
-          to   { opacity:1; transform:translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
-const s = {
-  root: {
-    display: "flex",
-    height: "100vh",
-    fontFamily: "'DM Sans', sans-serif",
-    background: "#f7f8fa",
-    overflow: "hidden",
-  },
-
-  // ── Sidebar ──
-  sidebar: {
-    transition: "width 0.28s cubic-bezier(.4,0,.2,1)",
-    flexShrink: 0,
-    borderRight: "1px solid #e8e8e8",
-    background: "#fff",
-  },
-  sidebarInner: {
-    width: 280,
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden",
-  },
-  sidebarHeader: {
-    padding: "20px 16px 12px",
-    borderBottom: "1px solid #f0f0f0",
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-  },
-  brandMark: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-  },
-  brandDot: {
-    width: 10,
-    height: 10,
-    borderRadius: "50%",
-    background: "#1D9E75",
-    display: "inline-block",
-    boxShadow: "0 0 0 3px #E1F5EE",
-  },
-  brandName: {
-    fontSize: 15,
-    fontFamily: "'Syne', sans-serif",
-    fontWeight: 700,
-    color: "#0F6E56",
-    letterSpacing: "0.02em",
-  },
-  newChatBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-    padding: "8px 14px",
-    borderRadius: 10,
-    border: "1px solid #1D9E75",
-    background: "#E1F5EE",
-    color: "#0F6E56",
-    fontSize: 13,
-    fontWeight: 500,
-    cursor: "pointer",
-    width: "100%",
-    justifyContent: "center",
-    transition: "background 0.15s",
-  },
-  convList: {
-    flex: 1,
-    overflowY: "auto",
-    padding: "8px 0",
-  },
-  emptyConvs: {
-    fontSize: 13,
-    color: "#aaa",
-    textAlign: "center",
-    padding: "24px 16px",
-  },
-  convItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-    padding: "10px 16px",
-    cursor: "pointer",
-    transition: "background 0.15s",
-    borderLeft: "3px solid transparent",
-  },
-  convTitle: {
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#222",
-    margin: 0,
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  },
-  convPreview: {
-    fontSize: 12,
-    color: "#999",
-    margin: "2px 0 0",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  },
-  convDate: {
-    fontSize: 11,
-    color: "#bbb",
-    whiteSpace: "nowrap",
-  },
-  deleteConvBtn: {
-    background: "none",
-    border: "none",
-    fontSize: 11,
-    color: "#ccc",
-    cursor: "pointer",
-    padding: "2px 4px",
-    borderRadius: 4,
-    lineHeight: 1,
-  },
-  sidebarFooter: {
-    padding: "12px 16px",
-    borderTop: "1px solid #f0f0f0",
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-  },
-  footerDot: {
-    width: 7,
-    height: 7,
-    borderRadius: "50%",
-    background: "#1D9E75",
-  },
-  footerText: {
-    fontSize: 11,
-    color: "#bbb",
-  },
-
-  // ── Main ──
-  main: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    minWidth: 0,
-    height: "100vh",
-  },
-  topBar: {
-    display: "flex",
-    alignItems: "center",
-    gap: 12,
-    padding: "12px 20px",
-    background: "#fff",
-    borderBottom: "1px solid #efefef",
-    flexShrink: 0,
-  },
-  sidebarToggle: {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    color: "#666",
-    padding: 6,
-    borderRadius: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  topBarCenter: {
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-    gap: 10,
-  },
-  topBarAvatar: {
-    width: 38,
-    height: 38,
-    borderRadius: "50%",
-    background: "#1D9E75",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "'Syne', sans-serif",
-    fontWeight: 700,
-    fontSize: 16,
-    flexShrink: 0,
-  },
-  topBarName: {
-    margin: 0,
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#111",
-  },
-  topBarStatus: {
-    margin: 0,
-    fontSize: 12,
-    color: "#999",
-    display: "flex",
-    alignItems: "center",
-    gap: 5,
-  },
-  statusDot: {
-    width: 7,
-    height: 7,
-    borderRadius: "50%",
-    background: "#1D9E75",
-    display: "inline-block",
-  },
-  newChatTopBtn: {
-    background: "none",
-    border: "1px solid #e0e0e0",
-    borderRadius: 8,
-    cursor: "pointer",
-    color: "#555",
-    padding: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "background 0.15s",
-  },
-
-  // ── Error ──
-  errorBanner: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    background: "#fff0f0",
-    borderBottom: "1px solid #ffd0d0",
-    padding: "8px 20px",
-    fontSize: 13,
-    color: "#c0392b",
-    flexShrink: 0,
-  },
-  errorClose: {
-    background: "none",
-    border: "none",
-    color: "#c0392b",
-    cursor: "pointer",
-    fontSize: 13,
-  },
-
-  // ── Messages ──
-  messagesArea: {
-    flex: 1,
-    overflowY: "auto",
-    padding: "24px 20px",
-    display: "flex",
-    flexDirection: "column",
-    gap: 16,
-  },
-  msgRow: {
-    display: "flex",
-    alignItems: "flex-end",
-    gap: 8,
-    animation: "fadeUp 0.25s ease both",
-  },
-  aiAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: "50%",
-    background: "#1D9E75",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "'Syne', sans-serif",
-    fontWeight: 700,
-    fontSize: 13,
-    flexShrink: 0,
-  },
-  userAvatar: {
-    width: 32,
-    height: 32,
-    borderRadius: "50%",
-    background: "#085041",
-    color: "#fff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontFamily: "'Syne', sans-serif",
-    fontWeight: 700,
-    fontSize: 13,
-    flexShrink: 0,
-  },
-  aiBubble: {
-    background: "#fff",
-    border: "1px solid #e8f5f0",
-    borderRadius: "18px 18px 18px 4px",
-    padding: "12px 16px",
-    boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-  },
-  userBubble: {
-    background: "#1D9E75",
-    borderRadius: "18px 18px 4px 18px",
-    padding: "12px 16px",
-  },
-  bubbleText: {
-    margin: 0,
-    fontSize: 14,
-    lineHeight: 1.6,
-    color: "inherit",
-    whiteSpace: "pre-wrap",
-    wordBreak: "break-word",
-  },
-  timeStamp: {
-    fontSize: 11,
-    color: "#bbb",
-  },
-
-  // ── Typing ──
-  typingWrap: {
-    display: "flex",
-    alignItems: "flex-end",
-    gap: 8,
-  },
-  typingBubble: {
-    background: "#fff",
-    border: "1px solid #e8f5f0",
-    borderRadius: "18px 18px 18px 4px",
-    padding: "14px 18px",
-    display: "flex",
-    gap: 5,
-    alignItems: "center",
-  },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: "50%",
-    background: "#1D9E75",
-    display: "inline-block",
-    animation: "blink 1.2s infinite ease-in-out",
-  },
-
-  // ── Empty state ──
-  emptyState: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    padding: "40px 24px",
-    gap: 16,
-  },
-  emptyOrb: {
-    width: 80,
-    height: 80,
-    borderRadius: "50%",
-    background: "#E1F5EE",
-    border: "2px solid #9FE1CB",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-  },
-  emptyTitle: {
-    margin: 0,
-    fontSize: 22,
-    fontFamily: "'Syne', sans-serif",
-    fontWeight: 700,
-    color: "#111",
-  },
-  emptySubtitle: {
-    margin: 0,
-    fontSize: 14,
-    color: "#888",
-    maxWidth: 420,
-    lineHeight: 1.6,
-  },
-  suggestionsGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: 10,
-    width: "100%",
-    maxWidth: 520,
-    marginTop: 8,
-  },
-  suggestionChip: {
-    padding: "10px 14px",
-    borderRadius: 12,
-    border: "1px solid #C8EAE0",
-    background: "#F0FBF7",
-    color: "#0F6E56",
-    fontSize: 13,
-    fontWeight: 500,
-    cursor: "pointer",
-    textAlign: "left",
-    lineHeight: 1.4,
-    transition: "background 0.15s, border-color 0.15s",
-  },
-
-  // ── Loading spinner ──
-  convLoadingWrap: {
-    display: "flex",
-    justifyContent: "center",
-    padding: 40,
-  },
-  spinnerRing: {
-    width: 32,
-    height: 32,
-    borderRadius: "50%",
-    border: "3px solid #E1F5EE",
-    borderTopColor: "#1D9E75",
-    animation: "spin 0.8s linear infinite",
-  },
-
-  // ── Input area ──
-  inputArea: {
-    padding: "12px 20px 16px",
-    background: "#fff",
-    borderTop: "1px solid #efefef",
-    flexShrink: 0,
-  },
-  inputBox: {
-    display: "flex",
-    alignItems: "flex-end",
-    gap: 10,
-    background: "#f7f8fa",
-    borderRadius: 16,
-    border: "1.5px solid #e0e0e0",
-    padding: "8px 8px 8px 16px",
-    transition: "border-color 0.15s",
-  },
-  textarea: {
-    flex: 1,
-    border: "none",
-    background: "transparent",
-    resize: "none",
-    outline: "none",
-    fontSize: 14,
-    lineHeight: 1.6,
-    color: "#111",
-    fontFamily: "'DM Sans', sans-serif",
-    maxHeight: 140,
-    overflowY: "auto",
-    padding: "4px 0",
-  },
-  sendButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    border: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexShrink: 0,
-    transition: "background 0.2s, transform 0.1s",
-  },
-  inputHint: {
-    margin: "6px 4px 0",
-    fontSize: 11,
-    color: "#ccc",
-    textAlign: "right",
-  },
-};
