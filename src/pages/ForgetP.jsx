@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from "react-router-dom";
 import * as z from "zod";
 import { forgotPasswordApi } from '../services/authService';
-import myImage from '../assets/mint-backg.jpg'
 import { toast } from 'react-toastify';
 
 const forgotSchema = z.object({
@@ -18,9 +17,7 @@ const ForgetP = () => {
 
   const { register, handleSubmit, setError: setFormFieldError, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(forgotSchema), 
-    defaultValues: {
-      email: "",
-    },
+    defaultValues: { email: "" },
     mode: 'onBlur'
   });
 
@@ -42,46 +39,42 @@ const ForgetP = () => {
   }
 
   return (
-    <section style={{ backgroundImage: `url(${myImage})` }} className="bg-cover bg-center min-h-screen flex flex-col justify-center py-10 lg:py-0">
+    <section className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20 px-4 py-24 transition-colors duration-300">
+      <div className="w-full max-w-lg">
+        <form
+          onSubmit={handleSubmit(onSubmitForm)}
+          className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl px-8 py-12 shadow-[0_8px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] border border-slate-100 dark:border-slate-700/60 flex flex-col gap-6 transition-all duration-300"
+        >
+          <div className="text-teal-600 dark:text-teal-400 font-labrada text-4xl sm:text-5xl text-center font-bold tracking-tight">ONSY</div>
 
-      <div className='px-4 lg:px-40'>
-        <div className="w-full max-w-full lg:max-w-1/2 mx-auto">
-          
-          <form
-            onSubmit={handleSubmit(onSubmitForm)}
-            className="shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-4 lg:px-6 py-12 mt-1 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold" 
-            style={{ backgroundImage: `url(${myImage})` }} 
-          >
-            <div className='text-[#147E8F] font-labrada text-5xl lg:text-[64px] lg:mx-10 text-center'> ONSY </div>
-            
-            <div className="text-center lg:text-left">
-              <h1 className="text-2xl lg:text-[32px] font-bold mt-0 text-black"> Forgot your password </h1>
-              <p className='text-[#5F5F5F] font-semibold text-lg lg:text-xl mb-2'>Please enter your email to reset the password</p>
+          <div className="text-center">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Forgot your password</h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-base sm:text-lg mt-2">Please enter your email to reset the password</p>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div>
+              <Label htmlFor="email" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Email address</Label>
+              <Input 
+                {...register("email")} 
+                type="email" 
+                isInvalid={!!errors.email}
+                className="w-full h-14 px-4 text-base rounded-xl bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 focus:bg-white dark:focus:bg-slate-700 focus:border-teal-500 dark:focus:border-teal-400 outline-none transition-all duration-300 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                placeholder="your@email.com"
+              />
+              {errors.email && <p className="text-red-500 dark:text-red-400 text-sm mt-1.5 font-medium">{errors.email.message}</p>}
             </div>
 
-            <div className='flex flex-col gap-2 px-2 lg:px-19 font-semibold pb-10'>
-                <Label htmlFor='email' className='font-semibold'>Email address</Label>
-                <Input 
-                  {...register("email")} 
-                  type="email" 
-                  isInvalid={!!errors.email}
-                  className={`p-3 h-14 w-full lg:w-96 rounded-[10px] text-[16px] font-semibold border border-[#147E8F]`} 
-                  placeholder='your@email.com' 
-                />
-                {errors.email && <p className="text-red-900">{errors.email.message}</p>}
-                
-                <Button 
-                    type="submit" 
-                    isLoading={isSubmitting} 
-                    disabled={isSubmitting}
-                    className={`bg-[#036464E5] h-14 w-full lg:w-96 rounded-[10px] py-6 hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5] transition-all duration-300 ease-in-out text-white ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-                >           
-                    {isSubmitting ? "Processing..." : "Reset Password"}
-                </Button>
-            </div>
-          </form>
-
-        </div>
+            <Button 
+              type="submit" 
+              isLoading={isSubmitting} 
+              disabled={isSubmitting}
+              className={`w-full h-14 rounded-xl bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white font-bold text-base shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 hover:-translate-y-0.5 transition-all duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >           
+              {isSubmitting ? "Processing..." : "Reset Password"}
+            </Button>
+          </div>
+        </form>
       </div>
     </section>
   )

@@ -71,7 +71,7 @@ const CircularGauge = ({ value = 75 }) => {
       <circle cx={cx} cy={cy} r={radius}
         fill="none" stroke="rgba(97,132,117,0.22)" strokeWidth={strokeWidth} />
 
-      {/* Filled progress arc (Animated via Framer Motion) */}
+      {/* Filled progress arc */}
       <motion.circle cx={cx} cy={cy} r={radius}
         fill="none"
         stroke="url(#gaugeGrad)"
@@ -90,7 +90,7 @@ const CircularGauge = ({ value = 75 }) => {
       <circle cx={cx} cy={cy} r={radius - strokeWidth / 2 - 2}
         fill="none" stroke="rgba(97,132,117,0.2)" strokeWidth={1} />
 
-      {/* Center text (Fades in after the gauge fills) */}
+      {/* Center text */}
       <motion.text x={cx} y={cy + 11} textAnchor="middle"
         fill="#2d7d8a" fontSize={32} fontWeight={800}
         fontFamily="inherit" letterSpacing="-1"
@@ -154,25 +154,19 @@ const Dashboard = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="
-        py-24 px-5
-        sm:py-24 sm:px-10
-        lg:py-24 lg:px-30
-        flex flex-col lg:flex-row
-        lg:justify-between
-        gap-10 lg:gap-0
-      "
+      className="min-h-screen bg-[#FEFDFE] dark:bg-slate-900 transition-colors duration-300 py-24 px-5 sm:px-10 lg:px-16 xl:px-24 flex flex-col lg:flex-row lg:justify-between gap-10"
     >
 
       {/* ── Left Column ── */}
-      <div className="flex flex-col gap-5 w-full lg:w-157">
+      <div className="flex flex-col gap-6 w-full lg:w-[48%]">
 
         {/* Line Chart Card */}
         <motion.div variants={itemVariants} className="
-          w-full lg:w-157
-          h-64 sm:h-80 lg:h-101
-          bg-[#147E8F3D] rounded-4xl
-          shadow-[0_0_40.6px_0_rgba(0,0,0,0.2)]
+          w-full h-64 sm:h-80 lg:h-[400px]
+          bg-[#147E8F3D] dark:bg-teal-900/30
+          rounded-3xl
+          shadow-[0_0_40px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.4)]
+          border border-teal-200/30 dark:border-teal-700/30
           flex items-center justify-center
           px-2 py-4
         ">
@@ -213,7 +207,6 @@ const Dashboard = () => {
                 strokeWidth={2.5} 
                 dot={false}
                 activeDot={{ r: 5, fill: '#0e6b78', stroke: 'white', strokeWidth: 2 }}
-                // إضافة الأنيميشن لخط الرسم الخاص بالريتشارتس
                 isAnimationActive={true}
                 animationDuration={2500}
                 animationEasing="ease-out"
@@ -230,24 +223,24 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Weekly Mood Text */}
-        <motion.div variants={itemVariants} className="w-full lg:w-157 flex flex-col gap-4">
-          <h2 className="font-bold text-xl sm:text-2xl text-[#111111]">
+        <motion.div variants={itemVariants} className="w-full flex flex-col gap-4">
+          <h2 className="font-bold text-xl sm:text-2xl text-[#111111] dark:text-slate-100">
             Weekly Mood Analysis
           </h2>
-          <ul className="flex flex-col gap-5 lg:gap-8 font-semibold list-disc pl-5 text-[#5F5F5F]">
+          <ul className="flex flex-col gap-5 lg:gap-6 font-semibold list-disc pl-5 text-[#5F5F5F] dark:text-slate-400">
             <li>
-              Week 1 (<span className="text-[#147E8F]">The Baseline</span>): Your mood started
-              at a stable <span className="text-[#147E8F]">"Natural"</span> level. It remained
+              Week 1 (<span className="text-[#147E8F] dark:text-teal-400">The Baseline</span>): Your mood started
+              at a stable <span className="text-[#147E8F] dark:text-teal-400">"Natural"</span> level. It remained
               steady throughout the week with a very slight upward trend toward the end.
             </li>
             <li>
-              Week 2 (<span className="text-[#147E8F]">The Climb</span>): There was a noticeable
+              Week 2 (<span className="text-[#147E8F] dark:text-teal-400">The Climb</span>): There was a noticeable
               improvement in your mood. You moved from the "Natural" state steadily upward,
               approaching the "Happy" zone.
             </li>
             <li>
-              Week 3 (<span className="text-[#147E8F]">The Peak</span>): This was clearly your{' '}
-              <span className="text-[#147E8F] font-bold">best week</span>. The mood surged past
+              Week 3 (<span className="text-[#147E8F] dark:text-teal-400">The Peak</span>): This was clearly your{' '}
+              <span className="text-[#147E8F] dark:text-teal-400 font-bold">best week</span>. The mood surged past
               "Happy" to reach the "Excited" level. The chart specifically highlights 12/23 as
               the "Best Day" during this period.
             </li>
@@ -256,36 +249,35 @@ const Dashboard = () => {
       </div>
 
       {/* ── Right Column ── */}
-      <div className="flex flex-col gap-5 w-full lg:w-157">
+      <div className="flex flex-col gap-6 w-full lg:w-[48%]">
 
         {/* Gauge Card */}
         <motion.div variants={itemVariants} className="
-          w-full lg:w-157
-          h-64 sm:h-80 lg:h-101
-          bg-[#61847547] rounded-4xl
-          shadow-[0_0_40.6px_0_rgba(0,0,0,0.2)]
+          w-full h-64 sm:h-80 lg:h-[400px]
+          bg-[#61847547] dark:bg-slate-800/50
+          rounded-3xl
+          shadow-[0_0_40px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.4)]
+          border border-teal-200/20 dark:border-slate-700/50
           flex flex-col items-center justify-center gap-3
         ">
-          <p className="text-[#2d5c5c] font-semibold text-base tracking-wide">
+          <p className="text-[#2d5c5c] dark:text-teal-300 font-semibold text-base tracking-wide">
             Overall Mood
           </p>
-
-          {/* Gauge scales: 160px mobile → 200px tablet → 230px desktop */}
           <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-[230px] lg:h-[230px]">
             <CircularGauge value={75} />
           </div>
         </motion.div>
 
         {/* Overall Mood Text */}
-        <motion.div variants={itemVariants} className="w-full lg:w-157 flex flex-col gap-4">
-          <h2 className="font-bold text-xl sm:text-2xl text-[#111111]">
+        <motion.div variants={itemVariants} className="w-full flex flex-col gap-4">
+          <h2 className="font-bold text-xl sm:text-2xl text-[#111111] dark:text-slate-100">
             Overall Mood Summary
           </h2>
-          <ul className="flex flex-col gap-5 lg:gap-8 font-semibold list-disc pl-5 text-[#5F5F5F]">
+          <ul className="flex flex-col gap-5 lg:gap-6 font-semibold list-disc pl-5 text-[#5F5F5F] dark:text-slate-400">
             <li>
               The chart shows that your{' '}
-              <span className="text-[#147E8F]">Overall Mood</span> is at{' '}
-              <span className="text-[#147E8F]">75%</span>.
+              <span className="text-[#147E8F] dark:text-teal-400">Overall Mood</span> is at{' '}
+              <span className="text-[#147E8F] dark:text-teal-400">75%</span>.
             </li>
             <li>
               In the context of the previous weekly breakdown, this indicates a very positive
@@ -295,9 +287,9 @@ const Dashboard = () => {
               than the temporary lows.
             </li>
             <li>
-              An overall rating of <span className="text-[#147E8F]">75%</span> typically reflects
-              a state of being <span className="text-[#147E8F]">"Happy"</span> to{' '}
-              <span className="text-[#4a9e6b]">"Very Good"</span> on a standard emotional scale.
+              An overall rating of <span className="text-[#147E8F] dark:text-teal-400">75%</span> typically reflects
+              a state of being <span className="text-[#147E8F] dark:text-teal-400">"Happy"</span> to{' '}
+              <span className="text-emerald-600 dark:text-emerald-400">"Very Good"</span> on a standard emotional scale.
             </li>
           </ul>
         </motion.div>

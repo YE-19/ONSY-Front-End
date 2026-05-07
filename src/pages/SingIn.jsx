@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from "react-router-dom";
 import { loginSchema } from '../schemas/login.schema';
 import { loginUser } from '../services/authService';
-import myImage from '../assets/mint-backg.jpg'
 import google from "../assets/Group.png"
 import aro from "../assets/Vector.png"
 import Loading from './Loading';
@@ -62,84 +61,124 @@ const SingIn = () => {
 
   return (
     <>
-      {/* 1. السكشن: h-auto للموبايل و lg:h-300 للديسك توب، py-20 للموبايل و lg:py-40 للديسك توب */}
-      <section style={{ backgroundImage: `url(${myImage})` }} className="bg-cover bg-center h-auto lg:h-300 py-20 lg:py-40 px-4 lg:px-0">
-        <div>
-          <form
-            onSubmit={handleSubmit(onSubmitForm)}
-            className="shadow-[0_0_66.6px_0_rgba(0,0,0,0.3)] px-6 py-10 lg:py-12 rounded-[31px] flex flex-col gap-4 border-[3px] border-[#036464E5] font-semibold w-full max-w-147 lg:w-147 m-auto" 
-            style={{ backgroundImage: `url(${myImage})` }}
-          >
-            <div className='text-[#147E8F] font-labrada text-5xl lg:text-[64px] lg:mx-10 mx-10 text-center'>
-              ONSY
-            </div>
-            <div className='mb-6 lg:mb-8 mt-4 text-center lg:text-left'>
-              <h1 className="text-2xl lg:text-[32px] font-bold mt-0 text-black"> Welcome back </h1>
-              <p className='text-[#5F5F5F] font-semibold text-lg lg:text-xl mb-2'>Continue your mental wellness journey</p>
-            </div>
-            
+      <section className="min-h-screen w-full flex mt-20 items-center justify-center bg-gradient-to-br from-slate-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20 px-4 pt-[80px] pb-12 sm:px-6 lg:px-8 transition-colors duration-300">
+        
+        <form
+          onSubmit={handleSubmit(onSubmitForm)}
+          className="w-full max-w-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 sm:p-12 shadow-[0_8px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] border border-slate-100 dark:border-slate-700/60 flex flex-col gap-6 transition-all duration-300 hover:shadow-[0_8px_50px_rgb(0,0,0,0.09)] dark:hover:shadow-[0_8px_50px_rgb(0,0,0,0.4)]"
+        >
+          {/* Brand Header */}
+          <div className="text-teal-600 dark:text-teal-400 font-bold text-4xl sm:text-5xl text-center tracking-tight mb-2">
+            ONSY
+          </div>
 
-            <div className='flex flex-col gap-2 px-0 lg:px-19 font-semibold items-center lg:items-start'>
-              <div className='w-full lg:w-96'>
-                <Label htmlFor='email' className='mb-1 font-semibold block'>Email address</Label>
-                <Input 
-                  {...register("email")} 
-                  type="email" 
-                  className={`p-3 h-14 w-full lg:w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
-                  placeholder='your@email.com' 
-                />
-                {errors.email && <p className="text-red-900 text-sm mt-1">{errors.email.message}</p>}
-              </div>
+          {/* Welcome Text */}
+          <div className="text-center mb-4">
+            <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight mb-2">
+              Welcome back
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-base sm:text-lg">
+              Continue your mental wellness journey
+            </p>
+          </div>
 
-              <div className="relative w-full lg:w-96"> 
-                <Label htmlFor='password' title='password' className='mb-1 font-semibold block'>password</Label>
+          <div className="flex flex-col gap-5">
+            {/* Email Field */}
+            <div className="w-full">
+              <Label htmlFor="email" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                Email address
+              </Label>
+              <Input 
+                {...register("email")} 
+                type="email" 
+                className="w-full px-4 py-3 h-auto text-base rounded-xl bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 focus:bg-white dark:focus:bg-slate-700 focus:border-teal-500 dark:focus:border-teal-400 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-teal-400/10 outline-none transition-all duration-300 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500" 
+                placeholder="your@email.com" 
+              />
+              {errors.email && (
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1.5 font-medium animate-pulse">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div className="w-full"> 
+              <Label htmlFor="password" title="password" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                Password
+              </Label>
+              <div className="relative">
                 <Input 
                   {...register("password")} 
                   type={showPassword ? "text" : "password"} 
-                  className={`p-3 h-14 w-full lg:w-96 text-[16px] rounded-[10px] font-semibold border border-[#147E8F]`} 
-                  placeholder='********' 
+                  className="w-full px-4 py-3 h-auto text-base rounded-xl bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 focus:bg-white dark:focus:bg-slate-700 focus:border-teal-500 dark:focus:border-teal-400 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-teal-400/10 outline-none transition-all duration-300 text-slate-800 dark:text-slate-100 pr-16 placeholder:text-slate-400 dark:placeholder:text-slate-500" 
+                  placeholder="••••••••" 
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-11 text-gray-500 cursor-pointer hover:text-[#264444e5] transition-all duration-300 ease-in-out"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-slate-400 dark:text-slate-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300 focus:outline-none"
                 >
                   {showPassword ? "Hide" : "Show"} 
                 </button>
-                {errors.password && <p className="text-red-900 text-sm mt-1">{errors.password.message}</p>}
               </div>
-
-              <div className='w-full lg:w-96'>
-                <p onClick={() => navigate("/ForgetP")} className='text-end cursor-pointer text-onsy-secondary mt-1 mb-6 underline underline-offset-4 hover:text-[#264444e5] transition-all duration-300 ease-in-out'>Forgot password?</p>
-              </div>
-              
-              <Button 
-                type="submit" 
-                isLoading={isSubmitting} 
-                disabled={isSubmitting}
-                className={`bg-[#036464E5] h-14 w-full lg:w-96 rounded-[10px] py-6 text-white hover:shadow-[0_0_15px_3px_#FFFFFF80] hover:bg-[#264444e5] transition-all duration-300 ease-in-out ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
-              >           
-                {isSubmitting ? "Loading..." : "Log in"}
-              </Button>
-              
-              <div className='flex gap-1 items-center m-auto w-full justify-center'>
-                <div className='h-px w-16 lg:w-28 bg-onsy-secondary'></div>
-                <p className='text-[#111111] font-normal text-center my-3 text-sm lg:text-[16px] whitespace-nowrap'>Or sign up with</p>
-                <div className='h-px w-16 lg:w-28 bg-onsy-secondary'></div>
-              </div>
-
-              <div className='p-3 px-5 h-14 w-full lg:w-96 rounded-[10px] bg-[#FFFFFF] flex justify-between items-center cursor-pointer hover:shadow-[0_0_15px_3px_#FFFFFF80] transition-all duration-300 ease-in-out'>
-                <div className='flex items-center gap-2'>
-                  <img src={google} alt="google" />
-                  <p className='font-semibold text-[#5F5F5F]'>Sign up with Google</p>
-                </div>
-                <img src={aro} className='w-4 h-4' alt="arrow" />
-              </div>
+              {errors.password && (
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1.5 font-medium animate-pulse">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
-            <p className='text-[#111111] text-center mt-4'>don't have an account? <Link to={'/SignUp'} className='text-onsy-secondary font-semibold underline underline-offset-4 hover:text-[#264444e5] transition-all duration-300 ease-in-out '> Signup</Link> </p>
-          </form>
 
-        </div>
+            {/* Forgot Password */}
+            <div className="flex justify-end -mt-2">
+              <span 
+                onClick={() => navigate("/ForgetP")} 
+                className="text-sm font-semibold text-teal-600 dark:text-teal-400 cursor-pointer hover:text-teal-800 dark:hover:text-teal-300 transition-colors duration-300"
+              >
+                Forgot password?
+              </span>
+            </div>
+            
+            {/* Submit Button */}
+            <Button 
+              type="submit" 
+              isLoading={isSubmitting} 
+              disabled={isSubmitting}
+              className={`w-full py-4 bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 hover:-translate-y-0.5 transition-all duration-300 ease-out flex justify-center items-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >          
+              {isSubmitting ? "Loading..." : "Log in"}
+            </Button>
+            
+            {/* Divider */}
+            <div className="flex items-center justify-center gap-4 my-2">
+              <div className="h-px bg-slate-200 dark:bg-slate-600 flex-1"></div>
+              <p className="text-slate-400 dark:text-slate-500 font-medium text-sm">Or sign up with</p>
+              <div className="h-px bg-slate-200 dark:bg-slate-600 flex-1"></div>
+            </div>
+
+            {/* Google Button */}
+            <div className="w-full bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 p-4 rounded-xl flex justify-between items-center cursor-pointer group hover:border-teal-300 dark:hover:border-teal-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ease-out">
+              <div className="flex items-center gap-3">
+                <img src={google} alt="Google logo" className="w-5 h-5 object-contain" />
+                <p className="font-bold text-slate-600 dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-100 transition-colors">
+                  Sign up with Google
+                </p>
+              </div>
+              <img src={aro} className="w-4 h-4 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" alt="Arrow right" />
+            </div>
+          </div>
+
+          {/* Signup Link */}
+          <p className="text-slate-500 dark:text-slate-400 text-center mt-2 font-medium">
+            Don't have an account?{' '}
+            <Link 
+              to={'/SignUp'} 
+              className="text-teal-600 dark:text-teal-400 font-bold hover:text-teal-800 dark:hover:text-teal-300 hover:underline underline-offset-4 transition-all duration-300"
+            >
+              Sign up
+            </Link>
+          </p>
+
+        </form>
       </section>
     </>
   )

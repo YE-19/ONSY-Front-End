@@ -17,11 +17,12 @@ import SpeakChatBot from './pages/SpeakChatBot'
 import EMotiv from './pages/EMotiv'
 import MoodT from './pages/MoodT'
 import AiChat from './pages/AiChat'
+import { ThemeProvider } from './context/ThemeContext'
 
 function App() {
 
   return (
-    <>
+    <ThemeProvider>
     <HeroUIProvider>
       <MainNav />
       <Routes>
@@ -42,7 +43,7 @@ function App() {
         {/* <Route path='/Speak' element={<ProtectedRoute> <AiChat /> </ProtectedRoute>  } /> */}
       </Routes>
       </HeroUIProvider>
-    </>
+    </ThemeProvider>
   )
 }
 

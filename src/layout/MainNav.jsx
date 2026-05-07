@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { getToken } from '../utils/cookieUtils';
+import ThemeToggle from '../components/ThemeToggle';
 
 const MainNav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,72 +11,148 @@ const MainNav = () => {
   const isSpeakPage = location.pathname === '/Speak';
   const isMoodPage = location.pathname === '/Mood';
 
-  const navLinkBase = "rounded-3xl px-3 transition-all duration-300 ease-in-out border-2 hover:scale-120 hover:border-onsy-primary focus:outline-none";
-  const navLinkActive = "border-[#5AA8B1] "; 
-
-  const isAuthenticated = !!getToken(); 
+  const isAuthenticated = !!getToken();
 
   const handleAuthAction = () => {
     if (isAuthenticated) {
-      navigate("/SignOut"); 
+      navigate("/SignOut");
     } else {
       navigate("/SignIn");
     }
   };
 
+  /* ── shared nav-pill base ── */
+  const navLinkBase =
+    "relative px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none";
+
+  const getNavClass = ({ isActive }) =>
+    isActive
+      ? `${navLinkBase} bg-teal-500/10 dark:bg-teal-400/15 text-teal-700 dark:text-teal-300 ring-1 ring-teal-400/50 dark:ring-teal-400/30`
+      : `${navLinkBase} text-slate-600 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/30`;
+
+  const getMobileNavClass = ({ isActive }) =>
+    isActive
+      ? "w-full text-center py-3 px-6 rounded-2xl bg-teal-500/10 dark:bg-teal-400/15 text-teal-700 dark:text-teal-300 ring-1 ring-teal-400/40 dark:ring-teal-400/30 font-semibold text-sm transition-all duration-200"
+      : "w-full text-center py-3 px-6 rounded-2xl text-slate-600 dark:text-slate-300 font-medium text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-teal-700 dark:hover:text-teal-300 transition-all duration-200";
+
   return (
-    <section className={`w-full absolute top-0 px-6 lg:px-24 h-20 flex justify-between items-center backdrop-blur z-50 border-b border-b-[#d4c7c7a9] ${isSpeakPage ? 'hidden h-0' : ''}`}>
-      
-      {/* 1. Logo (On the Left) */}
-      <div 
-        className={` text-[#147E8F] font-labrada text-[30px] lg:text-[48px] font-semibold cursor-pointer transition-all duration-300 ease-in-out hover:scale-110 z-50 
-          ${isMoodPage ? 'text-white' : 'text-[#147E8F] '}`}
-        onClick={() => { navigate("/"); setIsOpen(false); }}
-      >
-        ONSY
-      </div>
-
-      {/* 2. Hamburger Button (In the Absolute Center) */}
-      <div className='lg:hidden absolute left-1/2 -translate-x-1/2 z-50'>
-        <button onClick={() => setIsOpen(!isOpen)} className='flex flex-col gap-1.5 focus:outline-none p-2'>
-          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2.5' : ''} ${isMoodPage ? 'bg-white' : ''}`}></span>
-          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? 'opacity-0' : ''} ${isMoodPage ? 'bg-white' : ''}`}></span>
-          <span className={`h-1 w-8 bg-[#147E8F] rounded transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-2.5' : ''} ${isMoodPage ? 'bg-white' : ''}`}></span>
-        </button>
-      </div>
-
-      {/* 3. Desktop Navigation Links (Hidden on Mobile) */}
-      <nav className='links font-medium hidden lg:flex gap-4 items-center'>
-        <NavLink to="/" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Home </NavLink>
-        <NavLink to="/Speak" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Speak with <span className='text-cyan-800'> ONSY</span> </NavLink>
-        <NavLink to="/Dashboard" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Dashboard </NavLink>
-        <NavLink to="/EMotiv" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> E-Motiv </NavLink>
-        <NavLink to="/Mood" className={({ isActive }) => `${navLinkBase} ${isActive ? navLinkActive : 'border-transparent text-[#111111]'}`}> Mood </NavLink>
-      </nav>
-
-      {/* 4. Auth Button (On the Right) */}
-      <div className='z-50'>
-        <button 
-          onClick={handleAuthAction}
-          className={`h-10 lg:h-12 border border-black rounded-xl lg:text-white text-black cursor-pointer px-4 lg:w-45.25 font-semibold transition-all duration-300 ease-in-out hover:scale-110 ${
-            isHomePage ? 'bg-transparent text-black' : 'bg-[#036464E5] text-white'
+    <section
+      className={`w-full fixed top-0 z-50 px-5 lg:px-10 transition-all duration-300 ${isSpeakPage ? 'hidden h-0' : ''}`}
+    >
+      {/* ── Glass pill navbar ── */}
+      <div
+        className={`mx-auto mt-4 max-w-6xl flex items-center justify-between gap-4 rounded-2xl px-5 h-16
+          border backdrop-blur-xl shadow-lg shadow-black/5
+          ${isMoodPage
+            ? 'bg-white/10 dark:bg-black/20 border-white/20'
+            : 'bg-white/80 dark:bg-slate-900/85 border-white/60 dark:border-slate-700/60'
           }`}
+      >
+
+        {/* 1. Logo */}
+        <div
+          onClick={() => { navigate("/"); setIsOpen(false); }}
+          className={`font-labrada text-2xl lg:text-3xl font-semibold cursor-pointer select-none
+            transition-all duration-300 hover:scale-105 tracking-tight z-50
+            ${isMoodPage ? 'text-white' : 'text-teal-700 dark:text-teal-400'}`}
         >
-          {isAuthenticated ? "Log out" : "Log in"}
-        </button>
+          ONSY
+        </div>
+
+        {/* 2. Desktop Nav Links — centered */}
+        <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+          <NavLink to="/" className={getNavClass}>Home</NavLink>
+          <NavLink to="/Speak" className={getNavClass}>
+            Speak with <span className="text-teal-600 dark:text-teal-400 font-semibold">ONSY</span>
+          </NavLink>
+          <NavLink to="/Dashboard" className={getNavClass}>Dashboard</NavLink>
+          <NavLink to="/EMotiv" className={getNavClass}>E-Motiv</NavLink>
+          <NavLink to="/Mood" className={getNavClass}>Mood</NavLink>
+        </nav>
+
+        {/* 3. Right side: Theme toggle + Auth button + hamburger */}
+        <div className="flex items-center gap-2 z-50 ml-auto">
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
+          {/* Auth button */}
+          <button
+            onClick={handleAuthAction}
+            className={`group relative inline-flex items-center justify-center overflow-hidden
+              h-9 px-5 rounded-xl text-sm font-semibold
+              transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0
+              ${isHomePage && !isMoodPage
+                ? 'border border-teal-300 dark:border-teal-600 bg-transparent text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:shadow-teal-200/60 dark:hover:shadow-teal-900/60'
+                : isMoodPage
+                  ? 'bg-white/20 text-white border border-white/30 hover:bg-white/30 hover:shadow-white/20'
+                  : 'bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white shadow-sm shadow-teal-500/25 hover:shadow-teal-500/40'
+              }`}
+          >
+            {/* Shine sweep */}
+            {!isHomePage && !isMoodPage && (
+              <span className="absolute inset-0 -translate-x-full skew-x-[-20deg] bg-white/20 transition-transform duration-500 group-hover:translate-x-[150%]" />
+            )}
+            <span className="relative">{isAuthenticated ? "Log out" : "Log in"}</span>
+          </button>
+
+          {/* 4. Hamburger — mobile only */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+            className={`lg:hidden flex flex-col justify-center items-center w-9 h-9 rounded-xl transition-all duration-200 focus:outline-none gap-[5px]
+              ${isMoodPage ? 'hover:bg-white/20' : 'hover:bg-teal-50 dark:hover:bg-slate-700/60'}`}
+          >
+            <span
+              className={`h-[2px] w-5 rounded-full transition-all duration-300 origin-center
+                ${isMoodPage ? 'bg-white' : 'bg-teal-700 dark:bg-teal-400'}
+                ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`}
+            />
+            <span
+              className={`h-[2px] w-5 rounded-full transition-all duration-300
+                ${isMoodPage ? 'bg-white' : 'bg-teal-700 dark:bg-teal-400'}
+                ${isOpen ? 'opacity-0 scale-x-0' : ''}`}
+            />
+            <span
+              className={`h-[2px] w-5 rounded-full transition-all duration-300 origin-center
+                ${isMoodPage ? 'bg-white' : 'bg-teal-700 dark:bg-teal-400'}
+                ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* 5. Mobile Dropdown Menu (Slides from Top) */}
-      <div className={`
-        absolute top-0 left-0 w-full bg-white/95 backdrop-blur-md shadow-lg transition-all duration-500 ease-in-out overflow-hidden flex flex-col items-center gap-4 pt-24 pb-10
-        lg:hidden z-40
-        ${isOpen ? 'max-h-125 opacity-100' : 'max-h-0 opacity-0'}
-      `}>
-        <NavLink to="/" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Home </NavLink>
-        <NavLink to="/Speak" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Speak with ONSY </NavLink>
-        <NavLink to="/Dashboard" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Dashboard </NavLink>
-        <NavLink to="/EMotiv" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> E-Motiv </NavLink>
-        <NavLink to="/Mood" onClick={() => setIsOpen(false)} className={({ isActive }) => `${navLinkBase} w-[80%] text-center py-2 ${isActive ? navLinkActive : 'border-transparent'}`}> Mood </NavLink>
+      {/* 5. Mobile dropdown */}
+      <div
+        className={`lg:hidden mx-auto mt-2 max-w-6xl overflow-hidden rounded-2xl border backdrop-blur-xl shadow-xl shadow-black/8
+          bg-white/95 dark:bg-slate-900/95 border-white/70 dark:border-slate-700/70
+          transition-all duration-500 ease-in-out
+          ${isOpen ? 'max-h-[480px] opacity-100' : 'max-h-0 opacity-0 pointer-events-none border-transparent shadow-none'}`}
+      >
+        <div className="flex flex-col items-stretch gap-1.5 p-4">
+
+          {/* Divider label */}
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-2 mb-1">
+            Navigation
+          </p>
+
+          <NavLink to="/" onClick={() => setIsOpen(false)} className={getMobileNavClass}>Home</NavLink>
+          <NavLink to="/Speak" onClick={() => setIsOpen(false)} className={getMobileNavClass}>Speak with ONSY</NavLink>
+          <NavLink to="/Dashboard" onClick={() => setIsOpen(false)} className={getMobileNavClass}>Dashboard</NavLink>
+          <NavLink to="/EMotiv" onClick={() => setIsOpen(false)} className={getMobileNavClass}>E-Motiv</NavLink>
+          <NavLink to="/Mood" onClick={() => setIsOpen(false)} className={getMobileNavClass}>Mood</NavLink>
+
+          {/* Divider */}
+          <div className="my-1 h-px bg-slate-100 dark:bg-slate-700 rounded-full" />
+
+          {/* Auth in mobile menu */}
+          <button
+            onClick={() => { handleAuthAction(); setIsOpen(false); }}
+            className="w-full py-3 px-6 rounded-2xl bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white font-semibold text-sm transition-all duration-300 hover:shadow-md hover:shadow-teal-400/30 active:scale-[0.98]"
+          >
+            {isAuthenticated ? "Log out" : "Log in"}
+          </button>
+        </div>
       </div>
 
     </section>
