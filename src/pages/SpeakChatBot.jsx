@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { motion } from 'framer-motion'
 import victor1 from '../assets/Vector1.png'
 import victor2 from '../assets/Vector2.png'
@@ -7,6 +7,7 @@ import victor4 from '../assets/Vector4.png'
 import victor5 from '../assets/Vector5.png'
 import arrow from '../assets/mdi_arrow.png'
 import { useNavigate } from 'react-router-dom';
+import { chatService } from '../services/chatService';
 
 const sidebarVariants = {
   hidden: { x: -50, opacity: 0 },
@@ -40,6 +41,29 @@ const mainContentVariants = {
 
 const SpeakChatBot = () => {
   const navigate = useNavigate();
+
+  const [userInput, setUserInput] = useState(""); // لتخزين ما يكتبه المستخدم
+  const [messages, setMessages] = useState([]);  // لتخزين سجل المحادثة
+  const [loading, setLoading] = useState(false); // حالة انتظار الرد
+
+  const handleSend = async () => {
+    if (!userInput.trim()) return; // منع الإرسال لو الكلام فاضي
+
+    const newMsg = { role: "user", text: userInput };
+    setMessages((prev) => [...prev, newMsg]);
+    setUserInput(""); // مسح الخانة بعد الإرسال
+    setLoading(true);
+
+    try {
+      const data = await chatService.sendMessage(userInput);
+      setMessages((prev) => [...prev, { role: "bot", text: data.reply }]);
+    } catch (error) {
+      console.error("حدث خطأ في الإرسال:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // --- نهاية الـ Logic ---
 
   return (
     <>
@@ -155,13 +179,110 @@ const SpeakChatBot = () => {
         </motion.div>
       </motion.nav>
 
-      <motion.div 
-        variants={mainContentVariants}
-        initial="hidden"
-        animate="visible"
-        className="flex-1 h-screen bg-gradient-to-br from-[#147E8F] via-teal-700 to-cyan-800 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-colors duration-300"
-      >
-      </motion.div>
+    <motion.div
+  variants={mainContentVariants}
+  initial="hidden"
+  animate="visible"
+  className="flex-1 h-screen flex flex-col items-center justify-between p-8 text-white relative overflow-hidden"
+  style={{
+    background: `
+      radial-gradient(circle at bottom, rgba(255, 255, 255, 0.7) 0%, transparent 70%),
+      radial-gradient(circle at top right, rgba(255, 255, 255, 0.6) 0%, transparent 60%),
+      linear-gradient(180deg, #147E8F 0%, #0D5864 100%)
+    `,
+    backgroundBlendMode: 'screen'
+  }}
+>
+
+  <div 
+    style={{
+      position: 'absolute',
+      bottom: '-150px', 
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: '1142px', 
+      height: '446px',
+      backgroundColor: '#FFFFFF',
+      opacity: '0.64', 
+      filter: 'blur(213px)', 
+      borderRadius: '50%', 
+      pointerEvents: 'none'
+    }}
+ ></div>
+  {/* اللوجو الكبير في النصا */}
+<div className="flex-1 flex flex-col items-center justify-center mb-60">
+  <h1 
+    className="font-labrada font-[600] text-white opacity-150 leading-none tracking-normal"
+    style={{ fontSize: '128px' }}
+  >
+    ONSY
+  </h1>
+  <p 
+  className="font-inter font-[600] text-black opacity-90 tracking-wide mt-6 text-center"
+  style={{ fontSize: '32px', lineHeight: '100%' }}
+>
+  I'm here to listen, what's going on?
+</p>
+</div>
+
+{/*  صندوق الشات - Chat Input Container */}
+<div className="w-full flex justify-center px-4 absolute bottom-[180px] z-20"> {/* رفعنا الـ bottom من 100 لـ 180 */}
+  <div 
+    style={{ 
+      width: '850px',         
+      height: '90px',           
+      backgroundColor: '#FEFDFE', 
+      borderRadius: '30px',   
+    }}
+    className="flex items-center px-6 shadow-xl relative border border-white/20"
+  >
+    {/* أيقونة الإضافة (+) */}
+    <button className="text-slate-400 hover:text-[#147E8F] transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+      </svg>
+    </button>
+
+    {/* حقل النص - Input Field */}
+    <input 
+      type="text" 
+      placeholder="Let's talk—what's been on your mind?" 
+      value={userInput}
+      onChange={(e) => setUserInput(e.target.value)}
+  onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+      className="flex-1 bg-transparent border-none focus:ring-0 text-[#147E8F] placeholder-slate-400 px-4 font-inter font-[500]"
+      style={{ 
+        fontSize: '22px',     
+        lineHeight: '100%' 
+      }}
+    />
+
+    {/* زر الإرسال ة */}
+<button
+  className="bg-[#3B82F6] hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-1.5 px-5 py-2.5 h-[46px]"
+  onClick={handleSend}
+  disabled={loading}
+>
+  {/* أيقونة الطائرة الورقية */}
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    className="h-4 w-4 rotate-[50deg]" 
+    viewBox="0 0 20 20" 
+    fill="currentColor"
+  >
+    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+  </svg>
+  
+  {/* كلمة Send واحدة فقط مع حالة التحميل */}
+  <span className="font-semibold text-sm">
+    {loading ? "..." : "Send"}
+  </span>
+</button>
+  </div>
+</div>
+    
+    
+</motion.div>
     </section>
     </>
   )
