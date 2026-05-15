@@ -7,15 +7,21 @@ import ndone from "../assets/ndone.png"
 import { getAllMoods, logMood, updateMood, deleteMood } from "../services/moodService";
 
 const MOODS = [
-  { score: 1, emoji: "😞", label: "Very bad", sub: "Feeling very down", color: "#E24B4A" },
-  { score: 2, emoji: "😟", label: "Bad", sub: "Not doing well", color: "#EF9F27" },
-  { score: 3, emoji: "😐", label: "Okay", sub: "Neither good nor bad", color: "#888780" },
-  { score: 4, emoji: "😊", label: "Good", sub: "Feeling decent", color: "#1D9E75" },
-  { score: 5, emoji: "🤩", label: "Amazing", sub: "Feeling absolutely great", color: "#085041" },
+  { score: 0,  emoji: "😩", label: "Terrible",    sub: "Extremely distressed",   color: "#E24B4A" },
+  { score: 1,  emoji: "😞", label: "Very bad",    sub: "Feeling very down",      color: "#D85A30" },
+  { score: 2,  emoji: "😟", label: "Bad",         sub: "Not doing well",         color: "#EF9F27" },
+  { score: 3,  emoji: "😕", label: "Poor",        sub: "Struggling a bit",       color: "#BA7517" },
+  { score: 4,  emoji: "😐", label: "Low",         sub: "Below average day",      color: "#888780" },
+  { score: 5,  emoji: "🙂", label: "Okay",        sub: "Neither good nor bad",   color: "#5DCAA5" },
+  { score: 6,  emoji: "😊", label: "Good",        sub: "Feeling decent",         color: "#1D9E75" },
+  { score: 7,  emoji: "😄", label: "Pretty good", sub: "Having a good day",      color: "#1D9E75" },
+  { score: 8,  emoji: "😁", label: "Great",       sub: "Feeling really well",    color: "#0F6E56" },
+  { score: 9,  emoji: "😃", label: "Excellent",   sub: "Almost at my best",      color: "#085041" },
+  { score: 10, emoji: "🤩", label: "Amazing",     sub: "Feeling absolutely great",color: "#085041" },
 ];
 
 export default function MoodTracker({ onClose, onSubmit }) {
-  const [value, setValue] = useState(3);
+  const [value, setValue] = useState(5);
   const [submitted, setSubmitted] = useState(false);
   const [showMoodForm, setShowMoodForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -106,16 +112,16 @@ export default function MoodTracker({ onClose, onSubmit }) {
     const existingMood = moods[clickedStr];
     if (existingMood && existingMood.mood) {
       const existingScore = existingMood.mood;
-      setValue(existingScore >= 1 && existingScore <= 5 ? existingScore : 3);
+      setValue(existingScore >= 0 && existingScore <= 10 ? existingScore : 5);
     } else {
-      setValue(3);
+      setValue(5);
     }
     setShowMoodForm(true);
     setSubmitted(false);
   };
 
-  const mood = MOODS.find(m => m.score === value) || MOODS[2];
-  const pct = ((value - 1) / 4) * 100;
+  const mood = MOODS.find(m => m.score === value) || MOODS[5];
+  const pct = (value / 10) * 100;
 
   const handleChange = useCallback((e) => {
     setValue(Number(e.target.value));
@@ -351,8 +357,8 @@ export default function MoodTracker({ onClose, onSubmit }) {
                 <input
                   ref={sliderRef}
                   type="range"
-                  min={1}
-                  max={5}
+                  min={0}
+                  max={10}
                   step={1}
                   value={value}
                   onChange={handleChange}
