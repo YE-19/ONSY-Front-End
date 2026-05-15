@@ -26,9 +26,13 @@ const MainNav = () => {
     "relative px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none";
 
   const getNavClass = ({ isActive }) =>
-    isActive
-      ? `${navLinkBase} bg-teal-500/10 dark:bg-teal-400/15 text-teal-700 dark:text-teal-300 ring-1 ring-teal-400/50 dark:ring-teal-400/30`
-      : `${navLinkBase} text-slate-600 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/30`;
+    isMoodPage
+      ? isActive
+        ? `${navLinkBase} bg-white/20 text-white ring-1 ring-white/40`
+        : `${navLinkBase} text-white/80 hover:text-white hover:bg-white/10`
+      : isActive
+        ? `${navLinkBase} bg-teal-500/10 dark:bg-teal-400/15 text-teal-700 dark:text-teal-300 ring-1 ring-teal-400/50 dark:ring-teal-400/30`
+        : `${navLinkBase} text-slate-600 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/30`;
 
   const getMobileNavClass = ({ isActive }) =>
     isActive
@@ -84,9 +88,7 @@ const MainNav = () => {
               transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0
               ${isHomePage && !isMoodPage
                 ? 'border border-teal-300 dark:border-teal-600 bg-transparent text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:shadow-teal-200/60 dark:hover:shadow-teal-900/60'
-                : isMoodPage
-                  ? 'bg-white/20 text-white border border-white/30 hover:bg-white/30 hover:shadow-white/20'
-                  : 'bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white shadow-sm shadow-teal-500/25 hover:shadow-teal-500/40'
+                : 'bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white shadow-sm shadow-teal-500/25 hover:shadow-teal-500/40'
               }`}
           >
             {/* Shine sweep */}
