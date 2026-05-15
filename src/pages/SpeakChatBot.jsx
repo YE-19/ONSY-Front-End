@@ -66,8 +66,8 @@ function MessageBubble({ msg }) {
   return (
     <div className={`flex flex-col gap-1.5 w-full ${isUser ? "items-end" : "items-start"}`} style={{ animation: "fadeUp 0.3s ease-out both" }}>
       <div className={`max-w-[85%] sm:max-w-[75%] px-5 py-3.5 ${isUser
-          ? "bg-teal-50 dark:bg-teal-900/40 border border-teal-200/60 dark:border-teal-800 rounded-[22px_22px_4px_22px] shadow-sm text-teal-950 dark:text-teal-50"
-          : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 rounded-[22px_22px_22px_4px] shadow-sm text-slate-800 dark:text-slate-200"
+        ? "bg-teal-50 dark:bg-teal-900/40 border border-teal-200/60 dark:border-teal-800 rounded-[22px_22px_4px_22px] shadow-sm text-teal-950 dark:text-teal-50"
+        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/60 rounded-[22px_22px_22px_4px] shadow-sm text-slate-800 dark:text-slate-200"
         }`}>
         <p className={`m-0 text-[15px] leading-relaxed whitespace-pre-wrap break-words`}>
           {msg.content}
@@ -277,7 +277,7 @@ const SpeakChatBot = () => {
               whileHover={{ scale: 1.03, x: 4 }}
               whileTap={{ scale: 0.97 }}
               className="will-change-transform pl-4 text-slate-700 dark:text-slate-200 flex content-center items-center gap-3 h-11 w-full border border-[#036464] dark:border-teal-700 rounded-2xl cursor-pointer bg-transparent hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all duration-200"
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/Profile')}
             >
               <img src={victor4} alt="" />
               Profile

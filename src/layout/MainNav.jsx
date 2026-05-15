@@ -23,7 +23,7 @@ const MainNav = () => {
 
   /* ── shared nav-pill base ── */
   const navLinkBase =
-    "relative px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ease-in-out focus:outline-none";
+    "relative px-3 py-1.5 rounded-full text-[13px] font-medium whitespace-nowrap transition-all duration-300 ease-in-out focus:outline-none";
 
   const getNavClass = ({ isActive }) =>
     isMoodPage
@@ -64,14 +64,15 @@ const MainNav = () => {
         </div>
 
         {/* 2. Desktop Nav Links — centered */}
-        <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+        <nav className="hidden lg:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2">
           <NavLink to="/" className={getNavClass}>Home</NavLink>
           <NavLink to="/Speak" className={getNavClass}>
-            Speak with <span className="text-teal-600 dark:text-teal-400 font-semibold">ONSY</span>
+            Speak with&nbsp;<span className="text-teal-600 dark:text-teal-400 font-semibold">ONSY</span>
           </NavLink>
           <NavLink to="/Dashboard" className={getNavClass}>Dashboard</NavLink>
-          <NavLink to="/EMotiv" className={getNavClass}>E-Motiv</NavLink>
+          <NavLink to="/EMotiv" className={getNavClass}>E&#8209;Motiv</NavLink>
           <NavLink to="/Mood" className={getNavClass}>Mood</NavLink>
+          <NavLink to="/Profile" className={getNavClass}>Profile</NavLink>
         </nav>
 
         {/* 3. Right side: Theme toggle + Auth button + hamburger */}
@@ -143,6 +144,7 @@ const MainNav = () => {
           <NavLink to="/Dashboard" onClick={() => setIsOpen(false)} className={getMobileNavClass}>Dashboard</NavLink>
           <NavLink to="/EMotiv" onClick={() => setIsOpen(false)} className={getMobileNavClass}>E-Motiv</NavLink>
           <NavLink to="/Mood" onClick={() => setIsOpen(false)} className={getMobileNavClass}>Mood</NavLink>
+          <NavLink to="/Profile" onClick={() => setIsOpen(false)} className={getMobileNavClass}>Profile</NavLink>
 
           {/* Divider */}
           <div className="my-1 h-px bg-slate-100 dark:bg-slate-700 rounded-full" />

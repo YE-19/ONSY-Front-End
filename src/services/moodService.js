@@ -9,6 +9,7 @@ export const getAllMoods = async () => {
     }
 };
 
+
 export const logMood = async (moodValue, dateString) => {
     const response = await axiosInstance.post('/mood', {
         mood: moodValue,
