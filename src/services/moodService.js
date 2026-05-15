@@ -9,13 +9,12 @@ export const getAllMoods = async () => {
     }
 };
 
-export const logMood = async (moodValue) => {
-    try {
-        const response = await axiosInstance.post('/mood', { mood: moodValue });
-        return response.data;
-    } catch (error) {
-        throw error;
-    }
+export const logMood = async (moodValue, dateString) => {
+    const response = await axiosInstance.post('/mood', {
+        mood: moodValue,
+        date: dateString
+    });
+    return response.data;
 };
 
 export const getMoodById = async (moodId) => {
