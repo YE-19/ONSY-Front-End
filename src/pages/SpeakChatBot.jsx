@@ -111,7 +111,7 @@ const SpeakChatBot = () => {
 
   useEffect(() => {
     aiService.getAllSessions().then(data => {
-      if(Array.isArray(data)) setChatHistory(data);
+      if (Array.isArray(data)) setChatHistory(data);
     }).catch(console.error);
   }, []);
 
@@ -172,7 +172,7 @@ const SpeakChatBot = () => {
       if (response.sessionId && response.sessionId !== sessionId) {
         setSessionId(response.sessionId);
         aiService.getAllSessions().then(data => {
-          if(Array.isArray(data)) setChatHistory(data);
+          if (Array.isArray(data)) setChatHistory(data);
         }).catch(console.error);
       }
 
@@ -324,25 +324,25 @@ const SpeakChatBot = () => {
             {/* Scrollable sessions list only */}
             <div className="flex flex-col gap-4 overflow-y-auto hide-scrollbar flex-1 min-h-0 pt-1">
               {chatHistory.map(session => (
-                <motion.p 
-                  key={session.id} 
-                  whileHover={{ x: 5 }} 
-                  className="flex gap-1.5 cursor-pointer text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-sm transition-colors whitespace-nowrap overflow-hidden text-ellipsis shrink-0" 
+                <motion.p
+                  key={session.id}
+                  whileHover={{ x: 5 }}
+                  className="flex gap-1.5 cursor-pointer text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-sm transition-colors whitespace-nowrap overflow-hidden text-ellipsis shrink-0"
                   onClick={async () => {
-                   try {
-                     const s = await aiService.getSession(session.id);
-                     setSessionId(session.id);
-                     setMessages(s.messages.map((m, i) => ({
-                       _id: `msg-${session.id}-${i}`,
-                       role: m.role === 'assistant' ? 'ai' : 'user',
-                       content: m.content,
-                       sent_at: s.updatedAt 
-                     })));
-                     if (window.innerWidth < 1024) setSidebarOpen(false);
-                   } catch (e) {
-                     console.error(e);
-                   }
-                }}>
+                    try {
+                      const s = await aiService.getSession(session.id);
+                      setSessionId(session.id);
+                      setMessages(s.messages.map((m, i) => ({
+                        _id: `msg-${session.id}-${i}`,
+                        role: m.role === 'assistant' ? 'ai' : 'user',
+                        content: m.content,
+                        sent_at: s.updatedAt
+                      })));
+                      if (window.innerWidth < 1024) setSidebarOpen(false);
+                    } catch (e) {
+                      console.error(e);
+                    }
+                  }}>
                   <img src={arrow} alt="" className="shrink-0" />
                   <span className="truncate">{session.preview || "New Session"}</span>
                 </motion.p>
@@ -412,9 +412,6 @@ const SpeakChatBot = () => {
             <div className="max-w-4xl mx-auto relative">
               <div className={`flex items-end gap-2 bg-slate-100 dark:bg-slate-800 rounded-[24px] border border-transparent focus-within:border-teal-400 dark:focus-within:border-teal-500 px-4 py-2 sm:py-2.5 transition-all duration-200 shadow-sm ${loading ? 'opacity-70 pointer-events-none' : ''}`}>
                 <button className="p-2 -ml-2 text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors rounded-full shrink-0">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-                  </svg>
                 </button>
                 <textarea
                   ref={textareaRef}

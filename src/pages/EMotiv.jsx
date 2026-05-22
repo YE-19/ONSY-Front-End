@@ -313,7 +313,6 @@ export default function EMotiv() {
             }}
             className="relative flex flex-col md:flex-row gap-6"
           >
-            <div className="hidden md:block absolute top-10 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-transparent via-teal-300 dark:via-teal-500/40 to-transparent" />
             {[
               { step: '01', title: 'Wear it', desc: 'Put on the E-Motiv headset. The dry sensors auto-adjust to your head shape in seconds.', icon: '🎧' },
               { step: '02', title: 'Connect', desc: 'Pair with ONSY app via Bluetooth. A guided calibration takes just 30 seconds.', icon: '📱' },

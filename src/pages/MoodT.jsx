@@ -268,8 +268,22 @@ export default function MoodTracker({ onClose, onSubmit }) {
               ) : error && error !== 'history' ? (
                 <p className="text-red-300 w-full text-center py-4">{error}</p>
               ) : (
-                <div className="flex w-full justify-between items-start">
-                  {weekDays.map((date) => {
+                <AnimatePresence mode="wait">
+                  <motion.div 
+                    key={currentDate.toISOString()}
+                    className="flex w-full justify-between items-start"
+                    initial="hidden"
+                    animate="show"
+                    exit="hidden"
+                    variants={{
+                      hidden: { opacity: 0, transition: { duration: 0.15 } },
+                      show: {
+                        opacity: 1,
+                        transition: { staggerChildren: 0.05, delayChildren: 0.05 }
+                      }
+                    }}
+                  >
+                    {weekDays.map((date) => {
                     const dateStr = formatDate(date);
                     const isToday = dateStr === todayStr;
                     const isFuture = dateStr > todayStr;
@@ -279,7 +293,11 @@ export default function MoodTracker({ onClose, onSubmit }) {
                     const dayName = date.toLocaleDateString("en-US", { weekday: 'short' });
 
                     return (
-                      <div
+                      <motion.div
+                        variants={{
+                          hidden: { opacity: 0, y: 10, scale: 0.9 },
+                          show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 350, damping: 25 } }
+                        }}
                         key={dateStr}
                         onClick={() => !isFuture && handleDayClick(date)}
                         className={`flex flex-col items-center gap-2 ${isFuture ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:scale-110 transition-transform'}`}
@@ -312,10 +330,11 @@ export default function MoodTracker({ onClose, onSubmit }) {
                             </div>
                           )}
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
-                </div>
+                  </motion.div>
+                </AnimatePresence>
               )}
             </div>
 
