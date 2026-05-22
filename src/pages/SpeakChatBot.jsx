@@ -244,7 +244,8 @@ const SpeakChatBot = () => {
             ONSY
           </motion.div>
 
-          <div className="flex flex-col gap-3 w-full px-4 overflow-y-auto hide-scrollbar">
+          {/* Fixed Nav Buttons */}
+          <div className="flex flex-col gap-3 w-full px-4 shrink-0">
             <motion.button
               variants={itemVariants}
               whileHover={{ scale: 1.03, x: 4 }}
@@ -314,14 +315,19 @@ const SpeakChatBot = () => {
               <img src={victor5} alt="" />
               Settings
             </motion.button>
+          </div>
 
-            <motion.div variants={itemVariants} className="flex flex-col gap-4 w-full mt-4">
-              <p className="flex justify-between text-lg font-semibold text-slate-800 dark:text-slate-200 pb-1">Chat history <img src={arrow} alt="" /></p>
-              {chatHistory.slice(0, 5).map(session => (
+          {/* Chat History — fixed heading + scrollable list */}
+          <motion.div variants={itemVariants} className="flex flex-col w-full px-4 mt-4 flex-1 min-h-0">
+            {/* Sticky heading */}
+            <p className="flex justify-between text-lg font-semibold text-slate-800 dark:text-slate-200 pb-1 shrink-0">Chat history <img src={arrow} alt="" /></p>
+            {/* Scrollable sessions list only */}
+            <div className="flex flex-col gap-4 overflow-y-auto hide-scrollbar flex-1 min-h-0 pt-1">
+              {chatHistory.map(session => (
                 <motion.p 
                   key={session.id} 
                   whileHover={{ x: 5 }} 
-                  className="flex gap-1.5 cursor-pointer text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-sm transition-colors whitespace-nowrap overflow-hidden text-ellipsis" 
+                  className="flex gap-1.5 cursor-pointer text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 text-sm transition-colors whitespace-nowrap overflow-hidden text-ellipsis shrink-0" 
                   onClick={async () => {
                    try {
                      const s = await aiService.getSession(session.id);
@@ -341,22 +347,9 @@ const SpeakChatBot = () => {
                   <span className="truncate">{session.preview || "New Session"}</span>
                 </motion.p>
               ))}
-            </motion.div>
-          </div>
-
-          <motion.div variants={itemVariants} className="w-full px-4 mt-auto mb-6 shrink-0">
-            <div className="bg-slate-100 dark:bg-slate-800 rounded-3xl p-4 flex flex-col gap-2 border border-slate-200 dark:border-slate-700">
-              <h2 className="font-semibold text-slate-800 dark:text-slate-200">Free plan</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Unlock advanced features for better care.</p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="will-change-transform h-9 w-36 mx-auto mt-1 bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-center text-white rounded-lg cursor-pointer font-semibold text-sm transition-all hover:shadow-md hover:shadow-teal-500/30"
-              >
-                Upgrade
-              </motion.button>
             </div>
           </motion.div>
+
         </motion.nav>
 
         <motion.div

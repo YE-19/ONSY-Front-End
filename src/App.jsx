@@ -18,6 +18,7 @@ import EMotiv from './pages/EMotiv'
 import MoodT from './pages/MoodT'
 import Profile from './pages/Profile'
 import { ThemeProvider } from './context/ThemeContext'
+import MoodReminderNotification from './components/MoodReminderNotification'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
     <ThemeProvider>
       <HeroUIProvider>
         <MainNav />
+        <MoodReminderNotification />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/SignUp' element={<PublicRoute> <SignUp /> </PublicRoute>} />

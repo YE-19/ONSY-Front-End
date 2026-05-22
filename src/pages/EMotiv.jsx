@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
 
 /* ── Feature data ── */
 const features = [
@@ -88,8 +89,12 @@ export default function EMotiv() {
     <div className="min-h-screen bg-white dark:bg-[#030712] text-slate-900 dark:text-white overflow-x-hidden transition-colors duration-300">
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-[#030712] dark:to-[#030712]">
-
+      <motion.section 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-[#030712] dark:to-[#030712]"
+      >
         {/* Background decorations */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-teal-100 dark:bg-teal-600/10 blur-[100px] opacity-50 dark:opacity-100" />
@@ -158,18 +163,28 @@ export default function EMotiv() {
             <div className="w-1 h-2 rounded-full bg-teal-500 animate-bounce" />
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── STATS ── */}
-      <section className="py-20 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+      <section className="py-20 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent overflow-hidden">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+          }}
+          className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6"
+        >
           {[
             { value: 98, suffix: '%', label: 'Accuracy Rate' },
             { value: 14, suffix: '', label: 'EEG Channels' },
             { value: 12, suffix: 'h', label: 'Battery Life' },
             { value: 8, suffix: '+', label: 'Emotions Detected' },
           ].map((stat, i) => (
-            <div
+            <motion.div
+              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
               key={i}
               className="text-center p-6 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/8 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 hover:-translate-y-0.5 transition-all duration-300"
             >
@@ -177,15 +192,20 @@ export default function EMotiv() {
                 <Counter target={stat.value} suffix={stat.suffix} />
               </div>
               <div className="text-slate-600 dark:text-slate-500 text-sm mt-2 font-semibold">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ── FEATURES ── */}
-      <section className="py-24 px-6 bg-white dark:bg-transparent">
+      <section className="py-24 px-6 bg-white dark:bg-transparent overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
             <p className="text-teal-700 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-3">Capabilities</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-800 dark:text-slate-50">
               Everything your brain<br />
@@ -193,11 +213,21 @@ export default function EMotiv() {
                 deserves to know
               </span>
             </h2>
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
             {features.map((feat, i) => (
-              <div
+              <motion.div
+                variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
                 key={i}
                 onMouseEnter={() => setHoveredFeature(i)}
                 onMouseLeave={() => setHoveredFeature(null)}
@@ -217,15 +247,21 @@ export default function EMotiv() {
 
                 <h3 className="font-bold text-slate-800 dark:text-slate-50 text-lg mb-2">{feat.title}</h3>
                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{feat.desc}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ── SPECS ── */}
-      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent">
-        <div className="max-w-4xl mx-auto">
+      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto"
+        >
           <div className="rounded-3xl bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border-2 border-slate-100 dark:border-white/8 shadow-lg dark:shadow-none overflow-hidden">
             <div className="px-8 py-8 border-b-2 border-slate-100 dark:border-white/8 flex items-center gap-4 bg-slate-50 dark:bg-transparent">
               <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-500/20 flex items-center justify-center text-xl">⚙️</div>
@@ -251,24 +287,40 @@ export default function EMotiv() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-24 px-6 bg-white dark:bg-transparent">
+      <section className="py-24 px-6 bg-white dark:bg-transparent overflow-hidden">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
             <p className="text-teal-700 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-3">Simple Setup</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-slate-50">How it works</h2>
-          </div>
-          <div className="relative flex flex-col md:flex-row gap-6">
+          </motion.div>
+          
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+            }}
+            className="relative flex flex-col md:flex-row gap-6"
+          >
             <div className="hidden md:block absolute top-10 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-transparent via-teal-300 dark:via-teal-500/40 to-transparent" />
             {[
               { step: '01', title: 'Wear it', desc: 'Put on the E-Motiv headset. The dry sensors auto-adjust to your head shape in seconds.', icon: '🎧' },
               { step: '02', title: 'Connect', desc: 'Pair with ONSY app via Bluetooth. A guided calibration takes just 30 seconds.', icon: '📱' },
               { step: '03', title: 'Discover', desc: 'Watch your emotional state unfold in real-time. Get personalized insights and coaching.', icon: '✨' },
             ].map((step, i) => (
-              <div
+              <motion.div
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
                 key={i}
                 className="flex-1 relative flex flex-col items-center text-center p-8 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/6 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 hover:-translate-y-1 transition-all duration-300"
               >
@@ -276,20 +328,26 @@ export default function EMotiv() {
                 <div className="text-teal-600 dark:text-teal-500/80 text-xs font-mono font-black tracking-widest mb-2">{step.step}</div>
                 <h3 className="text-slate-800 dark:text-slate-50 font-bold text-lg mb-2">{step.title}</h3>
                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{step.desc}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ── CTA BANNER ── */}
-      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-t border-slate-100 dark:border-transparent">
-        <div className="max-w-4xl mx-auto relative overflow-hidden rounded-3xl
+      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-t border-slate-100 dark:border-transparent overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto relative overflow-hidden rounded-3xl
           bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-600
           dark:from-teal-900/60 dark:via-slate-900 dark:to-cyan-900/40
           border border-teal-500 dark:border-teal-500/20
           shadow-2xl shadow-teal-200 dark:shadow-none
-          p-12 text-center">
+          p-12 text-center"
+        >
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-white/10 dark:bg-teal-500/20 blur-3xl rounded-full pointer-events-none" />
           <p className="relative text-teal-100 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-4">Limited Early Access</p>
           <h2 className="relative text-4xl md:text-5xl font-black mb-4 text-white">
@@ -303,7 +361,7 @@ export default function EMotiv() {
             Get Early Access
             <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
           </button>
-        </div>
+        </motion.div>
       </section>
 
       <div className="h-16" />

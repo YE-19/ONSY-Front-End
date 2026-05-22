@@ -74,23 +74,23 @@ const SingIn = () => {
 
   return (
     <>
-      <section className="min-h-screen w-full flex mt-20 items-center justify-center bg-gradient-to-br from-slate-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20 px-4 pt-[80px] pb-12 sm:px-6 lg:px-8 transition-colors duration-300">
+      <section className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20 px-4 pt-20 pb-4 sm:px-6 lg:px-8 transition-colors duration-300 overflow-hidden">
         
         <form
           onSubmit={handleSubmit(onSubmitForm)}
-          className="w-full max-w-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 sm:p-12 shadow-[0_8px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] border border-slate-100 dark:border-slate-700/60 flex flex-col gap-6 transition-all duration-300 hover:shadow-[0_8px_50px_rgb(0,0,0,0.09)] dark:hover:shadow-[0_8px_50px_rgb(0,0,0,0.4)]"
+          className="w-full max-w-lg bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl p-6 sm:p-8 shadow-[0_8px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] border border-slate-100 dark:border-slate-700/60 flex flex-col gap-4 transition-all duration-300 hover:shadow-[0_8px_50px_rgb(0,0,0,0.09)] dark:hover:shadow-[0_8px_50px_rgb(0,0,0,0.4)]"
         >
           {/* Brand Header */}
-          <div className="text-teal-600 dark:text-teal-400 font-bold text-4xl sm:text-5xl text-center tracking-tight mb-2">
+          <div className="text-teal-600 dark:text-teal-400 font-bold text-3xl sm:text-4xl text-center tracking-tight">
             ONSY
           </div>
 
           {/* Welcome Text */}
-          <div className="text-center mb-4">
-            <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight mb-2">
+          <div className="text-center">
+            <h1 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight mb-1">
               Welcome back
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 font-medium text-base sm:text-lg">
+            <p className="text-slate-500 dark:text-slate-400 font-medium text-sm sm:text-base">
               Continue your mental wellness journey
             </p>
           </div>
@@ -105,7 +105,7 @@ const SingIn = () => {
             </div>
           )}
 
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
             {/* Email Field */}
             <div className="w-full">
               <Label htmlFor="email" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
@@ -166,20 +166,20 @@ const SingIn = () => {
               type="submit" 
               isLoading={isSubmitting} 
               disabled={isSubmitting}
-              className={`w-full py-4 bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 hover:-translate-y-0.5 transition-all duration-300 ease-out flex justify-center items-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+              className={`w-full h-11 bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white rounded-xl font-bold text-base shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 hover:-translate-y-0.5 transition-all duration-300 ease-out flex justify-center items-center ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
             >          
               {isSubmitting ? "Loading..." : "Log in"}
             </Button>
             
             {/* Divider */}
-            <div className="flex items-center justify-center gap-4 my-2">
+            <div className="flex items-center justify-center gap-4">
               <div className="h-px bg-slate-200 dark:bg-slate-600 flex-1"></div>
               <p className="text-slate-400 dark:text-slate-500 font-medium text-sm">Or sign up with</p>
               <div className="h-px bg-slate-200 dark:bg-slate-600 flex-1"></div>
             </div>
 
             {/* Google Button */}
-            <div className="w-full bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 p-4 rounded-xl flex justify-between items-center cursor-pointer group hover:border-teal-300 dark:hover:border-teal-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ease-out">
+            <div className="w-full bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 p-3 rounded-xl flex justify-between items-center cursor-pointer group hover:border-teal-300 dark:hover:border-teal-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 ease-out">
               <div className="flex items-center gap-3">
                 <img src={google} alt="Google logo" className="w-5 h-5 object-contain" />
                 <p className="font-bold text-slate-600 dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-100 transition-colors">
@@ -191,7 +191,7 @@ const SingIn = () => {
           </div>
 
           {/* Signup Link */}
-          <p className="text-slate-500 dark:text-slate-400 text-center mt-2 font-medium">
+          <p className="text-slate-500 dark:text-slate-400 text-center text-sm font-medium">
             Don't have an account?{' '}
             <Link 
               to={'/SignUp'} 

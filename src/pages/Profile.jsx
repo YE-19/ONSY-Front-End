@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { getProfile, updateProfile, changePassword, deleteAccount } from '../services/profileService';
 import { removeToken } from '../utils/cookieUtils';
@@ -69,7 +70,10 @@ const Skeleton = ({ className }) => (
 const SectionCard = ({ icon, title, children, accent = 'teal' }) => {
   const ring = accent === 'red' ? 'ring-red-200 dark:ring-red-900/40' : 'ring-teal-200/60 dark:ring-teal-700/30';
   return (
-    <div className={`bg-white dark:bg-slate-800/80 backdrop-blur-sm rounded-3xl ring-1 ${ring} shadow-lg shadow-black/[0.04] dark:shadow-black/20 p-6 md:p-8 transition-colors duration-300`}>
+    <motion.div 
+      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+      className={`bg-white dark:bg-slate-800/80 backdrop-blur-sm rounded-3xl ring-1 ${ring} shadow-lg shadow-black/[0.04] dark:shadow-black/20 p-6 md:p-8 transition-colors duration-300`}
+    >
       <div className="flex items-center gap-3 mb-6">
         <span className={`p-2.5 rounded-xl ${accent === 'red' ? 'bg-red-50 dark:bg-red-900/20 text-red-500' : 'bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400'}`}>
           {icon}
@@ -77,7 +81,7 @@ const SectionCard = ({ icon, title, children, accent = 'teal' }) => {
         <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">{title}</h2>
       </div>
       {children}
-    </div>
+    </motion.div>
   );
 };
 
@@ -255,7 +259,10 @@ export default function Profile() {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 pt-24 pb-16 px-4 md:px-8">
 
         {/* ── hero / avatar strip ── */}
-        <div className="max-w-3xl mx-auto mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+          className="max-w-3xl mx-auto mb-8"
+        >
           <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#036464] via-teal-600 to-cyan-500 dark:from-teal-900 dark:via-slate-800 dark:to-slate-900 p-8 flex flex-col sm:flex-row items-center gap-6 shadow-xl shadow-teal-500/20 dark:shadow-black/40">
             {/* decorative blobs */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -294,7 +301,7 @@ export default function Profile() {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* ── error banner ── */}
         {profileErr && (
@@ -303,7 +310,14 @@ export default function Profile() {
           </div>
         )}
 
-        <div className="max-w-3xl mx-auto flex flex-col gap-6">
+        <motion.div 
+          initial="hidden" animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+          }}
+          className="max-w-3xl mx-auto flex flex-col gap-6"
+        >
 
           {/* ══ Section 1: Profile Info ══ */}
           <SectionCard icon={<UserIcon />} title="Personal Information">
@@ -448,7 +462,7 @@ export default function Profile() {
             </div>
           </SectionCard>
 
-        </div>
+        </motion.div>
       </div>
 
       {/* ── Delete confirmation modal ── */}
