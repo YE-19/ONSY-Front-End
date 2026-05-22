@@ -111,7 +111,7 @@ export default function MoodTracker({ onClose, onSubmit }) {
 
   const handleDayClick = (date) => {
     const clickedStr = formatDate(date);
-    if (clickedStr > todayStr) return; // Prevent logging future dates
+    if (clickedStr !== todayStr) return; // Prevent logging non-current dates
 
     setSelectedDate(date);
     const dayMoods = moods[clickedStr] || [];
@@ -299,9 +299,9 @@ export default function MoodTracker({ onClose, onSubmit }) {
                           show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 350, damping: 25 } }
                         }}
                         key={dateStr}
-                        onClick={() => !isFuture && handleDayClick(date)}
-                        className={`flex flex-col items-center gap-2 ${isFuture ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:scale-110 transition-transform'}`}
-                        title={isFuture ? "Cannot log for future dates" : "Log mood"}
+                        onClick={() => isToday && handleDayClick(date)}
+                        className={`flex flex-col items-center gap-2 ${!isToday ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:scale-110 transition-transform'}`}
+                        title={!isToday ? (isFuture ? "Cannot log for future dates" : "Cannot edit past dates") : "Log mood"}
                       >
                         <span className={`text-xs md:text-sm font-medium ${isToday ? 'text-white font-bold' : 'text-white/80'}`}>
                           {dayName}

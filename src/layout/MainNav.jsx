@@ -67,7 +67,7 @@ const MainNav = () => {
         <nav className="hidden lg:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2">
           <NavLink to="/" className={getNavClass}>Home</NavLink>
           <NavLink to="/Speak" className={getNavClass}>
-            Speak with&nbsp;<span className="text-teal-600 dark:text-teal-400 font-semibold">ONSY</span>
+            Speak with&nbsp;<span className={`${isMoodPage ? 'text-white drop-shadow-md' : 'text-teal-600 dark:text-teal-400'} font-semibold`}>ONSY</span>
           </NavLink>
           <NavLink to="/Dashboard" className={getNavClass}>Dashboard</NavLink>
           <NavLink to="/EMotiv" className={getNavClass}>E&#8209;Motiv</NavLink>
