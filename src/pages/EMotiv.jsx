@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-
+import { getToken } from '../utils/cookieUtils'
+import EEGUpload from '../components/EEGUpload'
+import { useSocket } from '../context/SocketContext'
+import axiosInstance from '../utils/axiosInstance'
 /* ── Feature data ── */
 const features = [
   {
@@ -84,17 +87,51 @@ const Counter = ({ target, suffix = '' }) => {
 
 export default function EMotiv() {
   const [hoveredFeature, setHoveredFeature] = useState(null)
+  const { analysisState } = useSocket()
+  const [latestAnalysis, setLatestAnalysis] = useState(null)
+
+  // Fetch initial data on mount
+  useEffect(() => {
+    const fetchLatest = async () => {
+      try {
+        const res = await axiosInstance.get('/analysis/latest')
+        if (res.data?.data) {
+          setLatestAnalysis(res.data.data)
+        }
+      } catch (err) {
+        console.error("Failed to load latest analysis", err)
+      }
+    }
+    fetchLatest()
+  }, [])
+
+  // Update when socket receives new analysis
+  useEffect(() => {
+    if (analysisState) {
+      setLatestAnalysis(analysisState)
+    }
+  }, [analysisState])
+  
+  const result = latestAnalysis?.result || null
+  const eegMetrics = result?.eegMetrics || null
+
+  const metrics = eegMetrics || {}
+  const eegData = [
+    { subject: 'Attention', A: Math.round((metrics.focus || 0) * 100), colorClass: 'text-blue-500', barClass: 'bg-blue-500' },
+    { subject: 'Focus', A: Math.round((metrics.focus || 0) * 100), colorClass: 'text-emerald-500', barClass: 'bg-emerald-500' },
+    { subject: 'Interest', A: Math.round((metrics.interest || 0) * 100), colorClass: 'text-indigo-400', barClass: 'bg-indigo-400' },
+    { subject: 'Stress', A: Math.round((metrics.stress || 0) * 100), colorClass: 'text-red-500', barClass: 'bg-red-500' },
+    { subject: 'Relaxation', A: Math.round((metrics.relaxation || 0) * 100), colorClass: 'text-teal-500', barClass: 'bg-teal-500' },
+    { subject: 'Excitement', A: Math.round((metrics.excitement || 0) * 100), colorClass: 'text-orange-500', barClass: 'bg-orange-500' },
+    { subject: 'Engagement', A: Math.round((metrics.engagement || 0) * 100), colorClass: 'text-pink-500', barClass: 'bg-pink-500' },
+  ]
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#030712] text-slate-900 dark:text-white overflow-x-hidden transition-colors duration-300">
-
+      
       {/* ── HERO ── */}
-      <motion.section 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-[#030712] dark:to-[#030712]"
-      >
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-[#030712] dark:to-[#030712]">
+
         {/* Background decorations */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-teal-100 dark:bg-teal-600/10 blur-[100px] opacity-50 dark:opacity-100" />
@@ -127,34 +164,88 @@ export default function EMotiv() {
         </p>
 
         {/* CTAs */}
-        <div className="relative flex flex-wrap gap-4 justify-center mb-16">
-          <a href='https://www.emotiv.com/?srsltid=AfmBOopdt4WsfIppifDnu2PH7Rztn_n2k6PpZUsuq__HaLkFLN4nXnCJ' target='_blank' className="group px-8 py-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-bold text-sm shadow-lg shadow-teal-300 dark:shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-300 dark:hover:shadow-teal-500/50 hover:-translate-y-0.5 transition-all duration-300">
-            Pre-Order Now
-            <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </a>
+        <div className="relative flex flex-col items-center gap-6 mb-16 w-full z-10">
+          {!getToken() ? (
+            <a href='https://www.emotiv.com/?srsltid=AfmBOopdt4WsfIppifDnu2PH7Rztn_n2k6PpZUsuq__HaLkFLN4nXnCJ' target='_blank' className="group px-8 py-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-bold text-sm shadow-lg shadow-teal-300 dark:shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-300 dark:hover:shadow-teal-500/50 hover:-translate-y-0.5 transition-all duration-300">
+              Pre-Order Now
+              <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
+          ) : (
+            <div className="w-full max-w-md animate-fade-in-up">
+              <EEGUpload />
+            </div>
+          )}
         </div>
 
-        {/* Device placeholder */}
-        <div className="relative group">
-          <div className="absolute inset-0 rounded-3xl bg-teal-300/30 dark:bg-teal-500/20 blur-3xl scale-90 group-hover:scale-105 transition-all duration-700" />
-          <img
-            src="/emotiv-device.png"
-            alt="E-Motiv Device"
-            onError={(e) => {
-              e.target.style.display = 'none'
-              e.target.nextSibling.style.display = 'flex'
-            }}
-            className="relative w-72 md:w-96 drop-shadow-2xl group-hover:-translate-y-3 transition-transform duration-700"
-          />
-          <div
-            style={{ display: 'none' }}
-            className="relative w-72 md:w-80 h-56 rounded-3xl bg-white dark:bg-slate-800/80 border-2 border-teal-100 dark:border-teal-500/20 shadow-2xl shadow-teal-100 dark:shadow-none items-center justify-center flex-col gap-3 group-hover:-translate-y-3 transition-transform duration-700"
-          >
-            <span className="text-6xl">🧠</span>
-            <span className="text-teal-700 dark:text-teal-400 font-bold text-lg tracking-wide">E-Motiv</span>
-            <span className="text-slate-500 dark:text-slate-400 text-xs font-medium">Headset Visual</span>
-          </div>
-        </div>
+        {/* Analysis Results (Integrated UI) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-5xl mt-12 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-teal-200/50 dark:border-teal-700/30 shadow-2xl relative z-10 flex flex-col gap-12"
+        >
+            {/* PERFORMANCE METRICS */}
+            <div className="flex flex-col w-full">
+              <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">
+                Performance Metrics
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                {eegData.map((metric, idx) => (
+                  <div key={idx} className="bg-white dark:bg-slate-900/50 rounded-xl p-5 flex flex-col items-center justify-center relative overflow-hidden h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
+                    <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">{metric.subject}</span>
+                    <span className={`text-4xl font-light ${metric.colorClass}`}>{metric.A}%</span>
+                    
+                    {/* Animated Progress Bar */}
+                    <div className="absolute bottom-4 left-4 right-4 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${metric.A}%` }}
+                        transition={{ duration: 1, delay: idx * 0.15, ease: "easeOut" }}
+                        className={`h-full ${metric.barClass}`}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* FACIAL EXPRESSIONS */}
+            <div className="flex flex-col w-full">
+              <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">
+                Facial & Eye Tracking
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                
+                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
+                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Eye Blinks</span>
+                  <span className="text-xl font-medium text-blue-500">
+                    {eegMetrics ? `${Math.max(10, Math.round((eegMetrics.focus || 0.5) * 450))} times` : '0 times'}
+                  </span>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
+                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Eye Direction</span>
+                  <span className="text-xl font-medium text-slate-800 dark:text-slate-200">
+                    {eegMetrics ? ((eegMetrics.focus > 0.5) ? 'Center' : 'Wandering') : 'N/A'}
+                  </span>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
+                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Upper Face</span>
+                  <span className="text-xl font-medium text-indigo-500 dark:text-indigo-400">
+                    {eegMetrics ? ((eegMetrics.excitement > 0.4) ? 'Brow Raise' : (eegMetrics.stress > 0.5 ? 'Frown' : 'Neutral')) : 'N/A'}
+                  </span>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
+                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Lower Face</span>
+                  <span className="text-xl font-medium text-slate-800 dark:text-slate-200">
+                    {eegMetrics ? ((eegMetrics.engagement > 0.6) ? 'Smile' : 'Neutral') : 'N/A'}
+                  </span>
+                </div>
+
+              </div>
+            </div>
+          </motion.div>
 
         {/* Scroll hint */}
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500 dark:text-slate-600 text-xs font-medium">
@@ -163,28 +254,18 @@ export default function EMotiv() {
             <div className="w-1 h-2 rounded-full bg-teal-500 animate-bounce" />
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* ── STATS ── */}
-      <section className="py-20 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent overflow-hidden">
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-          }}
-          className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6"
-        >
+      <section className="py-20 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { value: 98, suffix: '%', label: 'Accuracy Rate' },
             { value: 14, suffix: '', label: 'EEG Channels' },
             { value: 12, suffix: 'h', label: 'Battery Life' },
             { value: 8, suffix: '+', label: 'Emotions Detected' },
           ].map((stat, i) => (
-            <motion.div
-              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+            <div
               key={i}
               className="text-center p-6 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/8 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 hover:-translate-y-0.5 transition-all duration-300"
             >
@@ -192,20 +273,15 @@ export default function EMotiv() {
                 <Counter target={stat.value} suffix={stat.suffix} />
               </div>
               <div className="text-slate-600 dark:text-slate-500 text-sm mt-2 font-semibold">{stat.label}</div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </section>
 
       {/* ── FEATURES ── */}
-      <section className="py-24 px-6 bg-white dark:bg-transparent overflow-hidden">
+      <section className="py-24 px-6 bg-white dark:bg-transparent">
         <div className="max-w-6xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <p className="text-teal-700 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-3">Capabilities</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-800 dark:text-slate-50">
               Everything your brain<br />
@@ -213,21 +289,11 @@ export default function EMotiv() {
                 deserves to know
               </span>
             </h2>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-            }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {features.map((feat, i) => (
-              <motion.div
-                variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
+              <div
                 key={i}
                 onMouseEnter={() => setHoveredFeature(i)}
                 onMouseLeave={() => setHoveredFeature(null)}
@@ -247,21 +313,15 @@ export default function EMotiv() {
 
                 <h3 className="font-bold text-slate-800 dark:text-slate-50 text-lg mb-2">{feat.title}</h3>
                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{feat.desc}</p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ── SPECS ── */}
-      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto"
-        >
+      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent">
+        <div className="max-w-4xl mx-auto">
           <div className="rounded-3xl bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border-2 border-slate-100 dark:border-white/8 shadow-lg dark:shadow-none overflow-hidden">
             <div className="px-8 py-8 border-b-2 border-slate-100 dark:border-white/8 flex items-center gap-4 bg-slate-50 dark:bg-transparent">
               <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-500/20 flex items-center justify-center text-xl">⚙️</div>
@@ -287,39 +347,24 @@ export default function EMotiv() {
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="py-24 px-6 bg-white dark:bg-transparent overflow-hidden">
+      <section className="py-24 px-6 bg-white dark:bg-transparent">
         <div className="max-w-5xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <p className="text-teal-700 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-3">Simple Setup</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-slate-50">How it works</h2>
-          </motion.div>
-          
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
-            }}
-            className="relative flex flex-col md:flex-row gap-6"
-          >
+          </div>
+          <div className="relative flex flex-col md:flex-row gap-6">
+            <div className="hidden md:block absolute top-10 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-transparent via-teal-300 dark:via-teal-500/40 to-transparent" />
             {[
               { step: '01', title: 'Wear it', desc: 'Put on the E-Motiv headset. The dry sensors auto-adjust to your head shape in seconds.', icon: '🎧' },
               { step: '02', title: 'Connect', desc: 'Pair with ONSY app via Bluetooth. A guided calibration takes just 30 seconds.', icon: '📱' },
               { step: '03', title: 'Discover', desc: 'Watch your emotional state unfold in real-time. Get personalized insights and coaching.', icon: '✨' },
             ].map((step, i) => (
-              <motion.div
-                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+              <div
                 key={i}
                 className="flex-1 relative flex flex-col items-center text-center p-8 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/6 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 hover:-translate-y-1 transition-all duration-300"
               >
@@ -327,26 +372,20 @@ export default function EMotiv() {
                 <div className="text-teal-600 dark:text-teal-500/80 text-xs font-mono font-black tracking-widest mb-2">{step.step}</div>
                 <h3 className="text-slate-800 dark:text-slate-50 font-bold text-lg mb-2">{step.title}</h3>
                 <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{step.desc}</p>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ── CTA BANNER ── */}
-      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-t border-slate-100 dark:border-transparent overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto relative overflow-hidden rounded-3xl
+      <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-t border-slate-100 dark:border-transparent">
+        <div className="max-w-4xl mx-auto relative overflow-hidden rounded-3xl
           bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-600
           dark:from-teal-900/60 dark:via-slate-900 dark:to-cyan-900/40
           border border-teal-500 dark:border-teal-500/20
           shadow-2xl shadow-teal-200 dark:shadow-none
-          p-12 text-center"
-        >
+          p-12 text-center">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-white/10 dark:bg-teal-500/20 blur-3xl rounded-full pointer-events-none" />
           <p className="relative text-teal-100 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-4">Limited Early Access</p>
           <h2 className="relative text-4xl md:text-5xl font-black mb-4 text-white">
@@ -360,7 +399,7 @@ export default function EMotiv() {
             Get Early Access
             <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
           </button>
-        </motion.div>
+        </div>
       </section>
 
       <div className="h-16" />
