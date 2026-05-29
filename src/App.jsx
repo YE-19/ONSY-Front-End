@@ -18,10 +18,12 @@ import Dashboard from './pages/Dashboard'
 import SpeakChatBot from './pages/SpeakChatBot'
 import EMotiv from './pages/EMotiv'
 import MoodT from './pages/MoodT'
+import EEGAnalysis from './pages/EEGAnalysis'
 import Profile from './pages/Profile'
 import { ThemeProvider } from './context/ThemeContext'
 import { SocketProvider } from './context/SocketContext'
 import MoodReminderNotification from './components/MoodReminderNotification'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
 
@@ -31,6 +33,7 @@ function App() {
         <SocketProvider>
           <MainNav />
           <MoodReminderNotification />
+          <ScrollToTop />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/SignUp' element={<PublicRoute> <SignUp /> </PublicRoute>} />
@@ -45,6 +48,7 @@ function App() {
             <Route path='/Dashboard' element={<ProtectedRoute> <Dashboard /> </ProtectedRoute>} />
             <Route path='/Speak' element={<ProtectedRoute> <SpeakChatBot /> </ProtectedRoute>} />
             <Route path='/EMotiv' element={<ProtectedRoute> <EMotiv /> </ProtectedRoute>} />
+            <Route path='/EEGAnalysis' element={<ProtectedRoute> <EEGAnalysis /> </ProtectedRoute>} />
             <Route path='/Mood' element={<ProtectedRoute> <MoodT /> </ProtectedRoute>} />
             <Route path='/Profile' element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
             {/* <Route path='/Speak' element={<ProtectedRoute> <AiChat /> </ProtectedRoute>  } /> */}

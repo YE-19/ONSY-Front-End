@@ -1,9 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { getToken } from '../utils/cookieUtils'
-import EEGUpload from '../components/EEGUpload'
-import { useSocket } from '../context/SocketContext'
-import axiosInstance from '../utils/axiosInstance'
+
+/* ── Reusable scroll-reveal wrapper ── */
+const Reveal = ({ children, delay = 0, className = '', y = 30 }) => {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
 /* ── Feature data ── */
 const features = [
   {
@@ -87,54 +103,27 @@ const Counter = ({ target, suffix = '' }) => {
 
 export default function EMotiv() {
   const [hoveredFeature, setHoveredFeature] = useState(null)
-  const { analysisState } = useSocket()
-  const [latestAnalysis, setLatestAnalysis] = useState(null)
-
-  // Fetch initial data on mount
-  useEffect(() => {
-    const fetchLatest = async () => {
-      try {
-        const res = await axiosInstance.get('/analysis/latest')
-        if (res.data?.data) {
-          setLatestAnalysis(res.data.data)
-        }
-      } catch (err) {
-        console.error("Failed to load latest analysis", err)
-      }
-    }
-    fetchLatest()
-  }, [])
-
-  // Update when socket receives new analysis
-  useEffect(() => {
-    if (analysisState) {
-      setLatestAnalysis(analysisState)
-    }
-  }, [analysisState])
-  
-  const result = latestAnalysis?.result || null
-  const eegMetrics = result?.eegMetrics || null
-
-  const metrics = eegMetrics || {}
-  const eegData = [
-    { subject: 'Attention', A: Math.round((metrics.focus || 0) * 100), colorClass: 'text-blue-500', barClass: 'bg-blue-500' },
-    { subject: 'Focus', A: Math.round((metrics.focus || 0) * 100), colorClass: 'text-emerald-500', barClass: 'bg-emerald-500' },
-    { subject: 'Interest', A: Math.round((metrics.interest || 0) * 100), colorClass: 'text-indigo-400', barClass: 'bg-indigo-400' },
-    { subject: 'Stress', A: Math.round((metrics.stress || 0) * 100), colorClass: 'text-red-500', barClass: 'bg-red-500' },
-    { subject: 'Relaxation', A: Math.round((metrics.relaxation || 0) * 100), colorClass: 'text-teal-500', barClass: 'bg-teal-500' },
-    { subject: 'Excitement', A: Math.round((metrics.excitement || 0) * 100), colorClass: 'text-orange-500', barClass: 'bg-orange-500' },
-    { subject: 'Engagement', A: Math.round((metrics.engagement || 0) * 100), colorClass: 'text-pink-500', barClass: 'bg-pink-500' },
-  ]
+  const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#030712] text-slate-900 dark:text-white overflow-x-hidden transition-colors duration-300">
-      
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen bg-white dark:bg-[#030712] text-slate-900 dark:text-white overflow-x-hidden transition-colors duration-300"
+    >
+
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-28 pb-16 overflow-hidden bg-gradient-to-b from-slate-50 to-white dark:from-[#030712] dark:to-[#030712]">
 
         {/* Background decorations */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-teal-100 dark:bg-teal-600/10 blur-[100px] opacity-50 dark:opacity-100" />
+          <motion.div
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 0.5 }}
+            transition={{ duration: 1.4, ease: 'easeOut' }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-teal-100 dark:bg-teal-600/10 blur-[100px] dark:opacity-100"
+          />
           <div
             className="absolute inset-0 opacity-[0.05] dark:opacity-[0.04]"
             style={{
@@ -145,115 +134,79 @@ export default function EMotiv() {
         </div>
 
         {/* Badge */}
-        <div className="relative mb-6 flex items-center gap-2 bg-teal-50 dark:bg-teal-500/10 border border-teal-200 dark:border-teal-500/30 text-teal-700 dark:text-teal-300 text-xs font-semibold px-4 py-1.5 rounded-full tracking-widest uppercase shadow-sm">
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="relative mb-6 flex items-center gap-2 bg-teal-50 dark:bg-teal-500/10 border border-teal-200 dark:border-teal-500/30 text-teal-700 dark:text-teal-300 text-xs font-semibold px-4 py-1.5 rounded-full tracking-widest uppercase shadow-sm"
+        >
           <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
           Next-Gen Neurotechnology
-        </div>
+        </motion.div>
 
         {/* Headline */}
-        <h1 className="relative text-center text-5xl md:text-7xl font-black tracking-tight leading-none mb-6">
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="relative text-center text-5xl md:text-7xl font-black tracking-tight leading-none mb-6"
+        >
           <span className="text-slate-800 dark:text-slate-50">Meet </span>
           <span className="bg-gradient-to-r from-teal-600 via-cyan-500 to-teal-700 dark:from-teal-400 dark:via-cyan-300 dark:to-teal-500 bg-clip-text text-transparent">
             E-Motiv
           </span>
-        </h1>
+        </motion.h1>
 
-        <p className="relative max-w-xl text-center text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed mb-10 font-medium">
-          The world's first emotionally-aware EEG headset, built for everyday use.
-          Understand your brain. Master your mood. Live better.
-        </p>
-
-        {/* CTAs */}
-        <div className="relative flex flex-col items-center gap-6 mb-16 w-full z-10">
-          {!getToken() ? (
-            <a href='https://www.emotiv.com/?srsltid=AfmBOopdt4WsfIppifDnu2PH7Rztn_n2k6PpZUsuq__HaLkFLN4nXnCJ' target='_blank' className="group px-8 py-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-bold text-sm shadow-lg shadow-teal-300 dark:shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-300 dark:hover:shadow-teal-500/50 hover:-translate-y-0.5 transition-all duration-300">
-              Pre-Order Now
-              <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
-          ) : (
-            <div className="w-full max-w-md animate-fade-in-up">
-              <EEGUpload />
-            </div>
-          )}
-        </div>
-
-        {/* Analysis Results (Integrated UI) */}
-        <motion.div 
+        <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-5xl mt-12 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-teal-200/50 dark:border-teal-700/30 shadow-2xl relative z-10 flex flex-col gap-12"
+          transition={{ duration: 0.7, delay: 0.35 }}
+          className="relative max-w-xl text-center text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed mb-10 font-medium"
         >
-            {/* PERFORMANCE METRICS */}
-            <div className="flex flex-col w-full">
-              <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">
-                Performance Metrics
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                {eegData.map((metric, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-900/50 rounded-xl p-5 flex flex-col items-center justify-center relative overflow-hidden h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
-                    <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">{metric.subject}</span>
-                    <span className={`text-4xl font-light ${metric.colorClass}`}>{metric.A}%</span>
-                    
-                    {/* Animated Progress Bar */}
-                    <div className="absolute bottom-4 left-4 right-4 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${metric.A}%` }}
-                        transition={{ duration: 1, delay: idx * 0.15, ease: "easeOut" }}
-                        className={`h-full ${metric.barClass}`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          The world's first emotionally-aware EEG headset, built for everyday use.
+          Understand your brain. Master your mood. Live better.
+        </motion.p>
 
-            {/* FACIAL EXPRESSIONS */}
-            <div className="flex flex-col w-full">
-              <h3 className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">
-                Facial & Eye Tracking
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                
-                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
-                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Eye Blinks</span>
-                  <span className="text-xl font-medium text-blue-500">
-                    {eegMetrics ? `${Math.max(10, Math.round((eegMetrics.focus || 0.5) * 450))} times` : '0 times'}
-                  </span>
-                </div>
+        {/* CTA button */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="relative flex flex-col items-center gap-6 mb-16 w-full z-10"
+        >
 
-                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
-                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Eye Direction</span>
-                  <span className="text-xl font-medium text-slate-800 dark:text-slate-200">
-                    {eegMetrics ? ((eegMetrics.focus > 0.5) ? 'Center' : 'Wandering') : 'N/A'}
-                  </span>
-                </div>
-
-                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
-                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Upper Face</span>
-                  <span className="text-xl font-medium text-indigo-500 dark:text-indigo-400">
-                    {eegMetrics ? ((eegMetrics.excitement > 0.4) ? 'Brow Raise' : (eegMetrics.stress > 0.5 ? 'Frown' : 'Neutral')) : 'N/A'}
-                  </span>
-                </div>
-
-                <div className="bg-white dark:bg-slate-900/50 rounded-xl p-6 flex flex-col items-center justify-center text-center h-32 shadow-sm border border-slate-100 dark:border-slate-700/50">
-                  <span className="text-slate-600 dark:text-slate-300 font-bold text-sm mb-2">Lower Face</span>
-                  <span className="text-xl font-medium text-slate-800 dark:text-slate-200">
-                    {eegMetrics ? ((eegMetrics.engagement > 0.6) ? 'Smile' : 'Neutral') : 'N/A'}
-                  </span>
-                </div>
-
-              </div>
-            </div>
-          </motion.div>
+          <motion.a
+            href="https://www.emotiv.com/?srsltid=AfmBOopdt4WsfIppifDnu2PH7Rztn_n2k6PpZUsuq__HaLkFLN4nXnCJ"
+            target="_blank"
+            rel="noreferrer"
+            whileHover={{ y: -3, scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="group px-8 py-3.5 rounded-2xl bg-gradient-to-r from-teal-600 to-cyan-500 text-white font-bold text-sm shadow-lg shadow-teal-300 dark:shadow-teal-500/30 hover:shadow-xl hover:shadow-teal-300 dark:hover:shadow-teal-500/50 transition-shadow duration-300"
+          >
+            Pre-Order Now
+            <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </motion.a>
+        </motion.div>
 
         {/* Scroll hint */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-slate-500 dark:text-slate-600 text-xs font-medium">
-          <span>Scroll to explore</span>
-          <div className="w-5 h-8 rounded-full border-2 border-slate-300 dark:border-slate-700 flex items-start justify-center pt-1.5">
-            <div className="w-1 h-2 rounded-full bg-teal-500 animate-bounce" />
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer group"
+        >
+          <span className="text-teal-600 dark:text-teal-400 text-[10px] sm:text-xs font-bold tracking-widest uppercase bg-teal-50/80 dark:bg-teal-900/40 px-4 py-1.5 rounded-full shadow-sm backdrop-blur-sm border border-teal-100 dark:border-teal-800 transition-colors group-hover:bg-teal-100 dark:group-hover:bg-teal-800/50">
+            Scroll down for Early Access
+          </span>
+          <div className="w-6 h-10 rounded-full border-2 border-teal-200 dark:border-teal-700/60 flex items-start justify-center pt-2 bg-white/30 dark:bg-slate-800/30 backdrop-blur-sm">
+            <motion.div 
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              className="w-1.5 h-3 rounded-full bg-gradient-to-b from-teal-500 to-cyan-400" 
+            />
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── STATS ── */}
@@ -265,15 +218,14 @@ export default function EMotiv() {
             { value: 12, suffix: 'h', label: 'Battery Life' },
             { value: 8, suffix: '+', label: 'Emotions Detected' },
           ].map((stat, i) => (
-            <div
-              key={i}
-              className="text-center p-6 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/8 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 hover:-translate-y-0.5 transition-all duration-300"
-            >
-              <div className="text-4xl font-black bg-gradient-to-r from-teal-600 to-cyan-500 dark:from-teal-400 dark:to-cyan-300 bg-clip-text text-transparent">
-                <Counter target={stat.value} suffix={stat.suffix} />
+            <Reveal key={i} delay={i * 0.1}>
+              <div className="text-center p-6 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/8 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 hover:-translate-y-0.5 transition-all duration-300">
+                <div className="text-4xl font-black bg-gradient-to-r from-teal-600 to-cyan-500 dark:from-teal-400 dark:to-cyan-300 bg-clip-text text-transparent">
+                  <Counter target={stat.value} suffix={stat.suffix} />
+                </div>
+                <div className="text-slate-600 dark:text-slate-500 text-sm mt-2 font-semibold">{stat.label}</div>
               </div>
-              <div className="text-slate-600 dark:text-slate-500 text-sm mt-2 font-semibold">{stat.label}</div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -281,7 +233,7 @@ export default function EMotiv() {
       {/* ── FEATURES ── */}
       <section className="py-24 px-6 bg-white dark:bg-transparent">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
             <p className="text-teal-700 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-3">Capabilities</p>
             <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-800 dark:text-slate-50">
               Everything your brain<br />
@@ -289,31 +241,36 @@ export default function EMotiv() {
                 deserves to know
               </span>
             </h2>
-          </div>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {features.map((feat, i) => (
-              <div
-                key={i}
-                onMouseEnter={() => setHoveredFeature(i)}
-                onMouseLeave={() => setHoveredFeature(null)}
-                className={`relative p-6 rounded-2xl border-2 transition-all duration-300 cursor-default overflow-hidden
-                  ${hoveredFeature === i
-                    ? `bg-slate-50 dark:bg-white/[0.06] border-slate-200 dark:border-white/15 -translate-y-1 shadow-xl ${feat.shadow} dark:shadow-none`
-                    : 'bg-white dark:bg-white/[0.03] border-slate-100 dark:border-white/6'
-                  }`}
-              >
-                {hoveredFeature === i && (
-                  <div className={`absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br ${feat.color} opacity-10 blur-3xl pointer-events-none`} />
-                )}
-
-                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${feat.color} text-2xl mb-4 shadow-lg`}>
-                  {feat.icon}
-                </div>
-
-                <h3 className="font-bold text-slate-800 dark:text-slate-50 text-lg mb-2">{feat.title}</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{feat.desc}</p>
-              </div>
+              <Reveal key={i} delay={i * 0.08} y={20}>
+                <motion.div
+                  onMouseEnter={() => setHoveredFeature(i)}
+                  onMouseLeave={() => setHoveredFeature(null)}
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.25 }}
+                  className={`relative p-6 rounded-2xl border-2 transition-colors duration-300 cursor-default overflow-hidden h-full
+                    ${hoveredFeature === i
+                      ? `bg-slate-50 dark:bg-white/[0.06] border-slate-200 dark:border-white/15 shadow-xl ${feat.shadow} dark:shadow-none`
+                      : 'bg-white dark:bg-white/[0.03] border-slate-100 dark:border-white/6'
+                    }`}
+                >
+                  {hoveredFeature === i && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className={`absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br ${feat.color} opacity-10 blur-3xl pointer-events-none`}
+                    />
+                  )}
+                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${feat.color} text-2xl mb-4 shadow-lg`}>
+                    {feat.icon}
+                  </div>
+                  <h3 className="font-bold text-slate-800 dark:text-slate-50 text-lg mb-2">{feat.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{feat.desc}</p>
+                </motion.div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -322,41 +279,47 @@ export default function EMotiv() {
       {/* ── SPECS ── */}
       <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-y border-slate-100 dark:border-transparent">
         <div className="max-w-4xl mx-auto">
-          <div className="rounded-3xl bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border-2 border-slate-100 dark:border-white/8 shadow-lg dark:shadow-none overflow-hidden">
-            <div className="px-8 py-8 border-b-2 border-slate-100 dark:border-white/8 flex items-center gap-4 bg-slate-50 dark:bg-transparent">
-              <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-500/20 flex items-center justify-center text-xl">⚙️</div>
-              <div>
-                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-50">Technical Specifications</h2>
-                <p className="text-slate-600 dark:text-slate-500 text-sm font-medium">Hardware built to clinical standards</p>
+          <Reveal>
+            <div className="rounded-3xl bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-950 border-2 border-slate-100 dark:border-white/8 shadow-lg dark:shadow-none overflow-hidden">
+              <div className="px-8 py-8 border-b-2 border-slate-100 dark:border-white/8 flex items-center gap-4 bg-slate-50 dark:bg-transparent">
+                <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-500/20 flex items-center justify-center text-xl">⚙️</div>
+                <div>
+                  <h2 className="text-xl font-bold text-slate-800 dark:text-slate-50">Technical Specifications</h2>
+                  <p className="text-slate-600 dark:text-slate-500 text-sm font-medium">Hardware built to clinical standards</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3">
+                {specs.map((spec, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.4, delay: i * 0.07 }}
+                    className={`px-8 py-6
+                      ${i % 3 !== 2 ? 'border-r-2 border-slate-100 dark:border-white/6' : ''}
+                      ${i < 3 ? 'border-b-2 border-slate-100 dark:border-white/6' : ''}
+                      hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors duration-200`}
+                  >
+                    <div className="text-2xl font-black bg-gradient-to-r from-teal-600 to-cyan-500 dark:from-teal-400 dark:to-cyan-300 bg-clip-text text-transparent mb-1">
+                      {spec.value}
+                    </div>
+                    <div className="text-slate-600 dark:text-slate-500 text-xs font-bold uppercase tracking-widest">{spec.label}</div>
+                  </motion.div>
+                ))}
               </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3">
-              {specs.map((spec, i) => (
-                <div
-                  key={i}
-                  className={`px-8 py-6
-                    ${i % 3 !== 2 ? 'border-r-2 border-slate-100 dark:border-white/6' : ''}
-                    ${i < 3 ? 'border-b-2 border-slate-100 dark:border-white/6' : ''}
-                    hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors duration-200`}
-                >
-                  <div className="text-2xl font-black bg-gradient-to-r from-teal-600 to-cyan-500 dark:from-teal-400 dark:to-cyan-300 bg-clip-text text-transparent mb-1">
-                    {spec.value}
-                  </div>
-                  <div className="text-slate-600 dark:text-slate-500 text-xs font-bold uppercase tracking-widest">{spec.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── HOW IT WORKS ── */}
       <section className="py-24 px-6 bg-white dark:bg-transparent">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
+          <Reveal className="text-center mb-16">
             <p className="text-teal-700 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-3">Simple Setup</p>
             <h2 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-slate-50">How it works</h2>
-          </div>
+          </Reveal>
           <div className="relative flex flex-col md:flex-row gap-6">
             <div className="hidden md:block absolute top-10 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-transparent via-teal-300 dark:via-teal-500/40 to-transparent" />
             {[
@@ -364,15 +327,18 @@ export default function EMotiv() {
               { step: '02', title: 'Connect', desc: 'Pair with ONSY app via Bluetooth. A guided calibration takes just 30 seconds.', icon: '📱' },
               { step: '03', title: 'Discover', desc: 'Watch your emotional state unfold in real-time. Get personalized insights and coaching.', icon: '✨' },
             ].map((step, i) => (
-              <div
-                key={i}
-                className="flex-1 relative flex flex-col items-center text-center p-8 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/6 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="text-4xl mb-4">{step.icon}</div>
-                <div className="text-teal-600 dark:text-teal-500/80 text-xs font-mono font-black tracking-widest mb-2">{step.step}</div>
-                <h3 className="text-slate-800 dark:text-slate-50 font-bold text-lg mb-2">{step.title}</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{step.desc}</p>
-              </div>
+              <Reveal key={i} delay={i * 0.15} y={24} className="flex-1">
+                <motion.div
+                  whileHover={{ y: -8 }}
+                  transition={{ duration: 0.25 }}
+                  className="relative flex flex-col items-center text-center p-8 rounded-2xl bg-white dark:bg-white/[0.03] border-2 border-slate-100 dark:border-white/6 shadow-md dark:shadow-none hover:border-teal-200 dark:hover:border-teal-500/30 transition-colors duration-300 h-full"
+                >
+                  <div className="text-4xl mb-4">{step.icon}</div>
+                  <div className="text-teal-600 dark:text-teal-500/80 text-xs font-mono font-black tracking-widest mb-2">{step.step}</div>
+                  <h3 className="text-slate-800 dark:text-slate-50 font-bold text-lg mb-2">{step.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{step.desc}</p>
+                </motion.div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -380,29 +346,82 @@ export default function EMotiv() {
 
       {/* ── CTA BANNER ── */}
       <section className="py-24 px-6 bg-slate-50 dark:bg-transparent border-t border-slate-100 dark:border-transparent">
-        <div className="max-w-4xl mx-auto relative overflow-hidden rounded-3xl
-          bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-600
-          dark:from-teal-900/60 dark:via-slate-900 dark:to-cyan-900/40
-          border border-teal-500 dark:border-teal-500/20
-          shadow-2xl shadow-teal-200 dark:shadow-none
-          p-12 text-center">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-white/10 dark:bg-teal-500/20 blur-3xl rounded-full pointer-events-none" />
-          <p className="relative text-teal-100 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-4">Limited Early Access</p>
-          <h2 className="relative text-4xl md:text-5xl font-black mb-4 text-white">
-            Ready to understand<br />
-            <span className="text-teal-200 dark:text-cyan-300">your mind?</span>
-          </h2>
-          <p className="relative text-teal-50 dark:text-slate-400 mb-8 max-w-md mx-auto font-medium">
-            Join thousands of early adopters and be among the first to experience E-Motiv.
-          </p>
-          <button className="relative group px-10 py-4 rounded-2xl bg-white text-teal-700 font-bold shadow-xl hover:-translate-y-0.5 transition-all duration-300 text-lg hover:shadow-2xl hover:bg-teal-50">
-            Get Early Access
-            <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </button>
-        </div>
+        <Reveal y={20}>
+          <div className="max-w-4xl mx-auto relative overflow-hidden rounded-3xl
+            bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-600
+            dark:from-teal-900/60 dark:via-slate-900 dark:to-cyan-900/40
+            border border-teal-500 dark:border-teal-500/20
+            shadow-2xl shadow-teal-200 dark:shadow-none
+            p-12 text-center"
+          >
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-white/10 dark:bg-teal-500/20 blur-3xl rounded-full pointer-events-none" />
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="relative text-teal-100 dark:text-teal-400 text-sm font-bold tracking-widest uppercase mb-4"
+            >
+              Limited Early Access
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="relative text-4xl md:text-5xl font-black mb-4 text-white"
+            >
+              Ready to understand<br />
+              <span className="text-teal-200 dark:text-cyan-300">your mind?</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="relative text-teal-50 dark:text-slate-400 mb-8 max-w-md mx-auto font-medium"
+            >
+              Join thousands of early adopters and be among the first to experience E-Motiv.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="relative inline-flex flex-col items-center gap-5 mt-4"
+            >
+              {/* Animated arrows pointing down */}
+              <motion.div 
+                animate={{ y: [0, 8, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                className="flex flex-col items-center text-teal-100 dark:text-cyan-200 drop-shadow-md"
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="7 13 12 18 17 13"></polyline>
+                  <polyline points="7 6 12 11 17 6"></polyline>
+                </svg>
+              </motion.div>
+
+              <div className="relative">
+                {/* Glowing pulse ring behind button */}
+                <div className="absolute -inset-1.5 rounded-[1.3rem] bg-gradient-to-r from-teal-200 to-white dark:from-cyan-300 dark:to-teal-300 opacity-60 blur-lg animate-pulse" />
+                
+                <motion.button
+                  whileHover={{ y: -3, scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/EEGAnalysis')}
+                  className="relative group px-12 py-4 rounded-2xl bg-white text-teal-800 font-black shadow-2xl transition-all duration-300 text-xl hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] ring-4 ring-white/40 dark:ring-white/20"
+                >
+                  Get Early Access
+                  <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-2">→</span>
+                </motion.button>
+              </div>
+            </motion.div>
+          </div>
+        </Reveal>
       </section>
 
       <div className="h-16" />
-    </div>
+    </motion.div>
   )
 }

@@ -7,7 +7,7 @@ const MainNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const isHomePage = location.pathname === '/' || location.pathname === '/Mood';
+  const isHomePage = location.pathname === '/';
   const isSpeakPage = location.pathname === '/Speak';
   const isMoodPage = location.pathname === '/Mood';
 
