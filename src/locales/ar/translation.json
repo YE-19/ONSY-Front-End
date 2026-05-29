@@ -1,0 +1,35 @@
+{
+  "navbar": {
+    "home": "الرئيسية",
+    "speakWith": "تحدث مع",
+    "dashboard": "لوحة القيادة",
+    "emotiv": "إي-موتيف",
+    "mood": "المزاج",
+    "profile": "الملف الشخصي",
+    "logIn": "تسجيل الدخول",
+    "logOut": "تسجيل الخروج",
+    "navigation": "التنقل"
+  },
+  "dashboard": {
+    "performanceMetrics": "المقاييس النفسية",
+    "attention": "الانتباه",
+    "focus": "التركيز",
+    "interest": "الاهتمام",
+    "engagement": "التفاعل",
+    "stress": "الإجهاد",
+    "relaxation": "الاسترخاء",
+    "excitement": "الإثارة",
+    "facialExpressions": "تعبيرات الوجه",
+    "eyeBlinks": "رمش العين",
+    "eyeDirection": "اتجاه العيون",
+    "upperFace": "حركة الوجه العلوي",
+    "lowerFace": "حركة الوجه السفلي",
+    "center": "مركز",
+    "wandering": "متجول",
+    "browRaise": "رفع حاجب",
+    "frown": "عبوس",
+    "smile": "ابتسامة",
+    "neutral": "محايد",
+    "times": "مرة"
+  }
+}

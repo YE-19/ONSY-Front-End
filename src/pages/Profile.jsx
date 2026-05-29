@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProfile, updateProfile, changePassword, deleteAccount } from '../services/profileService';
 import { removeToken } from '../utils/cookieUtils';
@@ -41,12 +40,6 @@ const EyeIcon = ({ open }) => open ? (
     <line x1="1" y1="1" x2="23" y2="23" />
   </svg>
 );
-const CameraIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 text-white">
-    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-    <circle cx="12" cy="13" r="4" />
-  </svg>
-);
 
 /* ─── Toast ─────────────────────────────────────────────────────── */
 const Toast = ({ message, type, onDone }) => {
@@ -57,8 +50,8 @@ const Toast = ({ message, type, onDone }) => {
 
   const colors = {
     success: 'bg-teal-500 text-white',
-    error: 'bg-red-500 text-white',
-    info: 'bg-slate-700 text-white',
+    error:   'bg-red-500 text-white',
+    info:    'bg-slate-700 text-white',
   };
   return (
     <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] px-6 py-3 rounded-2xl shadow-xl text-sm font-semibold animate-fade-in-up ${colors[type] || colors.info}`}>
@@ -76,10 +69,7 @@ const Skeleton = ({ className }) => (
 const SectionCard = ({ icon, title, children, accent = 'teal' }) => {
   const ring = accent === 'red' ? 'ring-red-200 dark:ring-red-900/40' : 'ring-teal-200/60 dark:ring-teal-700/30';
   return (
-    <motion.div
-      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-      className={`bg-white dark:bg-slate-800/80 backdrop-blur-sm rounded-3xl ring-1 ${ring} shadow-lg shadow-black/[0.04] dark:shadow-black/20 p-6 md:p-8 transition-colors duration-300`}
-    >
+    <div className={`bg-white dark:bg-slate-800/80 backdrop-blur-sm rounded-3xl ring-1 ${ring} shadow-lg shadow-black/[0.04] dark:shadow-black/20 p-6 md:p-8 transition-colors duration-300`}>
       <div className="flex items-center gap-3 mb-6">
         <span className={`p-2.5 rounded-xl ${accent === 'red' ? 'bg-red-50 dark:bg-red-900/20 text-red-500' : 'bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400'}`}>
           {icon}
@@ -87,7 +77,7 @@ const SectionCard = ({ icon, title, children, accent = 'teal' }) => {
         <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">{title}</h2>
       </div>
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -143,18 +133,14 @@ export default function Profile() {
   const navigate = useNavigate();
 
   /* profile data */
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile]   = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
-  const [profileErr, setProfileErr] = useState('');
+  const [profileErr, setProfileErr]         = useState('');
 
   /* edit-info state */
   const [editMode, setEditMode] = useState(false);
-  const [form, setForm] = useState({ firstName: '', lastName: '', gender: '', age: '' });
+  const [form, setForm]         = useState({ firstName: '', lastName: '', gender: '', age: '' });
   const [savingInfo, setSavingInfo] = useState(false);
-
-  /* avatar state */
-  const fileInputRef = useRef(null);
-  const [avatarPreview, setAvatarPreview] = useState(null);
 
   /* change-password state */
   const [pwForm, setPwForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
@@ -163,7 +149,7 @@ export default function Profile() {
 
   /* delete-account */
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deletingAcc, setDeletingAcc] = useState(false);
+  const [deletingAcc, setDeletingAcc]         = useState(false);
 
   /* toast */
   const [toast, setToast] = useState(null);
@@ -176,14 +162,11 @@ export default function Profile() {
       const data = await getProfile();
       const p = data?.data || data;
       setProfile(p);
-
-      const localAvatar = localStorage.getItem(`profileAvatar_${p.email}`);
-      setAvatarPreview(localAvatar || p?.profilePic || p?.avatar || p?.profileImage || null);
       setForm({
         firstName: p?.firstName || '',
-        lastName: p?.lastName || '',
-        gender: p?.gender || '',
-        age: p?.age != null ? String(p.age) : '',
+        lastName:  p?.lastName  || '',
+        gender:    p?.gender    || '',
+        age:       p?.age != null ? String(p.age) : '',
       });
     } catch (err) {
       console.error(err);
@@ -196,46 +179,15 @@ export default function Profile() {
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
 
   /* ── save profile info ── */
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        try {
-          if (profile?.email) {
-            localStorage.setItem(`profileAvatar_${profile.email}`, base64String);
-          }
-          setAvatarPreview(base64String);
-          showToast('Profile picture saved locally!', 'success');
-        } catch (error) {
-          console.error("Local storage error:", error);
-          showToast('Image is too large to save locally.', 'error');
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleRemoveImage = () => {
-    if (profile?.email) {
-      localStorage.removeItem(`profileAvatar_${profile.email}`);
-    }
-    setAvatarPreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
-    showToast('Profile picture removed!', 'info');
-  };
-
   const handleSaveInfo = async () => {
     try {
       setSavingInfo(true);
       const payload = {
         firstName: form.firstName,
-        lastName: form.lastName,
-        gender: form.gender,
-        age: form.age ? Number(form.age) : undefined,
+        lastName:  form.lastName,
+        gender:    form.gender,
+        age:       form.age ? Number(form.age) : undefined,
       };
-
       await updateProfile(payload);
       setProfile(prev => ({ ...prev, ...payload }));
       setEditMode(false);
@@ -303,10 +255,7 @@ export default function Profile() {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300 pt-24 pb-16 px-4 md:px-8">
 
         {/* ── hero / avatar strip ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-          className="max-w-3xl mx-auto mb-8"
-        >
+        <div className="max-w-3xl mx-auto mb-8">
           <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#036464] via-teal-600 to-cyan-500 dark:from-teal-900 dark:via-slate-800 dark:to-slate-900 p-8 flex flex-col sm:flex-row items-center gap-6 shadow-xl shadow-teal-500/20 dark:shadow-black/40">
             {/* decorative blobs */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -316,44 +265,12 @@ export default function Profile() {
             </div>
 
             {/* avatar */}
-            <div className="relative z-10 flex-shrink-0 w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/40 flex items-center justify-center shadow-inner group">
-              {loadingProfile ? (
-                <div className="animate-pulse w-full h-full rounded-full bg-white/30" />
-              ) : avatarPreview ? (
-                <img src={avatarPreview} alt="Profile" className="w-full h-full rounded-full object-cover" />
-              ) : (
-                <span className="text-3xl font-bold text-white tracking-wide">{initials}</span>
-              )}
-
-              {/* Hover overlay for changing picture */}
-              {!loadingProfile && (
-                <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors cursor-pointer text-white"
-                    title="Change Picture"
-                  >
-                    <CameraIcon />
-                  </button>
-                  {avatarPreview && (
-                    <button
-                      onClick={handleRemoveImage}
-                      className="p-2 bg-red-500/80 hover:bg-red-500 rounded-full transition-colors cursor-pointer text-white"
-                      title="Remove Picture"
-                    >
-                      <TrashIcon />
-                    </button>
-                  )}
-                </div>
-              )}
+            <div className="relative z-10 flex-shrink-0 w-24 h-24 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/40 flex items-center justify-center shadow-inner">
+              {loadingProfile
+                ? <div className="animate-pulse w-full h-full rounded-full bg-white/30" />
+                : <span className="text-3xl font-bold text-white tracking-wide">{initials}</span>
+              }
             </div>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              ref={fileInputRef}
-              onChange={handleImageChange}
-            />
 
             {/* name + email */}
             <div className="relative z-10 text-center sm:text-left">
@@ -377,7 +294,7 @@ export default function Profile() {
               )}
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* ── error banner ── */}
         {profileErr && (
@@ -386,14 +303,7 @@ export default function Profile() {
           </div>
         )}
 
-        <motion.div
-          initial="hidden" animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-          }}
-          className="max-w-3xl mx-auto flex flex-col gap-6"
-        >
+        <div className="max-w-3xl mx-auto flex flex-col gap-6">
 
           {/* ══ Section 1: Profile Info ══ */}
           <SectionCard icon={<UserIcon />} title="Personal Information">
@@ -538,7 +448,7 @@ export default function Profile() {
             </div>
           </SectionCard>
 
-        </motion.div>
+        </div>
       </div>
 
       {/* ── Delete confirmation modal ── */}

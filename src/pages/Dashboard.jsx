@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   LineChart,
@@ -10,6 +10,8 @@ import {
   ReferenceDot,
   ResponsiveContainer,
 } from 'recharts'
+import axiosInstance from '../utils/axiosInstance'
+import { useSocket } from '../context/SocketContext'
 
 // ── Framer Motion Variants ────────────────────────────────────────────────────
 const containerVariants = {
@@ -32,7 +34,7 @@ const itemVariants = {
 }
 
 // ── SVG Circular Gauge — scales via CSS wrapper ───────────────────────────────
-const CircularGauge = ({ value = 75 }) => {
+const CircularGauge = ({ value = 0, label = "" }) => {
   const size = 230
   const cx = size / 2
   const cy = size / 2
@@ -91,7 +93,7 @@ const CircularGauge = ({ value = 75 }) => {
         fill="none" stroke="rgba(97,132,117,0.2)" strokeWidth={1} />
 
       {/* Center text */}
-      <motion.text x={cx} y={cy + 11} textAnchor="middle"
+      <motion.text x={cx} y={cy} textAnchor="middle"
         fill="#2d7d8a" fontSize={32} fontWeight={800}
         fontFamily="inherit" letterSpacing="-1"
         initial={{ opacity: 0, scale: 0.8 }}
@@ -100,201 +102,235 @@ const CircularGauge = ({ value = 75 }) => {
       >
         {value}%
       </motion.text>
+      <motion.text x={cx} y={cy + 24} textAnchor="middle"
+        fill="#147E8F" fontSize={14} fontWeight={600}
+        fontFamily="inherit"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 2 }}
+      >
+        {label}
+      </motion.text>
     </svg>
   )
 }
 
-// ── Line Chart data & helpers ─────────────────────────────────────────────────
-const moodData = [
-  { week: 1, mood: 2   },
-  { week: 2, mood: 2.4 },
-  { week: 3, mood: 3.8 },
-  { week: 4, mood: 2.9 },
-  { week: 5, mood: 1.5 },
-  { week: 6, mood: 2.2 },
-  { week: 7, mood: 2.1 },
-  { week: 8, mood: 1.3 },
-]
-
-const moodLabels = { 1: 'Sad', 2: 'Natural', 3: 'Happy', 4: 'Excited' }
+// AI returns: 1=Normal (best), 2=Mild, 3=Moderate, 4=High Risk (worst)
+const moodLabels = { 1: 'Normal', 2: 'Mild', 3: 'Moderate', 4: 'High Risk' }
 
 const MoodTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
   const val  = payload[0].value
-  const name = val >= 3.5 ? 'Excited' : val >= 2.8 ? 'Happy' : val >= 1.8 ? 'Natural' : 'Sad'
+  const name = val <= 1 ? 'Normal' : val <= 2 ? 'Mild' : val <= 3 ? 'Moderate' : 'High Risk'
   return (
     <div style={{
       background: '#0e6b78', color: '#fff', fontSize: 11, fontWeight: 600,
       padding: '5px 10px', borderRadius: 7, boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
     }}>
-      Week {label}: <span style={{ color: '#a8e6ef' }}>{name}</span>
+      Record {label}: <span style={{ color: '#a8e6ef' }}>{name}</span>
     </div>
-  )
-}
-
-const BestDayLabel = ({ viewBox }) => {
-  if (!viewBox) return null
-  const { x, y } = viewBox
-  const w = 108, h = 26
-  return (
-    <g>
-      <rect x={x - w / 2} y={y - h - 12} width={w} height={h} rx={7} fill="#0e6b78" />
-      <text x={x} y={y - h - 12 + h / 2 + 4}
-        textAnchor="middle" fill="white" fontSize={11} fontWeight={700}>
-        Best day : 12/23
-      </text>
-    </g>
   )
 }
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 const Dashboard = () => {
+  const { analysisState, analysisTimestamp } = useSocket();
+  const [latestAnalysis, setLatestAnalysis] = useState(null);
+  const [historyData, setHistoryData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // Track the timestamp we last processed so we don't re-run on mount
+  const lastProcessedTimestamp = useRef(null);
+
+  // Fetch initial data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [latestRes, historyRes] = await Promise.all([
+          axiosInstance.get('/analysis/latest'),
+          axiosInstance.get('/analysis/history')
+        ]);
+        
+        if (latestRes.data?.data) setLatestAnalysis(latestRes.data.data);
+        
+        if (historyRes.data?.data) {
+          // Map to chart format
+          const formattedHistory = historyRes.data.data.reverse().map((item, index) => ({
+            index: index + 1,
+            mood: item.result?.mental_level || 2, // 1-4 level
+          }));
+          setHistoryData(formattedHistory);
+        }
+      } catch (err) {
+        console.error("Failed to load dashboard data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Listen to socket updates — only react to genuinely NEW analyses
+  useEffect(() => {
+    if (!analysisState || !analysisTimestamp) return;
+    // Skip if we already processed this exact update
+    if (lastProcessedTimestamp.current === analysisTimestamp) return;
+    lastProcessedTimestamp.current = analysisTimestamp;
+
+    setLatestAnalysis(analysisState);
+    setHistoryData(prev => {
+      const newData = [...prev, {
+        index: prev.length ? prev[prev.length - 1].index + 1 : 1,
+        mood: analysisState.result?.mental_level || 2
+      }];
+      if (newData.length > 20) return newData.slice(newData.length - 20);
+      return newData;
+    });
+  }, [analysisTimestamp]);
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center dark:bg-slate-900">
+      <span className="text-teal-600 font-bold text-xl animate-pulse">Loading Analysis Dashboard...</span>
+    </div>;
+  }
+
+  const result = latestAnalysis?.result || {};
+  const currentMoodScore = result.risk_score !== undefined 
+    ? Math.max(0, Math.min(100, Math.round(100 - result.risk_score)))
+    : Math.max(0, Math.min(100, Math.round(100 - ((result.mental_level || 2) - 1) * 25)));
+
   return (
     <motion.section 
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="min-h-screen bg-[#FEFDFE] dark:bg-slate-900 transition-colors duration-300 py-24 px-5 sm:px-10 lg:px-16 xl:px-24 flex flex-col lg:flex-row lg:justify-between gap-10"
+      className="min-h-screen bg-[#FEFDFE] dark:bg-slate-900 transition-colors duration-300 py-24 px-5 sm:px-10 lg:px-16 xl:px-24 flex flex-col gap-10"
     >
+      <div className="flex flex-col lg:flex-row lg:justify-between gap-10">
+        {/* ── Left Column ── */}
+        <div className="flex flex-col gap-6 w-full lg:w-[48%]">
 
-      {/* ── Left Column ── */}
-      <div className="flex flex-col gap-6 w-full lg:w-[48%]">
+          {/* Line Chart Card */}
+          <motion.div variants={itemVariants} className="
+            w-full h-64 sm:h-80 lg:h-[400px]
+            bg-[#147E8F3D] dark:bg-teal-900/30
+            rounded-3xl
+            shadow-[0_0_40px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.4)]
+            border border-teal-200/30 dark:border-teal-700/30
+            flex flex-col items-center justify-center
+            px-2 py-4
+          ">
+            <h3 className="text-[#2d5c5c] dark:text-teal-300 font-semibold mb-2">Recent Mental Levels (Last 20)</h3>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={historyData} margin={{ top: 20, right: 16, left: 4, bottom: 24 }}>
+                <CartesianGrid vertical horizontal={false}
+                  stroke="rgba(255,255,255,0.6)" strokeWidth={1} />
 
-        {/* Line Chart Card */}
-        <motion.div variants={itemVariants} className="
-          w-full h-64 sm:h-80 lg:h-[400px]
-          bg-[#147E8F3D] dark:bg-teal-900/30
-          rounded-3xl
-          shadow-[0_0_40px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.4)]
-          border border-teal-200/30 dark:border-teal-700/30
-          flex items-center justify-center
-          px-2 py-4
-        ">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={moodData} margin={{ top: 46, right: 16, left: 4, bottom: 24 }}>
-              <CartesianGrid vertical horizontal={false}
-                stroke="rgba(255,255,255,0.6)" strokeWidth={1} />
+                <XAxis
+                  dataKey="index"
+                  tickLine={false}
+                  axisLine={{ stroke: 'rgba(20,126,143,0.35)' }}
+                  tick={{ fill: '#3a7c89', fontSize: 10, fontWeight: 500 }}
+                  label={{
+                    value: 'Records', position: 'insideBottom', offset: -12,
+                    style: { fill: '#147E8F', fontSize: 12, fontWeight: 700 },
+                  }}
+                />
 
-              <XAxis
-                dataKey="week"
-                tickLine={false}
-                axisLine={{ stroke: 'rgba(20,126,143,0.35)' }}
-                tick={{ fill: '#3a7c89', fontSize: 10, fontWeight: 500 }}
-                label={{
-                  value: 'Weeks', position: 'insideBottom', offset: -12,
-                  style: { fill: '#147E8F', fontSize: 12, fontWeight: 700 },
-                }}
-              />
+                <YAxis
+                  domain={[1, 4]} ticks={[1, 2, 3, 4]}
+                  reversed={true}
+                  tickLine={false} axisLine={false} width={70}
+                  tickFormatter={(v) => moodLabels[v] ?? ''}
+                  tick={{ fill: '#3a7c89', fontSize: 10, fontWeight: 500 }}
+                  label={{
+                    value: 'Mood Level', angle: -90, position: 'insideLeft', offset: 14,
+                    style: { fill: '#147E8F', fontSize: 12, fontWeight: 700 },
+                  }}
+                />
 
-              <YAxis
-                domain={[1, 4]} ticks={[1, 2, 3, 4]}
-                tickLine={false} axisLine={false} width={54}
-                tickFormatter={(v) => moodLabels[v] ?? ''}
-                tick={{ fill: '#3a7c89', fontSize: 10, fontWeight: 500 }}
-                label={{
-                  value: 'Moods', angle: -90, position: 'insideLeft', offset: 14,
-                  style: { fill: '#147E8F', fontSize: 12, fontWeight: 700 },
-                }}
-              />
+                <Tooltip content={<MoodTooltip />}
+                  cursor={{ stroke: 'rgba(20,126,143,0.3)', strokeWidth: 1 }} />
 
-              <Tooltip content={<MoodTooltip />}
-                cursor={{ stroke: 'rgba(20,126,143,0.3)', strokeWidth: 1 }} />
+                <Line 
+                  type="monotone" 
+                  dataKey="mood"
+                  stroke="#0e6b78" 
+                  strokeWidth={2.5} 
+                  dot={{ r: 3, fill: '#0e6b78' }}
+                  activeDot={{ r: 5, fill: '#0e6b78', stroke: 'white', strokeWidth: 2 }}
+                  isAnimationActive={true}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </motion.div>
 
-              <Line 
-                type="monotone" 
-                dataKey="mood"
-                stroke="#0e6b78" 
-                strokeWidth={2.5} 
-                dot={false}
-                activeDot={{ r: 5, fill: '#0e6b78', stroke: 'white', strokeWidth: 2 }}
-                isAnimationActive={true}
-                animationDuration={2500}
-                animationEasing="ease-out"
-                animationBegin={400}
-              />
+          {/* AI Recommendations */}
+          <motion.div variants={itemVariants} className="w-full flex flex-col gap-4">
+            <h2 className="font-bold text-xl sm:text-2xl text-[#111111] dark:text-slate-100">
+              AI Recommendations
+            </h2>
+            {result.recommendations && result.recommendations.length > 0 ? (
+              <ul className="flex flex-col gap-3 font-medium list-disc pl-5 text-[#5F5F5F] dark:text-slate-400">
+                {result.recommendations.map((rec, idx) => (
+                  <li key={idx}><span className="text-[#147E8F] dark:text-teal-400">{rec}</span></li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[#5F5F5F] dark:text-slate-400">No recommendations available at this time. Start by logging a mood or uploading EEG data.</p>
+            )}
+          </motion.div>
+        </div>
 
-              <ReferenceDot x={3} y={3.8} r={5}
-                fill="#0e6b78" stroke="white" strokeWidth={2}
-                label={<BestDayLabel />}
-                isFront={true}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </motion.div>
+        {/* ── Right Column ── */}
+        <div className="flex flex-col gap-6 w-full lg:w-[48%]">
 
-        {/* Weekly Mood Text */}
-        <motion.div variants={itemVariants} className="w-full flex flex-col gap-4">
-          <h2 className="font-bold text-xl sm:text-2xl text-[#111111] dark:text-slate-100">
-            Weekly Mood Analysis
-          </h2>
-          <ul className="flex flex-col gap-5 lg:gap-6 font-semibold list-disc pl-5 text-[#5F5F5F] dark:text-slate-400">
-            <li>
-              Week 1 (<span className="text-[#147E8F] dark:text-teal-400">The Baseline</span>): Your mood started
-              at a stable <span className="text-[#147E8F] dark:text-teal-400">"Natural"</span> level. It remained
-              steady throughout the week with a very slight upward trend toward the end.
-            </li>
-            <li>
-              Week 2 (<span className="text-[#147E8F] dark:text-teal-400">The Climb</span>): There was a noticeable
-              improvement in your mood. You moved from the "Natural" state steadily upward,
-              approaching the "Happy" zone.
-            </li>
-            <li>
-              Week 3 (<span className="text-[#147E8F] dark:text-teal-400">The Peak</span>): This was clearly your{' '}
-              <span className="text-[#147E8F] dark:text-teal-400 font-bold">best week</span>. The mood surged past
-              "Happy" to reach the "Excited" level. The chart specifically highlights 12/23 as
-              the "Best Day" during this period.
-            </li>
-          </ul>
-        </motion.div>
+          {/* Gauge Card */}
+          <motion.div variants={itemVariants} className="
+            w-full h-64 sm:h-80 lg:h-[400px]
+            bg-[#61847547] dark:bg-slate-800/50
+            rounded-3xl
+            shadow-[0_0_40px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.4)]
+            border border-teal-200/20 dark:border-slate-700/50
+            flex flex-col items-center justify-center gap-3
+          ">
+            <p className="text-[#2d5c5c] dark:text-teal-300 font-semibold text-base tracking-wide">
+              Mental Wellness Score
+            </p>
+            <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-[230px] lg:h-[230px]">
+              <CircularGauge value={currentMoodScore} label={result.dominant_emotion || "Unknown"} />
+            </div>
+          </motion.div>
+
+          {/* Overall Mood Text */}
+          <motion.div variants={itemVariants} className="w-full flex flex-col gap-4">
+            <h2 className="font-bold text-xl sm:text-2xl text-[#111111] dark:text-slate-100">
+              Current Mental State
+            </h2>
+            <ul className="flex flex-col gap-4 font-semibold list-disc pl-5 text-[#5F5F5F] dark:text-slate-400">
+              <li>
+                Dominant Emotion: <span className="text-[#147E8F] dark:text-teal-400 capitalize">{result.dominant_emotion || "N/A"}</span>
+              </li>
+              <li>
+                Sentiment: <span className="text-[#147E8F] dark:text-teal-400 capitalize">{result.sentiment || "N/A"}</span> 
+                <span className="text-sm ml-2 opacity-70">(Score: {result.sentiment_score !== undefined ? result.sentiment_score.toFixed(2) : "N/A"})</span>
+              </li>
+              {result.emotions && (
+                <li className="mt-2">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {Object.entries(result.emotions).map(([emo, val]) => (
+                      <span key={emo} className="bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-300 px-2 py-1 rounded text-xs">
+                        {emo}: {(val * 100).toFixed(1)}%
+                      </span>
+                    ))}
+                  </div>
+                </li>
+              )}
+            </ul>
+          </motion.div>
+        </div>
       </div>
-
-      {/* ── Right Column ── */}
-      <div className="flex flex-col gap-6 w-full lg:w-[48%]">
-
-        {/* Gauge Card */}
-        <motion.div variants={itemVariants} className="
-          w-full h-64 sm:h-80 lg:h-[400px]
-          bg-[#61847547] dark:bg-slate-800/50
-          rounded-3xl
-          shadow-[0_0_40px_0_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_0_rgba(0,0,0,0.4)]
-          border border-teal-200/20 dark:border-slate-700/50
-          flex flex-col items-center justify-center gap-3
-        ">
-          <p className="text-[#2d5c5c] dark:text-teal-300 font-semibold text-base tracking-wide">
-            Overall Mood
-          </p>
-          <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-[230px] lg:h-[230px]">
-            <CircularGauge value={75} />
-          </div>
-        </motion.div>
-
-        {/* Overall Mood Text */}
-        <motion.div variants={itemVariants} className="w-full flex flex-col gap-4">
-          <h2 className="font-bold text-xl sm:text-2xl text-[#111111] dark:text-slate-100">
-            Overall Mood Summary
-          </h2>
-          <ul className="flex flex-col gap-5 lg:gap-6 font-semibold list-disc pl-5 text-[#5F5F5F] dark:text-slate-400">
-            <li>
-              The chart shows that your{' '}
-              <span className="text-[#147E8F] dark:text-teal-400">Overall Mood</span> is at{' '}
-              <span className="text-[#147E8F] dark:text-teal-400">75%</span>.
-            </li>
-            <li>
-              In the context of the previous weekly breakdown, this indicates a very positive
-              aggregate score. While the line graph showed some significant dips (especially
-              around Week 5), staying at a three-quarters satisfaction level suggests that your
-              "highs" (like the excitement in Week 3) and your "natural" days carry more weight
-              than the temporary lows.
-            </li>
-            <li>
-              An overall rating of <span className="text-[#147E8F] dark:text-teal-400">75%</span> typically reflects
-              a state of being <span className="text-[#147E8F] dark:text-teal-400">"Happy"</span> to{' '}
-              <span className="text-emerald-600 dark:text-emerald-400">"Very Good"</span> on a standard emotional scale.
-            </li>
-          </ul>
-        </motion.div>
-      </div>
-
     </motion.section>
   )
 }

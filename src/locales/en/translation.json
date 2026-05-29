@@ -1,0 +1,35 @@
+{
+  "navbar": {
+    "home": "Home",
+    "speakWith": "Speak with",
+    "dashboard": "Dashboard",
+    "emotiv": "E-Motiv",
+    "mood": "Mood",
+    "profile": "Profile",
+    "logIn": "Log in",
+    "logOut": "Log out",
+    "navigation": "Navigation"
+  },
+  "dashboard": {
+    "performanceMetrics": "Performance Metrics",
+    "attention": "Attention",
+    "focus": "Focus",
+    "interest": "Interest",
+    "engagement": "Engagement",
+    "stress": "Stress",
+    "relaxation": "Relaxation",
+    "excitement": "Excitement",
+    "facialExpressions": "Facial Expressions",
+    "eyeBlinks": "Eye Blinks",
+    "eyeDirection": "Eye Direction",
+    "upperFace": "Upper Face",
+    "lowerFace": "Lower Face",
+    "center": "Center",
+    "wandering": "Wandering",
+    "browRaise": "Brow Raise",
+    "frown": "Frown",
+    "smile": "Smile",
+    "neutral": "Neutral",
+    "times": "times"
+  }
+}

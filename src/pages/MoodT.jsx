@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import arrowl from "../assets/arrowl.png"
 import arrowr from "../assets/arrowr.png"
 import done from "../assets/done.png"
@@ -8,17 +7,17 @@ import ndone from "../assets/ndone.png"
 import { getAllMoods, logMood, updateMood, deleteMood } from "../services/moodService";
 
 const MOODS = [
-  { score: 0, emoji: "😩", label: "Terrible", sub: "Extremely distressed", color: "#E24B4A" },
-  { score: 1, emoji: "😞", label: "Very bad", sub: "Feeling very down", color: "#D85A30" },
-  { score: 2, emoji: "😟", label: "Bad", sub: "Not doing well", color: "#EF9F27" },
-  { score: 3, emoji: "😕", label: "Poor", sub: "Struggling a bit", color: "#BA7517" },
-  { score: 4, emoji: "😐", label: "Low", sub: "Below average day", color: "#888780" },
-  { score: 5, emoji: "🙂", label: "Okay", sub: "Neither good nor bad", color: "#5DCAA5" },
-  { score: 6, emoji: "😊", label: "Good", sub: "Feeling decent", color: "#1D9E75" },
-  { score: 7, emoji: "😄", label: "Pretty good", sub: "Having a good day", color: "#1D9E75" },
-  { score: 8, emoji: "😁", label: "Great", sub: "Feeling really well", color: "#0F6E56" },
-  { score: 9, emoji: "😃", label: "Excellent", sub: "Almost at my best", color: "#085041" },
-  { score: 10, emoji: "🤩", label: "Amazing", sub: "Feeling absolutely great", color: "#085041" },
+  { score: 0,  emoji: "😩", label: "Terrible",    sub: "Extremely distressed",   color: "#E24B4A" },
+  { score: 1,  emoji: "😞", label: "Very bad",    sub: "Feeling very down",      color: "#D85A30" },
+  { score: 2,  emoji: "😟", label: "Bad",         sub: "Not doing well",         color: "#EF9F27" },
+  { score: 3,  emoji: "😕", label: "Poor",        sub: "Struggling a bit",       color: "#BA7517" },
+  { score: 4,  emoji: "😐", label: "Low",         sub: "Below average day",      color: "#888780" },
+  { score: 5,  emoji: "🙂", label: "Okay",        sub: "Neither good nor bad",   color: "#5DCAA5" },
+  { score: 6,  emoji: "😊", label: "Good",        sub: "Feeling decent",         color: "#1D9E75" },
+  { score: 7,  emoji: "😄", label: "Pretty good", sub: "Having a good day",      color: "#1D9E75" },
+  { score: 8,  emoji: "😁", label: "Great",       sub: "Feeling really well",    color: "#0F6E56" },
+  { score: 9,  emoji: "😃", label: "Excellent",   sub: "Almost at my best",      color: "#085041" },
+  { score: 10, emoji: "🤩", label: "Amazing",     sub: "Feeling absolutely great",color: "#085041" },
 ];
 
 export default function MoodTracker({ onClose, onSubmit }) {
@@ -111,7 +110,7 @@ export default function MoodTracker({ onClose, onSubmit }) {
 
   const handleDayClick = (date) => {
     const clickedStr = formatDate(date);
-    if (clickedStr !== todayStr) return; // Prevent logging non-current dates
+    if (clickedStr > todayStr) return; // Prevent logging future dates
 
     setSelectedDate(date);
     const dayMoods = moods[clickedStr] || [];
@@ -138,7 +137,7 @@ export default function MoodTracker({ onClose, onSubmit }) {
     if (!selectedDate) return;
     const dateStr = formatDate(selectedDate);
     setFormError(null);
-
+ 
     try {
       const newMood = await logMood(value, dateStr);
       setMoods(prev => {
@@ -164,7 +163,7 @@ export default function MoodTracker({ onClose, onSubmit }) {
     const dayMoods = moods[dateStr] || [];
     const moodToUpdate = dayMoods.slice().reverse().find(m => !m.isUpdated);
     if (!moodToUpdate) return;
-
+    
     setFormError(null);
     try {
       const moodId = moodToUpdate._id || moodToUpdate.id;
@@ -195,7 +194,7 @@ export default function MoodTracker({ onClose, onSubmit }) {
     const dayMoods = moods[dateStr] || [];
     const moodToDelete = dayMoods[dayMoods.length - 1];
     if (!moodToDelete) return;
-
+    
     setFormError(null);
     try {
       const moodId = moodToDelete._id || moodToDelete.id;
@@ -241,12 +240,7 @@ export default function MoodTracker({ onClose, onSubmit }) {
           <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'radial-gradient(circle, #99f6e4 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-6 md:gap-10 w-full z-10"
-        >
+        <div className="flex flex-col items-center gap-6 md:gap-10 w-full z-10">
           <h2 className="text-6xl md:text-9xl text-white font-labrada font-semibold drop-shadow-lg">Mood</h2>
           <p className="font-semibold text-xl md:text-[32px] text-center px-2 text-white/90">
             Here you can submit, edit or delete your mood.
@@ -268,22 +262,8 @@ export default function MoodTracker({ onClose, onSubmit }) {
               ) : error && error !== 'history' ? (
                 <p className="text-red-300 w-full text-center py-4">{error}</p>
               ) : (
-                <AnimatePresence mode="wait">
-                  <motion.div 
-                    key={currentDate.toISOString()}
-                    className="flex w-full justify-between items-start"
-                    initial="hidden"
-                    animate="show"
-                    exit="hidden"
-                    variants={{
-                      hidden: { opacity: 0, transition: { duration: 0.15 } },
-                      show: {
-                        opacity: 1,
-                        transition: { staggerChildren: 0.05, delayChildren: 0.05 }
-                      }
-                    }}
-                  >
-                    {weekDays.map((date) => {
+                <div className="flex w-full justify-between items-start">
+                  {weekDays.map((date) => {
                     const dateStr = formatDate(date);
                     const isToday = dateStr === todayStr;
                     const isFuture = dateStr > todayStr;
@@ -293,15 +273,11 @@ export default function MoodTracker({ onClose, onSubmit }) {
                     const dayName = date.toLocaleDateString("en-US", { weekday: 'short' });
 
                     return (
-                      <motion.div
-                        variants={{
-                          hidden: { opacity: 0, y: 10, scale: 0.9 },
-                          show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 350, damping: 25 } }
-                        }}
+                      <div
                         key={dateStr}
-                        onClick={() => isToday && handleDayClick(date)}
-                        className={`flex flex-col items-center gap-2 ${!isToday ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:scale-110 transition-transform'}`}
-                        title={!isToday ? (isFuture ? "Cannot log for future dates" : "Cannot edit past dates") : "Log mood"}
+                        onClick={() => !isFuture && handleDayClick(date)}
+                        className={`flex flex-col items-center gap-2 ${isFuture ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:scale-110 transition-transform'}`}
+                        title={isFuture ? "Cannot log for future dates" : "Log mood"}
                       >
                         <span className={`text-xs md:text-sm font-medium ${isToday ? 'text-white font-bold' : 'text-white/80'}`}>
                           {dayName}
@@ -322,19 +298,18 @@ export default function MoodTracker({ onClose, onSubmit }) {
                           </div>
                           {!isFuture && (
                             <div className="absolute -bottom-1 -right-1 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 p-0.5 flex items-center justify-center w-5 h-5 md:w-6 md:h-6 shadow-sm">
-                              <img
-                                src={dayMoods.length >= 2 ? done : dayMoods.length === 1 ? hdone : ndone}
-                                alt={dayMoods.length >= 2 ? "Done" : dayMoods.length === 1 ? "Half done" : "Not done"}
-                                className={dayMoods.length >= 2 ? "w-2.5 h-2" : dayMoods.length === 1 ? "w-2.5 h-2" : "w-2.5 h-2.5"}
+                              <img 
+                                src={dayMoods.length >= 2 ? done : dayMoods.length === 1 ? hdone : ndone} 
+                                alt={dayMoods.length >= 2 ? "Done" : dayMoods.length === 1 ? "Half done" : "Not done"} 
+                                className={dayMoods.length >= 2 ? "w-2.5 h-2" : dayMoods.length === 1 ? "w-2.5 h-2" : "w-2.5 h-2.5"} 
                               />
                             </div>
                           )}
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
-                  </motion.div>
-                </AnimatePresence>
+                </div>
               )}
             </div>
 
@@ -353,193 +328,184 @@ export default function MoodTracker({ onClose, onSubmit }) {
               <p className="text-sm md:text-base text-white/80">Today's date: {new Date().toLocaleDateString()}</p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Modal */}
-      <AnimatePresence>
-        {showMoodForm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/50 dark:bg-black/70 backdrop-blur-sm"
-            onClick={() => setShowMoodForm(false)}
+      {showMoodForm && (
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4 z-50 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity"
+          onClick={() => setShowMoodForm(false)}
+        >
+          <div
+            className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto relative shadow-2xl border border-slate-100 dark:border-slate-700"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 w-full max-w-lg max-h-[90vh] overflow-y-auto relative shadow-2xl border border-slate-100 dark:border-slate-700"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              onClick={() => setShowMoodForm(false)}
+              className="absolute top-4 right-4 md:top-5 md:right-5 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 rounded-full p-1.5 cursor-pointer"
             >
-              <button
-                onClick={() => setShowMoodForm(false)}
-                className="absolute top-4 right-4 md:top-5 md:right-5 text-slate-400 dark:text-slate-500 hover:text-red-500 dark:hover:text-red-400 transition-colors bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 rounded-full p-1.5 cursor-pointer"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
 
-              {/* Header Section */}
-              <div className="flex items-center gap-4 mb-8 pr-8">
-                <div className={`flex items-center justify-center w-12 h-12 rounded-2xl shadow-sm ${isFullyDone ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50' : 'bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800/50'}`}>
-                  {isFullyDone ? (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                  ) : (
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-                  )}
-                </div>
-                <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 leading-tight">
-                    {isFullyDone ? 'Mood Complete' : dayMoodsArr.length === 1 ? 'Log 2nd Mood' : 'Log 1st Mood'}
-                  </h2>
-                  <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-0.5">
-                    {selectedDate ? selectedDate.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" }) : "Today"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-1.5 mb-8">
-                {submitted ? (
-                  <>
-                    <div className="w-20 h-20 md:w-22 md:h-22 rounded-full bg-[#E1F5EE] dark:bg-teal-900/40 border-2 border-[#9FE1CB] dark:border-teal-600 flex items-center justify-center text-[36px] text-[#1D9E75] dark:text-teal-400 font-bold mb-1">
-                      ✓
-                    </div>
-                    <p className="text-xl md:text-[22px] font-bold" style={{ color: mood.color }}>Mood logged!</p>
-                    <p className="text-[13px] text-slate-400 dark:text-slate-500">Have a great day</p>
-                  </>
-                ) : deleted ? (
-                  <>
-                    <div className="w-20 h-20 md:w-22 md:h-22 rounded-full bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 flex items-center justify-center mb-1">
-                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        <line x1="10" y1="11" x2="10" y2="17"></line>
-                        <line x1="14" y1="11" x2="14" y2="17"></line>
-                      </svg>
-                    </div>
-                    <p className="text-xl md:text-[22px] font-bold text-red-500 dark:text-red-400">Mood Removed</p>
-                    <p className="text-[13px] text-slate-400 dark:text-slate-500">Entry deleted successfully</p>
-                  </>
+            {/* Header Section */}
+            <div className="flex items-center gap-4 mb-8 pr-8">
+              <div className={`flex items-center justify-center w-12 h-12 rounded-2xl shadow-sm ${isFullyDone ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50' : 'bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800/50'}`}>
+                {isFullyDone ? (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                 ) : (
-                  <>
-                    <div
-                      className="w-20 h-20 md:w-22 md:h-22 rounded-full flex items-center justify-center mb-1 transition-all duration-300"
-                      style={{ background: mood.color + "18", border: `2px solid ${mood.color}33` }}
-                    >
-                      <span className="text-4xl md:text-[48px] leading-none select-none">{mood.emoji}</span>
-                    </div>
-                    <p className="text-xl md:text-[22px] font-bold transition-colors duration-200" style={{ color: mood.color }}>
-                      {mood.label}
-                    </p>
-                    <p className="text-xs md:text-[13px] transition-colors duration-200" style={{ color: mood.color + "99" }}>
-                      {mood.sub}
-                    </p>
-                  </>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                 )}
               </div>
+              <div>
+                <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                  {isFullyDone ? 'Mood Complete' : dayMoodsArr.length === 1 ? 'Log 2nd Mood' : 'Log 1st Mood'}
+                </h2>
+                <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 mt-0.5">
+                  {selectedDate ? selectedDate.toLocaleDateString("en-US", { weekday: "long", month: "short", day: "numeric" }) : "Today"}
+                </p>
+              </div>
+            </div>
 
-              {/* Slider Section */}
-              <div className="mb-7">
-                <div className="flex justify-between mb-2 px-0.5">
-                  {MOODS.map((m) => (
-                    <span
-                      key={m.score}
-                      className="w-4 md:w-5 text-center inline-block leading-none select-none transition-all duration-200"
-                      style={{
-                        color: m.score === value ? mood.color : "#ccc",
-                        fontWeight: m.score === value ? 700 : 400,
-                        fontSize: m.score === value ? "14px" : "11px",
-                        transform: m.score === value ? "scale(1.2)" : "scale(1)",
-                      }}
-                    >
-                      {m.score}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="relative h-12 flex items-center">
-                  <div className="absolute inset-x-0 h-2.5 rounded-full bg-slate-100 dark:bg-slate-700" />
-                  <div
-                    className="absolute left-0 h-2.5 rounded-full transition-[width] duration-75"
-                    style={{ width: `${pct}%`, background: "linear-gradient(90deg, #E24B4A 0%, #EF9F27 50%, #085041 100%)" }}
-                  />
-                  <input
-                    ref={sliderRef}
-                    type="range"
-                    min={0}
-                    max={10}
-                    step={1}
-                    value={value}
-                    onChange={handleChange}
-                    className="absolute inset-0 w-full opacity-0 h-12 cursor-pointer z-20"
-                    aria-label="Mood score"
-                  />
-                  <div
-                    className="absolute w-6 h-6 md:w-7 md:h-7 rounded-full bg-white dark:bg-slate-200 border-[3px] shadow-md flex items-center justify-center z-10 transition-[left] duration-75 pointer-events-none"
-                    style={{ left: `calc(${pct}% - ${pct === 0 ? 0 : pct === 100 ? 28 : 14}px)`, borderColor: mood.color }}
-                  >
-                    <span className="text-[9px] md:text-[10px] font-bold" style={{ color: mood.color }}>
-                      {value}
-                    </span>
+            <div className="flex flex-col items-center gap-1.5 mb-8">
+              {submitted ? (
+                <>
+                  <div className="w-20 h-20 md:w-22 md:h-22 rounded-full bg-[#E1F5EE] dark:bg-teal-900/40 border-2 border-[#9FE1CB] dark:border-teal-600 flex items-center justify-center text-[36px] text-[#1D9E75] dark:text-teal-400 font-bold mb-1">
+                    ✓
                   </div>
-                </div>
-
-                <div className="flex justify-between mt-2 px-0.5">
-                  <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-left">😞 Worst</span>
-                  <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-center">😐 Neutral</span>
-                  <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-right">🤩 Best</span>
-                </div>
-              </div>
-
-              {formError && (
-                <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 rounded-xl p-3 mb-4 text-center text-sm font-semibold">
-                  {formError}
-                </div>
-              )}
-
-              <div className="flex gap-3 mt-2">
-                {dayMoodsArr.length > 0 && !submitted && !deleted && (
-                  <button
-                    onClick={handleDelete}
-                    className="flex-[0.8] py-3.5 md:py-4 rounded-2xl text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30 text-sm md:text-base font-semibold transition-all hover:bg-red-100 dark:hover:bg-red-900/50 hover:border-red-200 dark:hover:border-red-800/50 active:scale-[0.98] flex flex-col items-center justify-center gap-1 leading-none"
-                  >
-                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                    <span className="text-[10px] md:text-xs">Delete Last</span>
-                  </button>
-                )}
-                {isEditing && !submitted && !deleted && (
-                  <button
-                    onClick={handleUpdateMood}
-                    className="flex-[1.2] py-3.5 md:py-4 rounded-2xl text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/30 text-sm md:text-base font-semibold transition-all hover:bg-amber-100 dark:hover:bg-amber-900/50 active:scale-[0.98] flex flex-col items-center justify-center gap-1 leading-none"
-                  >
-                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                    <span className="text-[10px] md:text-xs">Update Last</span>
-                  </button>
-                )}
-                <button
-                  onClick={handleAddNewMood}
-                  disabled={submitted || isFullyDone}
-                  className="flex-[2] py-3.5 md:py-4 rounded-2xl text-white text-sm md:text-base font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                  style={{ background: submitted || isFullyDone ? "#1D9E75" : mood.color, cursor: submitted || isFullyDone ? "default" : "pointer", boxShadow: submitted || isFullyDone ? "none" : `0 10px 25px -5px ${mood.color}60` }}
-                >
-                  {!submitted && !isFullyDone && (
-                    <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
+                  <p className="text-xl md:text-[22px] font-bold" style={{ color: mood.color }}>Mood logged!</p>
+                  <p className="text-[13px] text-slate-400 dark:text-slate-500">Have a great day</p>
+                </>
+              ) : deleted ? (
+                <>
+                  <div className="w-20 h-20 md:w-22 md:h-22 rounded-full bg-red-50 dark:bg-red-900/30 border-2 border-red-200 dark:border-red-700 flex items-center justify-center mb-1">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      <line x1="10" y1="11" x2="10" y2="17"></line>
+                      <line x1="14" y1="11" x2="14" y2="17"></line>
                     </svg>
-                  )}
-                  {isFullyDone ? "Done for Today!" : submitted ? "Saved!" : dayMoodsArr.length === 1 ? "Add 2nd Mood" : "Add 1st Mood"}
-                </button>
+                  </div>
+                  <p className="text-xl md:text-[22px] font-bold text-red-500 dark:text-red-400">Mood Removed</p>
+                  <p className="text-[13px] text-slate-400 dark:text-slate-500">Entry deleted successfully</p>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="w-20 h-20 md:w-22 md:h-22 rounded-full flex items-center justify-center mb-1 transition-all duration-300"
+                    style={{ background: mood.color + "18", border: `2px solid ${mood.color}33` }}
+                  >
+                    <span className="text-4xl md:text-[48px] leading-none select-none">{mood.emoji}</span>
+                  </div>
+                  <p className="text-xl md:text-[22px] font-bold transition-colors duration-200" style={{ color: mood.color }}>
+                    {mood.label}
+                  </p>
+                  <p className="text-xs md:text-[13px] transition-colors duration-200" style={{ color: mood.color + "99" }}>
+                    {mood.sub}
+                  </p>
+                </>
+              )}
+            </div>
+
+            {/* Slider Section */}
+            <div className="mb-7">
+              <div className="flex justify-between mb-2 px-0.5">
+                {MOODS.map((m) => (
+                  <span
+                    key={m.score}
+                    className="w-4 md:w-5 text-center inline-block leading-none select-none transition-all duration-200"
+                    style={{
+                      color: m.score === value ? mood.color : "#ccc",
+                      fontWeight: m.score === value ? 700 : 400,
+                      fontSize: m.score === value ? "14px" : "11px",
+                      transform: m.score === value ? "scale(1.2)" : "scale(1)",
+                    }}
+                  >
+                    {m.score}
+                  </span>
+                ))}
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+              <div className="relative h-12 flex items-center">
+                <div className="absolute inset-x-0 h-2.5 rounded-full bg-slate-100 dark:bg-slate-700" />
+                <div
+                  className="absolute left-0 h-2.5 rounded-full transition-[width] duration-75"
+                  style={{ width: `${pct}%`, background: "linear-gradient(90deg, #E24B4A 0%, #EF9F27 50%, #085041 100%)" }}
+                />
+                <input
+                  ref={sliderRef}
+                  type="range"
+                  min={0}
+                  max={10}
+                  step={1}
+                  value={value}
+                  onChange={handleChange}
+                  className="absolute inset-0 w-full opacity-0 h-12 cursor-pointer z-20"
+                  aria-label="Mood score"
+                />
+                <div
+                  className="absolute w-6 h-6 md:w-7 md:h-7 rounded-full bg-white dark:bg-slate-200 border-[3px] shadow-md flex items-center justify-center z-10 transition-[left] duration-75 pointer-events-none"
+                  style={{ left: `calc(${pct}% - ${pct === 0 ? 0 : pct === 100 ? 28 : 14}px)`, borderColor: mood.color }}
+                >
+                  <span className="text-[9px] md:text-[10px] font-bold" style={{ color: mood.color }}>
+                    {value}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex justify-between mt-2 px-0.5">
+                <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-left">😞 Worst</span>
+                <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-center">😐 Neutral</span>
+                <span className="text-[10px] md:text-[11px] text-slate-400 dark:text-slate-500 select-none text-right">🤩 Best</span>
+              </div>
+            </div>
+
+            {formError && (
+              <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 rounded-xl p-3 mb-4 text-center text-sm font-semibold">
+                {formError}
+              </div>
+            )}
+
+            <div className="flex gap-3 mt-2">
+              {dayMoodsArr.length > 0 && !submitted && !deleted && (
+                <button
+                  onClick={handleDelete}
+                  className="flex-[0.8] py-3.5 md:py-4 rounded-2xl text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30 text-sm md:text-base font-semibold transition-all hover:bg-red-100 dark:hover:bg-red-900/50 hover:border-red-200 dark:hover:border-red-800/50 active:scale-[0.98] flex flex-col items-center justify-center gap-1 leading-none"
+                >
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                  <span className="text-[10px] md:text-xs">Delete Last</span>
+                </button>
+              )}
+              {isEditing && !submitted && !deleted && (
+                <button
+                  onClick={handleUpdateMood}
+                  className="flex-[1.2] py-3.5 md:py-4 rounded-2xl text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/30 text-sm md:text-base font-semibold transition-all hover:bg-amber-100 dark:hover:bg-amber-900/50 active:scale-[0.98] flex flex-col items-center justify-center gap-1 leading-none"
+                >
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  <span className="text-[10px] md:text-xs">Update Last</span>
+                </button>
+              )}
+              <button
+                onClick={handleAddNewMood}
+                disabled={submitted || isFullyDone}
+                className="flex-[2] py-3.5 md:py-4 rounded-2xl text-white text-sm md:text-base font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                style={{ background: submitted || isFullyDone ? "#1D9E75" : mood.color, cursor: submitted || isFullyDone ? "default" : "pointer", boxShadow: submitted || isFullyDone ? "none" : `0 10px 25px -5px ${mood.color}60` }}
+              >
+                {!submitted && !isFullyDone && (
+                  <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                )}
+                {isFullyDone ? "Done for Today!" : submitted ? "Saved!" : dayMoodsArr.length === 1 ? "Add 2nd Mood" : "Add 1st Mood"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

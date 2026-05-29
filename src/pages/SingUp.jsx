@@ -53,22 +53,22 @@ const SignUp = () => {
     }
   }
 
-  const inputCls = "w-full h-11 px-4 text-sm font-semibold rounded-xl bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 focus:bg-white dark:focus:bg-slate-700 focus:border-teal-500 dark:focus:border-teal-400 outline-none transition-all duration-300 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500";
-  const labelCls = "block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1";
-  const errorCls = "text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium";
+  const inputCls = "w-full h-14 px-4 text-base font-semibold rounded-xl bg-slate-50 dark:bg-slate-700/60 border border-slate-200 dark:border-slate-600 focus:bg-white dark:focus:bg-slate-700 focus:border-teal-500 dark:focus:border-teal-400 outline-none transition-all duration-300 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500";
+  const labelCls = "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5";
+  const errorCls = "text-red-500 dark:text-red-400 text-sm mt-1 font-medium";
 
   return (
-    <section className="h-screen w-full bg-gradient-to-br from-slate-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20 transition-colors duration-300 flex flex-col overflow-hidden">
-      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pt-24 pb-6">
+    <section className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-white to-teal-50/60 dark:from-slate-950 dark:via-slate-900 dark:to-teal-950/20 transition-colors duration-300">
+      <div className="pt-24 lg:pt-32 px-4 sm:px-6 lg:px-8 pb-16">
         <div className="w-full max-w-xl mx-auto">
           <form
             onSubmit={handleSubmit(onSubmitForm)}
-            className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl px-6 py-7 sm:px-8 sm:py-8 shadow-[0_8px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] border border-slate-100 dark:border-slate-700/60 flex flex-col gap-4 transition-all duration-300"
+            className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl px-6 py-10 sm:px-10 sm:py-12 shadow-[0_8px_40px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_40px_rgb(0,0,0,0.3)] border border-slate-100 dark:border-slate-700/60 flex flex-col gap-5 transition-all duration-300"
           >
-            <div className="text-teal-600 dark:text-teal-400 font-labrada text-3xl sm:text-4xl text-center font-bold tracking-tight">ONSY</div>
+            <div className="text-teal-600 dark:text-teal-400 font-labrada text-4xl sm:text-5xl text-center font-bold tracking-tight">ONSY</div>
             <div className="text-center">
-              <h1 className="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Create an account</h1>
-              <p className="text-slate-500 dark:text-slate-400 font-medium text-sm sm:text-base mt-0.5">Let's personalize your experience</p>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Create an account</h1>
+              <p className="text-slate-500 dark:text-slate-400 font-medium text-base sm:text-lg mt-1">Let's personalize your experience</p>
             </div>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col sm:flex-row gap-4">
@@ -118,19 +118,19 @@ const SignUp = () => {
                 <Input {...register("dateOfBirth")} type="date" className={inputCls} />
                 {errors.dateOfBirth && <p className={errorCls}>{errors.dateOfBirth.message}</p>}
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 my-1">
                 <div className="h-px bg-slate-200 dark:bg-slate-600 flex-1" />
-                <p className="text-slate-400 dark:text-slate-500 text-xs font-medium whitespace-nowrap">Or sign up with</p>
+                <p className="text-slate-400 dark:text-slate-500 text-sm font-medium whitespace-nowrap">Or sign up with</p>
                 <div className="h-px bg-slate-200 dark:bg-slate-600 flex-1" />
               </div>
-              <div className="w-full bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 p-3 rounded-xl flex justify-between items-center cursor-pointer group hover:border-teal-300 dark:hover:border-teal-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+              <div className="w-full bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 p-4 rounded-xl flex justify-between items-center cursor-pointer group hover:border-teal-300 dark:hover:border-teal-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
                 <div className="flex items-center gap-3">
                   <img src={google} alt="google" className="w-5 h-5 object-contain" />
                   <p className="font-semibold text-slate-600 dark:text-slate-300 group-hover:text-slate-800 dark:group-hover:text-slate-100 transition-colors text-sm sm:text-base">Sign up with Google</p>
                 </div>
                 <img src={aro} className="w-4 h-4 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" alt="arrow" />
               </div>
-              <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting} className={`w-full h-11 rounded-xl bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white font-bold text-sm shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 hover:-translate-y-0.5 transition-all duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}>           
+              <Button type="submit" isLoading={isSubmitting} disabled={isSubmitting} className={`w-full h-14 rounded-xl bg-gradient-to-r from-[#036464] to-teal-500 dark:from-teal-700 dark:to-teal-500 text-white font-bold text-base shadow-lg shadow-teal-600/20 hover:shadow-xl hover:shadow-teal-600/30 hover:-translate-y-0.5 transition-all duration-300 mt-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}>           
                 {isSubmitting ? "Creating Account..." : "Continue"}
               </Button>
             </div>
