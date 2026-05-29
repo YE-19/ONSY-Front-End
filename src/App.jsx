@@ -21,6 +21,8 @@ import MoodT from './pages/MoodT'
 import Profile from './pages/Profile'
 import { ThemeProvider } from './context/ThemeContext'
 import { SocketProvider } from './context/SocketContext'
+import MoodReminderNotification from './components/MoodReminderNotification'
+
 function App() {
 
   return (
@@ -28,6 +30,7 @@ function App() {
       <HeroUIProvider>
         <SocketProvider>
           <MainNav />
+          <MoodReminderNotification />
           <Routes>
             <Route path='/' element={<Home />} />
             <Route path='/SignUp' element={<PublicRoute> <SignUp /> </PublicRoute>} />
