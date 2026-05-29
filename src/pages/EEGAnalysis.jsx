@@ -128,7 +128,7 @@ export default function EEGAnalysis() {
     setFile(null)
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/eeg/upload`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/eeg/upload`, {
         method: 'POST',
         headers: { Authorization: `bearer ${getToken()}` },
         body: formData,

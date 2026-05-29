@@ -28,7 +28,7 @@ const EEGUpload = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/eeg/upload`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/eeg/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `bearer ${getToken()}`
