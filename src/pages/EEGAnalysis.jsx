@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { getToken } from '../utils/cookieUtils'
 import { toast } from 'react-toastify'
 import { useSocket } from '../context/SocketContext'
-import axiosInstance from '../utils/axiosInstance'
+import { eegService } from '../services/eegService'
 
 // ── Metric config ─────────────────────────────────────────────────────────────
 const METRIC_CONFIG = [
@@ -75,8 +74,8 @@ export default function EEGAnalysis() {
 
   // ── Fetch latest on mount
   useEffect(() => {
-    axiosInstance.get('/eeg/latest')
-      .then(res => { if (res.data?.data) setLatestAnalysis(res.data.data) })
+    eegService.getLatestAnalysis()
+      .then(data => { if (data?.data) setLatestAnalysis(data.data) })
       .catch(() => { })
       .finally(() => setPageLoading(false))
   }, [])
@@ -122,24 +121,16 @@ export default function EEGAnalysis() {
     if (!file) { toast.error('Please select a CSV file first.'); return }
     if (!file.name.endsWith('.csv')) { toast.error('Only .csv files are allowed.'); return }
 
-    const formData = new FormData()
-    formData.append('file', file)
+    const currentFile = file;
     setAnalysing(true)
     setFile(null)
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/eeg/upload`, {
-        method: 'POST',
-        headers: { Authorization: `bearer ${getToken()}` },
-        body: formData,
-      })
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error(err.message || 'Upload failed')
-      }
+      await eegService.uploadEegData(currentFile)
       toast.success('EEG data uploaded! Analysing…')
     } catch (err) {
-      toast.error(err.message || 'Failed to upload EEG data.')
+      const errorMsg = err.response?.data?.message || err.message || 'Failed to upload EEG data.'
+      toast.error(errorMsg)
       setAnalysing(false)
     }
   }

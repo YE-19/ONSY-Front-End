@@ -19,7 +19,9 @@ import SpeakChatBot from './pages/SpeakChatBot'
 import EMotiv from './pages/EMotiv'
 import MoodT from './pages/MoodT'
 import EEGAnalysis from './pages/EEGAnalysis'
+import CheckoutPage from './pages/CheckoutPage'
 import Profile from './pages/Profile'
+import NotFound from './pages/NotFound'
 import { ThemeProvider } from './context/ThemeContext'
 import { SocketProvider } from './context/SocketContext'
 import MoodReminderNotification from './components/MoodReminderNotification'
@@ -48,10 +50,12 @@ function App() {
             <Route path='/Dashboard' element={<ProtectedRoute> <Dashboard /> </ProtectedRoute>} />
             <Route path='/Speak' element={<ProtectedRoute> <SpeakChatBot /> </ProtectedRoute>} />
             <Route path='/EMotiv' element={<ProtectedRoute> <EMotiv /> </ProtectedRoute>} />
+            <Route path='/checkout' element={<ProtectedRoute> <CheckoutPage /> </ProtectedRoute>} />
             <Route path='/EEGAnalysis' element={<ProtectedRoute> <EEGAnalysis /> </ProtectedRoute>} />
             <Route path='/Mood' element={<ProtectedRoute> <MoodT /> </ProtectedRoute>} />
             <Route path='/Profile' element={<ProtectedRoute> <Profile /> </ProtectedRoute>} />
             {/* <Route path='/Speak' element={<ProtectedRoute> <AiChat /> </ProtectedRoute>  } /> */}
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </SocketProvider>
         <ToastContainer position="top-right" autoClose={5000} />

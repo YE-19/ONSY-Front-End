@@ -82,11 +82,10 @@ const Counter = ({ target, suffix = '' }) => {
   const started = useRef(false)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(async ([entry]) => {
+    const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started.current) {
         started.current = true
         let start = 0
-        const res = await axiosInstance.get('/eeg/latest')
         const step = Math.ceil(target / 60)
         const timer = setInterval(() => {
           start += step
@@ -410,7 +409,7 @@ export default function EMotiv() {
                 <motion.button
                   whileHover={{ y: -3, scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate('/EEGAnalysis')}
+                  onClick={() => navigate('/checkout')}
                   className="relative group px-12 py-4 rounded-2xl bg-white text-teal-800 font-black shadow-2xl transition-all duration-300 text-xl hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] ring-4 ring-white/40 dark:ring-white/20"
                 >
                   Get Early Access
