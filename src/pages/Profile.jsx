@@ -172,7 +172,8 @@ export default function Profile() {
       const data = await getProfile();
       const p = data?.data || data;
       setProfile(p);
-      const localAvatar = localStorage.getItem('profileAvatar');
+      const userEmail = p?.email || '';
+      const localAvatar = localStorage.getItem(`profileAvatar_${userEmail}`) || localStorage.getItem('profileAvatar');
       setAvatarPreview(localAvatar || p?.profilePic || p?.avatar || p?.profileImage || null);
       setForm({
         firstName: p?.firstName || '',
@@ -198,9 +199,10 @@ export default function Profile() {
       reader.onloadend = () => {
         const base64String = reader.result;
         try {
-          localStorage.setItem('profileAvatar', base64String);
+          const key = profile?.email ? `profileAvatar_${profile.email}` : 'profileAvatar';
+          localStorage.setItem(key, base64String);
           setAvatarPreview(base64String);
-          showToast('Profile picture saved locally!', 'success');
+          showToast('Profile picture saved for your account!', 'success');
         } catch (error) {
           console.error("Local storage error:", error);
           showToast('Image is too large to save locally.', 'error');
@@ -211,7 +213,8 @@ export default function Profile() {
   };
 
   const handleRemoveImage = () => {
-    localStorage.removeItem('profileAvatar');
+    const key = profile?.email ? `profileAvatar_${profile.email}` : 'profileAvatar';
+    localStorage.removeItem(key);
     setAvatarPreview(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
     showToast('Profile picture removed!', 'info');
