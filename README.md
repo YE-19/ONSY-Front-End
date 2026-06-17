@@ -17,7 +17,6 @@
 - [Installation & Getting Started](#installation--getting-started)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ---
@@ -150,12 +149,6 @@ Contributions are welcome! Please follow these steps:
 
 Please make sure to update tests as appropriate and adhere to the project's code styling guidelines (ESLint).
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. *(Update this section if using a different license)*
-
 ## 👥 Team
 
 **Supervised By:**
@@ -178,7 +171,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📫 Contact
 
-- **Name:** [Insert Your Name]
+- **Name:** [Youssef ehab]
 - **GitHub:** [@YE-19](https://github.com/YE-19)
 - **LinkedIn:** [Youssef Ehab](www.linkedin.com/in/youssef-ehab-ye19)
 - **Email:** [ehab56526@gmail.com](ehab56526@gmail.com)
