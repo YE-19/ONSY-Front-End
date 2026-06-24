@@ -160,7 +160,7 @@ const SingIn = () => {
       <div className="hidden lg:flex w-1/2 relative items-center justify-center overflow-hidden bg-teal-50 dark:bg-slate-950">
         {/* Background Gradients & Effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-teal-100/80 via-white to-emerald-50 dark:from-teal-900/40 dark:via-slate-900 dark:to-slate-950" />
-        <div className="absolute w-[600px] h-[600px] bg-teal-400/10 dark:bg-teal-500/20 rounded-full blur-[120px] -top-32 -left-32 animate-pulse duration-[5000ms]" />
+        <div className="absolute w-[600px] h-[600px] bg-teal-400/10 dark:bg-teal-500/20 rounded-full blur-[120px] top-10 left-10 animate-pulse duration-[5000ms]" />
         <div className="absolute w-[500px] h-[500px] bg-emerald-400/10 dark:bg-emerald-500/10 rounded-full blur-[100px] bottom-10 right-10 animate-pulse duration-[7000ms]" />
         
         {/* Content */}

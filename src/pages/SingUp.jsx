@@ -64,7 +64,7 @@ const SignUp = () => {
       // Helper function to translate error messages to English for Sign Up
       function translateSignUpError(message, field = "") {
         const lowMessage = String(message).toLowerCase();
-        
+
         if (
           (lowMessage.includes("email") && (lowMessage.includes("exist") || lowMessage.includes("use") || lowMessage.includes("take"))) ||
           lowMessage.includes("مسجل بالفعل") ||
@@ -131,23 +131,23 @@ const SignUp = () => {
     }
   }
 
-  const inputCls = "w-full px-4 py-2.5 h-11 text-sm rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 focus:border-teal-500 dark:focus:border-teal-400 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-teal-400/10 outline-none transition-all duration-300 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500";
-  const labelCls = "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1.5";
+  const inputCls = "w-full px-4 py-3 h-12 text-base rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 focus:border-teal-500 dark:focus:border-teal-400 focus:ring-4 focus:ring-teal-500/10 dark:focus:ring-teal-400/10 outline-none transition-all duration-300 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500";
+  const labelCls = "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2";
   const errorCls = "text-red-500 dark:text-red-400 text-xs mt-1.5 font-medium flex items-center gap-1 animate-pulse";
 
   return (
-    <div className="min-h-screen w-full flex bg-white dark:bg-slate-900 font-sans">
-      
+    <div className="h-screen w-full flex bg-white dark:bg-slate-900 font-sans overflow-hidden">
+
       {/* Left Side - Visuals */}
       <div className="hidden lg:flex w-1/2 relative items-center justify-center overflow-hidden bg-emerald-50 dark:bg-slate-950 order-2">
         {/* Background Gradients & Effects */}
         <div className="absolute inset-0 bg-gradient-to-tl from-emerald-100/80 via-white to-teal-50 dark:from-teal-900/50 dark:via-slate-900 dark:to-slate-950" />
         <div className="absolute w-[700px] h-[700px] bg-emerald-400/10 dark:bg-emerald-500/10 rounded-full blur-[150px] top-10 left-10 animate-pulse duration-[6000ms]" />
         <div className="absolute w-[400px] h-[400px] bg-teal-400/10 dark:bg-teal-600/20 rounded-full blur-[100px] -bottom-20 -right-20 animate-pulse duration-[8000ms]" />
-        
+
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center justify-center p-12 text-center max-w-xl mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
@@ -155,8 +155,8 @@ const SignUp = () => {
           >
             <Network className="w-20 h-20 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.4)]" />
           </motion.div>
-          
-          <motion.h2 
+
+          <motion.h2
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -164,8 +164,8 @@ const SignUp = () => {
           >
             Join the Revolution
           </motion.h2>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -173,8 +173,8 @@ const SignUp = () => {
           >
             Create an account to track your emotions, interact with our AI, and explore deep neurological insights.
           </motion.p>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.6 }}
@@ -188,16 +188,16 @@ const SignUp = () => {
       </div>
 
       {/* Right Side - Form (Left aligned here due to order-2 on the visual side) */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 lg:p-16 relative overflow-y-auto order-1">
-        
+      <div className="w-full lg:w-1/2 flex p-6 sm:p-10 lg:p-16 relative overflow-y-auto order-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+
         {/* Subtle background for mobile */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-white dark:from-slate-900 dark:to-slate-950 lg:hidden -z-10" />
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="w-full max-w-[500px] flex flex-col relative z-10"
+          className="w-full max-w-[500px] m-auto py-8 flex flex-col relative z-10"
         >
           {/* Mobile Header Brand */}
           <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
@@ -254,7 +254,7 @@ const SignUp = () => {
                     <option value="female">Female</option>
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                   </div>
                 </div>
                 {errors.gender && <p className={errorCls}><AlertCircle className="w-3.5 h-3.5" /> {errors.gender.message}</p>}

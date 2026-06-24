@@ -10,7 +10,8 @@ const MainNav = () => {
   const isHomePage = location.pathname === '/';
   const isSpeakPage = location.pathname === '/Speak';
   const isMoodPage = location.pathname === '/Mood';
-  const isTransparentPage = isHomePage || isMoodPage;
+  const isAuthPage = ['/signin', '/signup', '/forgetp', '/forgetpotp', '/resetp', '/verification'].includes(location.pathname.toLowerCase());
+  const isTransparentPage = isHomePage || isMoodPage || isAuthPage;
 
   const isAuthenticated = !!getToken();
 
