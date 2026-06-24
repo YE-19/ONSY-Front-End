@@ -91,7 +91,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 py-10 px-4 sm:px-6 lg:px-8 mt-16 font-sans transition-colors duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 pt-28 pb-10 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header */}

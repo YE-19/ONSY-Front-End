@@ -58,7 +58,6 @@ const MainNav = () => {
     <section
       className={`w-full fixed top-0 z-50 px-5 lg:px-10 transition-all duration-300
         ${isSpeakPage ? 'hidden h-0' : ''}
-        ${!isTransparentPage ? 'bg-white/80 dark:bg-slate-900/95 backdrop-blur-sm' : ''}
       `}
     >
       {/* ── Glass pill navbar ── */}
