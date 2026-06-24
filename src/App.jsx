@@ -27,6 +27,10 @@ import { ThemeProvider } from './context/ThemeContext'
 import { SocketProvider } from './context/SocketContext'
 import MoodReminderNotification from './components/MoodReminderNotification'
 import ScrollToTop from './components/ScrollToTop'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import ManageUsers from './pages/admin/ManageUsers'
+import GenerateReports from './pages/admin/GenerateReports'
+import MonitorSystem from './pages/admin/MonitorSystem'
 
 import AdminDashboard from './pages/AdminDashboard'
 
@@ -60,6 +64,10 @@ function App() {
             <Route path='/admin' element={<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>} />
             {/* <Route path='/Speak' element={<ProtectedRoute> <AiChat /> </ProtectedRoute>  } /> */}
             <Route path='*' element={<NotFound />} />
+            <Route path='/admin' element={<ProtectedRoute> <AdminDashboard /> </ProtectedRoute>} />
+            <Route path='/admin/manage-users' element={<ProtectedRoute> <ManageUsers /> </ProtectedRoute>} />
+            <Route path='/admin/generate-reports' element={<ProtectedRoute> <GenerateReports /> </ProtectedRoute>} />
+            <Route path='/admin/monitor-system' element={<ProtectedRoute> <MonitorSystem /> </ProtectedRoute>} />
           </Routes>
         </SocketProvider>
         <ToastContainer position="top-right" autoClose={5000} />
